@@ -1,8 +1,6 @@
 package pl.documents.model;
 
-
 import pl.documents.model.enums.Sex;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -18,7 +16,8 @@ public class Candidate
     private String password;
     private String phoneNumber;
     private String fillLocation;
-    private LocalDateTime fillDate;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
     private Sex sex;
     private String firstName;
     private String secondName;
@@ -29,6 +28,26 @@ public class Candidate
     private String profession;
     private String specialty;
     private String title;
+
+    LocalDateTime getCreateDate()
+    {
+        return createDate;
+    }
+
+    void setCreateDate(LocalDateTime createDate)
+    {
+        this.createDate = createDate;
+    }
+
+    LocalDateTime getUpdateDate()
+    {
+        return updateDate;
+    }
+
+    void setUpdateDate(LocalDateTime updateDate)
+    {
+        this.updateDate = updateDate;
+    }
 
     int getId()
     {
@@ -78,16 +97,6 @@ public class Candidate
     void setFillLocation(String fillLocation)
     {
         this.fillLocation = fillLocation;
-    }
-
-    LocalDateTime getFillDate()
-    {
-        return fillDate;
-    }
-
-    void setFillDate(LocalDateTime fillDate)
-    {
-        this.fillDate = fillDate;
     }
 
     Sex getSex()
