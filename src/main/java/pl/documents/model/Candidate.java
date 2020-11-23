@@ -1,9 +1,10 @@
 package pl.documents.model;
 
 import pl.documents.model.enums.Sex;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,7 +12,9 @@ import java.time.LocalDateTime;
 public class Candidate
 {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Email(message = "Bad e-mail!")
     private String email;
     private String password;
     private String phoneNumber;
@@ -28,8 +31,14 @@ public class Candidate
     private String profession;
     private String specialty;
     private String title;
+    private boolean completed;
 
-    LocalDateTime getCreateDate()
+    public Candidate()
+    {
+
+    }
+
+    public LocalDateTime getCreateDate()
     {
         return createDate;
     }
@@ -39,7 +48,7 @@ public class Candidate
         this.createDate = createDate;
     }
 
-    LocalDateTime getUpdateDate()
+    public LocalDateTime getUpdateDate()
     {
         return updateDate;
     }
@@ -49,7 +58,7 @@ public class Candidate
         this.updateDate = updateDate;
     }
 
-    int getId()
+    public int getId()
     {
         return id;
     }
@@ -59,7 +68,7 @@ public class Candidate
         this.id = id;
     }
 
-    String getEmail()
+    public String getEmail()
     {
         return email;
     }
@@ -69,7 +78,7 @@ public class Candidate
         this.email = email;
     }
 
-    String getPassword()
+    public String getPassword()
     {
         return password;
     }
@@ -79,7 +88,7 @@ public class Candidate
         this.password = password;
     }
 
-    String getPhoneNumber()
+    public String getPhoneNumber()
     {
         return phoneNumber;
     }
@@ -89,7 +98,7 @@ public class Candidate
         this.phoneNumber = phoneNumber;
     }
 
-    String getFillLocation()
+    public String getFillLocation()
     {
         return fillLocation;
     }
@@ -99,7 +108,7 @@ public class Candidate
         this.fillLocation = fillLocation;
     }
 
-    Sex getSex()
+    public Sex getSex()
     {
         return sex;
     }
@@ -109,7 +118,7 @@ public class Candidate
         this.sex = sex;
     }
 
-    String getFirstName()
+    public String getFirstName()
     {
         return firstName;
     }
@@ -119,7 +128,7 @@ public class Candidate
         this.firstName = firstName;
     }
 
-    String getSecondName()
+    public String getSecondName()
     {
         return secondName;
     }
@@ -129,7 +138,7 @@ public class Candidate
         this.secondName = secondName;
     }
 
-    String getSurname()
+    public String getSurname()
     {
         return surname;
     }
@@ -139,7 +148,7 @@ public class Candidate
         this.surname = surname;
     }
 
-    LocalDateTime getBirthDate()
+    public LocalDateTime getBirthDate()
     {
         return birthDate;
     }
@@ -149,7 +158,7 @@ public class Candidate
         this.birthDate = birthDate;
     }
 
-    String getSchoolName()
+    public String getSchoolName()
     {
         return schoolName;
     }
@@ -159,7 +168,7 @@ public class Candidate
         this.schoolName = schoolName;
     }
 
-    String getGraduationYear()
+    public String getGraduationYear()
     {
         return graduationYear;
     }
@@ -169,7 +178,7 @@ public class Candidate
         this.graduationYear = graduationYear;
     }
 
-    String getProfession()
+    public String getProfession()
     {
         return profession;
     }
@@ -179,7 +188,7 @@ public class Candidate
         this.profession = profession;
     }
 
-    String getSpecialty()
+    public String getSpecialty()
     {
         return specialty;
     }
@@ -189,7 +198,7 @@ public class Candidate
         this.specialty = specialty;
     }
 
-    String getTitle()
+    public String getTitle()
     {
         return title;
     }
@@ -197,5 +206,15 @@ public class Candidate
     void setTitle(String title)
     {
         this.title = title;
+    }
+
+    public boolean isCompleted()
+    {
+        return completed;
+    }
+
+    void setCompleted(boolean completed)
+    {
+        this.completed = completed;
     }
 }
