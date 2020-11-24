@@ -4,7 +4,6 @@ import pl.documents.model.enums.Sex;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
@@ -63,7 +62,7 @@ public class Candidate
         return id;
     }
 
-    void setId(int id)
+    public void setId(int id)
     {
         this.id = id;
     }

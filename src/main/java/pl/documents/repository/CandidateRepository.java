@@ -1,28 +1,23 @@
 package pl.documents.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.data.rest.core.annotation.RestResource;
 import pl.documents.model.Candidate;
 
 import java.util.List;
+import java.util.Optional;
 
-@RepositoryRestResource
-public interface CandidateRepository extends JpaRepository<Candidate, Integer>
+public interface CandidateRepository
 {
-    @Override
-    @RestResource(exported = false)
-    void deleteById(Integer integer);
-
-    @Override
-    @RestResource(exported = false)
-    void delete(Candidate candidate);
-
-    /**
-     * Finding candidates who have ever logged and completed the form.
-     * @return list of candidates who completed the form
-     */
-    @RestResource(path = "completed", rel = "completed")
+    List<Candidate> findAll();
+    Page<Candidate> findAll(Pageable page);
+    Optional<Candidate> findById(Integer id);
     List<Candidate> findByCompleted(@Param("completed") boolean isComplete);
+    boolean existsById(Integer id);
+    Candidate save(Candidate entity);
+    void deleteById(Integer id);
+
+
+
 }
