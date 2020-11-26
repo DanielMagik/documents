@@ -1,0 +1,9 @@
+appconfiguration:
+  accessBefore: 1
+  deleteAfter: 7
+spring:
+  h2.console:
+    enabled: false
+    path: '/console'
+  datasource.url: 'jdbc:h2:file:C:\\Users\\user\\Desktop\\Inzynierka\\documents\\db'
+
