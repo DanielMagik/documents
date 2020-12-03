@@ -7,30 +7,42 @@ import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
 
 @Entity
-@Table
+@Table(name = "CANDIDATES")
 public class Candidate
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int id;//
     @Email(message = "Bad e-mail!")
-    private String email;
-    private String password;
-    private String phoneNumber;
-    private String fillLocation;
-    private LocalDateTime createDate;
-    private LocalDateTime updateDate;
-    private Sex sex;
-    private String firstName;
-    private String secondName;
-    private String surname;
-    private LocalDateTime birthDate;
-    private String schoolName;
-    private String graduationYear;
-    private String profession;
-    private String specialty;
-    private String title;
+    private String email;//
+    private String password;//
+    private String phoneNumber;//
+    private String fillLocation;//
+    private Sex sex;//
+    private String firstName;//
+    private String secondName;//
+    private String surname;//
+    private LocalDateTime birthDate;//
+    private String schoolName;//
+    private String graduationYear;//
+    private String profession;//
+    private String specialty;//
+    private String title;//
+    private String qualifications;//
+    private String experience;//
+    private LocalDateTime createDate;//
+    private LocalDateTime updateDate;//
     private boolean completed;
+
+    public String getQualifications()
+    {
+        return qualifications;
+    }
+
+    public void setQualifications(String qualifications)
+    {
+        this.qualifications = qualifications;
+    }
 
     public Candidate()
     {

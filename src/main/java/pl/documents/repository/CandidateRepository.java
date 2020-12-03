@@ -18,6 +18,4 @@ public interface CandidateRepository
     Candidate save(Candidate entity);
     void deleteById(Integer id);
 
-
-
 }
