@@ -4,6 +4,8 @@ import pl.documents.model.enums.Sex;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,58 +18,29 @@ public class Candidate
     @Email(message = "Bad e-mail!")
     private String email;//
     private String password;//
+    @Pattern(regexp = "\\d{9,11}",message = "Bad phone number")
     private String phoneNumber;//
+    @Pattern(regexp = "[A-Z][a-z ]+", message = "Bad fill location")
     private String fillLocation;//
     private Sex sex;//
+    @Pattern(regexp = "[A-Z][a-z ]+", message = "Bad first name")
     private String firstName;//
+    @Pattern(regexp = "[A-Z][a-z ]+", message = "Bad second name")
     private String secondName;//
+    @Pattern(regexp = "[A-Z][a-z ]+", message = "Bad surname name")
     private String surname;//
-    private LocalDateTime birthDate;//
+    private LocalDate birthDate;//
     private String schoolName;//
+    @Pattern(regexp = "\\d{4}",message = "Bad graduation year")
     private String graduationYear;//
     private String profession;//
     private String specialty;//
     private String title;//
     private String qualifications;//
     private String experience;//
+    private String optionalData;//
     private LocalDateTime createDate;//
     private LocalDateTime updateDate;//
-    private boolean completed;
-
-    public String getQualifications()
-    {
-        return qualifications;
-    }
-
-    public void setQualifications(String qualifications)
-    {
-        this.qualifications = qualifications;
-    }
-
-    public Candidate()
-    {
-
-    }
-
-    public LocalDateTime getCreateDate()
-    {
-        return createDate;
-    }
-
-    void setCreateDate(LocalDateTime createDate)
-    {
-        this.createDate = createDate;
-    }
-
-    public LocalDateTime getUpdateDate()
-    {
-        return updateDate;
-    }
-
-    void setUpdateDate(LocalDateTime updateDate)
-    {
-        this.updateDate = updateDate;
-    }
 
     public int getId()
     {
@@ -89,7 +62,7 @@ public class Candidate
         this.email = email;
     }
 
-    public String getPassword()
+    String getPassword()
     {
         return password;
     }
@@ -159,12 +132,12 @@ public class Candidate
         this.surname = surname;
     }
 
-    public LocalDateTime getBirthDate()
+    public LocalDate getBirthDate()
     {
         return birthDate;
     }
 
-    void setBirthDate(LocalDateTime birthDate)
+    void setBirthDate(LocalDate birthDate)
     {
         this.birthDate = birthDate;
     }
@@ -219,13 +192,53 @@ public class Candidate
         this.title = title;
     }
 
-    public boolean isCompleted()
+    public String getQualifications()
     {
-        return completed;
+        return qualifications;
     }
 
-    void setCompleted(boolean completed)
+    void setQualifications(String qualifications)
     {
-        this.completed = completed;
+        this.qualifications = qualifications;
+    }
+
+    public String getExperience()
+    {
+        return experience;
+    }
+
+    void setExperience(String experience)
+    {
+        this.experience = experience;
+    }
+
+    public String getOptionalData()
+    {
+        return optionalData;
+    }
+
+    void setOptionalData(String optionalData)
+    {
+        this.optionalData = optionalData;
+    }
+
+    LocalDateTime getCreateDate()
+    {
+        return createDate;
+    }
+
+    void setCreateDate(LocalDateTime createDate)
+    {
+        this.createDate = createDate;
+    }
+
+    LocalDateTime getUpdateDate()
+    {
+        return updateDate;
+    }
+
+    void setUpdateDate(LocalDateTime updateDate)
+    {
+        this.updateDate = updateDate;
     }
 }
