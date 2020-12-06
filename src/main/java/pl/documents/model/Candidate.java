@@ -39,7 +39,7 @@ public class Candidate
     private String optionalData;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
-    @OneToOne
+    @OneToOne(mappedBy = "candidate")
     private Worker worker;
 
     public Candidate()
