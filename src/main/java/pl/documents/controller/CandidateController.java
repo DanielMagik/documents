@@ -55,8 +55,11 @@ class CandidateController
         {
             return ResponseEntity.notFound().build();
         }
-        toUpdate.setId(id);
-        repository.save(toUpdate);
+        repository.findById(id).
+                ifPresent(candidate ->{
+                    candidate.updateFrom(toUpdate);
+                    repository.save(candidate);
+                });
         return ResponseEntity.noContent().build();
     }
     @DeleteMapping("/candidates/{id}")

@@ -13,7 +13,6 @@ public interface CandidateRepository
     List<Candidate> findAll();
     Page<Candidate> findAll(Pageable page);
     Optional<Candidate> findById(Integer id);
-    List<Candidate> findByCompleted(@Param("completed") boolean isComplete);
     boolean existsById(Integer id);
     Candidate save(Candidate entity);
     void deleteById(Integer id);

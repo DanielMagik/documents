@@ -13,41 +13,45 @@ import java.time.LocalDateTime;
 public class Candidate
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;//
-    @Email(message = "Bad e-mail!")
-    private String email;//
-    private String password;//
-    @Pattern(regexp = "\\d{9,11}",message = "Bad phone number")
-    private String phoneNumber;//
-    @Pattern(regexp = "[A-Z][a-z ]+", message = "Bad fill location")
-    private String fillLocation;//
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+   // @Email(message = "Bad e-mail!")
+   //@Column(unique = true)
+    private String email;
+    private String password;
+    //@Column(unique = true)
+   // @Pattern(regexp = "\\d{9,11}",message = "Bad phone number")
+    private String phoneNumber;
+    private String fillLocation;
     private Sex sex;//
-    @Pattern(regexp = "[A-Z][a-z ]+", message = "Bad first name")
-    private String firstName;//
-    @Pattern(regexp = "[A-Z][a-z ]+", message = "Bad second name")
-    private String secondName;//
-    @Pattern(regexp = "[A-Z][a-z ]+", message = "Bad surname name")
-    private String surname;//
-    private LocalDate birthDate;//
-    private String schoolName;//
-    @Pattern(regexp = "\\d{4}",message = "Bad graduation year")
-    private String graduationYear;//
-    private String profession;//
-    private String specialty;//
-    private String title;//
-    private String qualifications;//
-    private String experience;//
-    private String optionalData;//
-    private LocalDateTime createDate;//
-    private LocalDateTime updateDate;//
+    private String firstName;
+    private String secondName;
+    private String surname;
+    private LocalDate birthDate;
+    private String schoolName;
+    //@Pattern(regexp = "\\d{4}",message = "Bad graduation year")
+    private String graduationYear;
+    private String profession;
+    private String specialty;
+    private String title;
+    private String qualifications;
+    private String experience;
+    private String optionalData;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
+    @OneToOne
+    private Worker worker;
+
+    public Candidate()
+    {
+    }
 
     public int getId()
     {
         return id;
     }
 
-    public void setId(int id)
+    void setId(int id)
     {
         this.id = id;
     }
@@ -222,23 +226,34 @@ public class Candidate
         this.optionalData = optionalData;
     }
 
-    LocalDateTime getCreateDate()
+    public void updateFrom(final Candidate source)
     {
-        return createDate;
-    }
+          this.phoneNumber=source.phoneNumber;
+          this.fillLocation=source.fillLocation;
+          this.sex=source.sex;
+          this.firstName=source.firstName;
+          this.secondName=source.secondName;
+          this.surname=source.surname;
+          this.birthDate=source.birthDate;
+          this.schoolName=source.schoolName;
+          this.graduationYear=source.graduationYear;
+          this.profession=source.profession;
+          this.specialty=source.specialty;
+          this.title=source.title;
+          this.qualifications=source.qualifications;
+          this.experience=source.experience;
+          this.optionalData=source.optionalData;
 
-    void setCreateDate(LocalDateTime createDate)
-    {
-        this.createDate = createDate;
     }
-
-    LocalDateTime getUpdateDate()
+    @PrePersist
+    void prePersist()
     {
-        return updateDate;
+        this.createDate = LocalDateTime.now();
     }
-
-    void setUpdateDate(LocalDateTime updateDate)
+    @PreUpdate
+    void preUpdate()
     {
-        this.updateDate = updateDate;
+        this.updateDate=LocalDateTime.now();
     }
+    
 }
