@@ -1,9 +1,20 @@
 package pl.documents.model.enums;
 
+/**
+ * Czy pracownik jest emerytem/rencistą
+ */
 public enum  Pension
 {
-    BRAK,
-    EMERYT,
-    RENCISTA,
-    EMERTY_I_RENCISTA
+    /**
+     * Nie
+     */
+    NO,
+    /**
+     * Emeryt
+     */
+    RETIREMENT,
+    /**
+     * Rencista
+     */
+    DISABILITY,
 }

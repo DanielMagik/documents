@@ -16,5 +16,8 @@ public interface CandidateRepository
     boolean existsById(Integer id);
     Candidate save(Candidate entity);
     void deleteById(Integer id);
+    boolean existsByPhoneNumber(String phoneNumber);
+    boolean existsByEmail(String email);
+
 
 }

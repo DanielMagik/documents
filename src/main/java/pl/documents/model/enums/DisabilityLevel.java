@@ -1,8 +1,20 @@
 package pl.documents.model.enums;
 
+/**
+ * Poziom niepełnosprawności
+ */
 public enum DisabilityLevel
 {
-    LEKKI,
-    UMIARKOWANY,
-    ZNACZNY
+    /**
+     * Lekki
+     */
+    LIGHT,
+    /**
+     * Umiarkowany
+     */
+    MODERATE,
+    /**
+     * Znaczny
+     */
+    CONSIDERABLE
 }

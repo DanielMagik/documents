@@ -3,11 +3,13 @@ package pl.documents.model;
 import pl.documents.model.enums.Sex;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
 
+/**
+ * Dane niezbędne do wypełnienia dokumentów dla kandydata
+ */
 @Entity
 @Table(name = "CANDIDATES")
 public class Candidate
@@ -15,32 +17,85 @@ public class Candidate
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-   // @Email(message = "Bad e-mail!")
-   //@Column(unique = true)
+    /**
+     * Dane kontaktowe (e-mail)
+     */
     private String email;
-    private String password;
-    //@Column(unique = true)
-   // @Pattern(regexp = "\\d{9,11}",message = "Bad phone number")
+    /**
+     * Dane kontaktowe (numer telefonu)
+     */
     private String phoneNumber;
+    /**
+     * Hasło do logowania się
+     */
+    private String password;
+    /**
+     * Miejsce wypełnienia dokumentów dla kandydata
+     */
     private String fillLocation;
-    private Sex sex;//
+    /**
+     * Płeć
+     */
+    private Sex sex;
+    /**
+     * Pierwsze imię
+     */
     private String firstName;
+    /**
+     * Drugie imię
+     */
     private String secondName;
+    /**
+     * Nazwisko
+     */
     private String surname;
+    /**
+     * Data urodzenia(YYYY-MM-DD)
+     */
     private LocalDate birthDate;
-    private String schoolName;
-    //@Pattern(regexp = "\\d{4}",message = "Bad graduation year")
-    private String graduationYear;
+    /**
+     *  Zawód
+     */
     private String profession;
+    /**
+     * Specjalność
+     */
     private String specialty;
+    /**
+     * Tytuł zawodowy/naukowy
+     */
     private String title;
+    /**
+     * Kwalifikacje zawodowe
+     */
     private String qualifications;
-    private String experience;
+    /**
+     * Dodatkowe dane osobowe
+     */
     private String optionalData;
+    /**
+     * Data i czas utworzenia encji
+     */
     private LocalDateTime createDate;
+    /**
+     * Data i czas ostatniej aktualizacji encji
+     */
     private LocalDateTime updateDate;
+    /**
+     * Dane niezbędne do wypełnienia dokumentów dla pracownika
+     */
     @OneToOne(mappedBy = "candidate")
     private Worker worker;
+    /**
+     * Nazwy szkół i lata ich ukończenia
+     */
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "candidate")
+    private Set<Education> education;
+    /**
+     * Przebieg dotychczasowego zatrudnienia
+     */
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "candidate")
+    private Set<Employments> employments;
 
     public Candidate()
     {
@@ -51,29 +106,9 @@ public class Candidate
         return id;
     }
 
-    void setId(int id)
-    {
-        this.id = id;
-    }
-
     public String getEmail()
     {
         return email;
-    }
-
-    void setEmail(String email)
-    {
-        this.email = email;
-    }
-
-    String getPassword()
-    {
-        return password;
-    }
-
-    void setPassword(String password)
-    {
-        this.password = password;
     }
 
     public String getPhoneNumber()
@@ -81,19 +116,9 @@ public class Candidate
         return phoneNumber;
     }
 
-    void setPhoneNumber(String phoneNumber)
-    {
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getFillLocation()
     {
         return fillLocation;
-    }
-
-    void setFillLocation(String fillLocation)
-    {
-        this.fillLocation = fillLocation;
     }
 
     public Sex getSex()
@@ -101,19 +126,9 @@ public class Candidate
         return sex;
     }
 
-    void setSex(Sex sex)
-    {
-        this.sex = sex;
-    }
-
     public String getFirstName()
     {
         return firstName;
-    }
-
-    void setFirstName(String firstName)
-    {
-        this.firstName = firstName;
     }
 
     public String getSecondName()
@@ -121,19 +136,9 @@ public class Candidate
         return secondName;
     }
 
-    void setSecondName(String secondName)
-    {
-        this.secondName = secondName;
-    }
-
     public String getSurname()
     {
         return surname;
-    }
-
-    void setSurname(String surname)
-    {
-        this.surname = surname;
     }
 
     public LocalDate getBirthDate()
@@ -141,39 +146,9 @@ public class Candidate
         return birthDate;
     }
 
-    void setBirthDate(LocalDate birthDate)
-    {
-        this.birthDate = birthDate;
-    }
-
-    public String getSchoolName()
-    {
-        return schoolName;
-    }
-
-    void setSchoolName(String schoolName)
-    {
-        this.schoolName = schoolName;
-    }
-
-    public String getGraduationYear()
-    {
-        return graduationYear;
-    }
-
-    void setGraduationYear(String graduationYear)
-    {
-        this.graduationYear = graduationYear;
-    }
-
     public String getProfession()
     {
         return profession;
-    }
-
-    void setProfession(String profession)
-    {
-        this.profession = profession;
     }
 
     public String getSpecialty()
@@ -181,19 +156,9 @@ public class Candidate
         return specialty;
     }
 
-    void setSpecialty(String specialty)
-    {
-        this.specialty = specialty;
-    }
-
     public String getTitle()
     {
         return title;
-    }
-
-    void setTitle(String title)
-    {
-        this.title = title;
     }
 
     public String getQualifications()
@@ -201,59 +166,67 @@ public class Candidate
         return qualifications;
     }
 
-    void setQualifications(String qualifications)
-    {
-        this.qualifications = qualifications;
-    }
-
-    public String getExperience()
-    {
-        return experience;
-    }
-
-    void setExperience(String experience)
-    {
-        this.experience = experience;
-    }
-
     public String getOptionalData()
     {
         return optionalData;
     }
 
-    void setOptionalData(String optionalData)
+    public LocalDateTime getCreateDate()
     {
-        this.optionalData = optionalData;
+        return createDate;
     }
 
+    public LocalDateTime getUpdateDate()
+    {
+        return updateDate;
+    }
+
+    public Worker getWorker()
+    {
+        return worker;
+    }
+
+    public Set<Education> getEducation()
+    {
+        return education;
+    }
+
+    public Set<Employments> getEmployments()
+    {
+        return employments;
+    }
+
+    /**
+     * Update podstawowych danych pracownika
+     * @param source źródło danych, z którego pobrane zostaną nowe wartości
+     */
     public void updateFrom(final Candidate source)
     {
-          this.phoneNumber=source.phoneNumber;
-          this.fillLocation=source.fillLocation;
-          this.sex=source.sex;
-          this.firstName=source.firstName;
-          this.secondName=source.secondName;
-          this.surname=source.surname;
-          this.birthDate=source.birthDate;
-          this.schoolName=source.schoolName;
-          this.graduationYear=source.graduationYear;
-          this.profession=source.profession;
-          this.specialty=source.specialty;
-          this.title=source.title;
-          this.qualifications=source.qualifications;
-          this.experience=source.experience;
-          this.optionalData=source.optionalData;
+        this.email=source.email;
+        this.phoneNumber=source.phoneNumber;
+        this.fillLocation=source.fillLocation;
+        this.sex=source.sex;
+        this.firstName=source.firstName;
+        this.secondName=source.secondName;
+        this.surname= source.surname;
+        this.birthDate=source.birthDate;
+        this.profession=source.profession;
+        this.specialty=source.specialty;
+        this.title=source.title;
+        this.qualifications=source.qualifications;
+        this.optionalData=source.optionalData;
 
     }
+
     @PrePersist
     void prePersist()
     {
         this.createDate = LocalDateTime.now();
     }
+
     @PreUpdate
     void preUpdate()
     {
         this.updateDate=LocalDateTime.now();
     }
-    
 }

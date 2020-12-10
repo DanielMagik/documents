@@ -4,6 +4,9 @@ import pl.documents.model.enums.AddressType;
 
 import javax.persistence.*;
 
+/**
+ * Adres pracownika
+ */
 @Entity
 @Table(name = "ADDRESSES")
 public class Address
@@ -11,22 +14,57 @@ public class Address
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+    /**
+     * Rodzaj adresu (zamieszkania, zameldowania, do korespondencji)
+     */
     private AddressType addressType;
-    private String province;
-    private String district;
-    private String location;
+    /**
+     * Kod pocztowy
+     */
     private String postalCode;
-    private String postOffice;
+    /**
+     * Miejscowość
+     */
+    private String location;
+    /**
+     * Powiat
+     */
+    private String district;
+    /**
+     * Gmina
+     */
     private String community;
+    /**
+     * Ulica
+     */
     private String street;
+    /**
+     * Numer domu
+     */
     private String homeNumber;
+    /**
+     * Numer lokalu
+     */
     private String flatNumber;
+    /**
+     * Pracownik powiązany z adresem
+     */
     @ManyToOne
     @JoinColumn(name = "ID_WORKER",referencedColumnName = "id")
     private Worker worker;
 
     public Address()
     {
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
     }
 
     public AddressType getAddressType()
@@ -39,24 +77,14 @@ public class Address
         this.addressType = addressType;
     }
 
-    public String getProvince()
+    public String getPostalCode()
     {
-        return province;
+        return postalCode;
     }
 
-    public void setProvince(String province)
+    public void setPostalCode(String postalCode)
     {
-        this.province = province;
-    }
-
-    public String getDistrict()
-    {
-        return district;
-    }
-
-    public void setDistrict(String district)
-    {
-        this.district = district;
+        this.postalCode = postalCode;
     }
 
     public String getLocation()
@@ -69,24 +97,14 @@ public class Address
         this.location = location;
     }
 
-    public String getPostalCode()
+    public String getDistrict()
     {
-        return postalCode;
+        return district;
     }
 
-    public void setPostalCode(String postalCode)
+    public void setDistrict(String district)
     {
-        this.postalCode = postalCode;
-    }
-
-    public String getPostOffice()
-    {
-        return postOffice;
-    }
-
-    public void setPostOffice(String postOffice)
-    {
-        this.postOffice = postOffice;
+        this.district = district;
     }
 
     public String getCommunity()
