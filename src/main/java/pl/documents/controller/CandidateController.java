@@ -1,21 +1,11 @@
 package pl.documents.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
-import pl.documents.model.Candidate;
-import pl.documents.repository.CandidateRepository;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.util.List;
-
-@RestController
+//@RestController
 class CandidateController
 {
+    /*
     private static final Logger logger = LoggerFactory.getLogger(CandidateController.class);
     private final CandidateRepository repository;
 
@@ -42,10 +32,22 @@ class CandidateController
                 map(candidate -> ResponseEntity.ok(candidate)).
                 orElse(ResponseEntity.notFound().build());
     }
+    /*
     @PostMapping("/candidates")
     ResponseEntity<Candidate> createTask(@RequestBody @Valid Candidate toCreate)
     {
+
         Candidate result = repository.save(toCreate);
+        return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
+    }
+    */
+    /*
+    @PostMapping("/candidates")
+    ResponseEntity<Candidate> createCandidate()
+    {
+        logger.info("Create empty candidate and worker");
+        Candidate c = new Candidate();
+        Candidate result = repository.save(c);
         return ResponseEntity.created(URI.create("/" + result.getId())).body(result);
     }
     @PutMapping("/candidates/{id}")
@@ -72,5 +74,5 @@ class CandidateController
         repository.deleteById(id);
         return ResponseEntity.ok().build();
     }
-
+     */
 }

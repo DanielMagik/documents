@@ -16,145 +16,198 @@ import java.util.Set;
 public class Worker
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private int id;
     /**
-     * Miejsce wypełnienia dokumentów dla pracownika
+     * Dane kontaktowe (e-mail)
      */
-    private String fillLocation;
+    private String email = null;
+    /**
+     * Dane kontaktowe (numer telefonu)
+     */
+    private String phoneNumber = null;
+    /**
+     * Hasło do logowania się
+     */
+    private String password = null;
+    /**
+     * Miejsce wypełnienia dokumentów
+     */
+    private String fillLocation = null;
+    /**
+     * Płeć
+     */
+    private Sex sex = null;
+    /**
+     * Pierwsze imię
+     */
+    private String firstName = null;
+    /**
+     * Drugie imię
+     */
+    private String secondName = null;
+    /**
+     * Nazwisko
+     */
+    private String surname = null;
+    /**
+     * Data urodzenia(YYYY-MM-DD)
+     */
+    private LocalDate birthDate = null;
+    /**
+     *  Zawód
+     */
+    private String profession = null;
+    /**
+     * Specjalność
+     */
+    private String specialty = null;
+    /**
+     * Tytuł zawodowy/naukowy
+     */
+    private String title = null;
+    /**
+     * Kwalifikacje zawodowe
+     */
+    private String qualifications = null;
+    /**
+     * Dodatkowe dane osobowe
+     */
+    private String optionalData = null;
     /**
      * Czy pracownik jest obywatelem Polski: TRUE-TAK, FALSE-NIE
      */
-    private boolean isPolishCitizen;
+
+    private boolean isPolishCitizen = false;
     /**
      * Obywatelstwo. Pole wypełniane, gdy pracownik nie posiada Polskiego obywatelstwa
      */
-    private String citizenship;
+    private String citizenship = null;
     /**
      * PESEL, gdy pracownik jest obywatelem Polski, numer innego dokumentu,
      * gdy jest obywatelem innego państwa
      */
-    private String documentNumber;
+    private String documentNumber = null;
     /**
      * Gdy pracownik nie jest obywatelem Polski, to typ dokumentu,
      * z którego wpisany został odpowiedni numer
      */
-    private String documentType;
+    private String documentType = null;//TODO Czy to nie powinien być enum?
     /**
      * Urząd skarbowy
      */
-    private String taxOffice;
+    private String taxOffice = null;
     /**
      * Imię osoby, którą należy zawiadomić w razie wypadku
      */
-    private String authorizedName;
+    private String authorizedName = null;
     /**
      * Nazwisko osoby, którą należy zawiadomić w razie wypadku
      */
-    private String authorizedSurname;
+    private String authorizedSurname = null;
     /**
      * Kontakt do osoby, którą należy zawiadomić w razie wypadku
      */
-    private String authorizedContact;
+    private String authorizedContact = null;
     /**
      * Pracownik chce korzystać ze szczególnych uprawnień przewidzianych
      * w kodeksie pracy. Konieczność wpisania członków rodziny (dzieci albo współmałżonka)
      */
-    private boolean willSpecialPowersForFamily;
+    private boolean willSpecialPowersForFamily = false;
     /**
      * Nip pracownika
      */
-    private String NIP;
+    private String NIP = null;
     /**
      * Czy pracownik chce złożyć PIY-2: TRUE-TAK, FALSE-NIE
      */
-    private boolean willPIT2;
+    private boolean willPIT2 = false;
     /**
      * Stanowisko
      */
-    private String workplace;
+    private String workplace = null;
     /**
      * Departament
      */
-    private String department;
+    private String department = null;
     /**
      * Czy pracownik nie jest/jest emerytem/rencistą
      */
-    private Pension pension;
+    private Pension pension = null;
     /**
      * Data zatrudnienia(YYYY-MM-DD)
      */
-    private LocalDate employmentDate;
+    private LocalDate employmentDate = null;
     /**
      * Nazwa banku
      */
-    private String bank;
+    private String bank = null;
     /**
      * Numer konta
      */
-    private String accountNumber;
+    private String accountNumber = null;
     /**
      * Aktualne poświadczenie bezpieczeństwa do informacji niejawnych o klauzuli tajności
      */
-    private SecurityClearance securityClearance;
+    private SecurityClearance securityClearance = null;
     /**
      * NFZ, do którego należy pracownik
      */
-    private String NFZ;
+    private String NFZ = null;
     /**
      * Emerytura/renta - numer decyzji ZUS
      */
-    private String pensionZUSNumber;
+    private String pensionZUSNumber = null;
     /**
      * Czy pracownik jest niepełnosprawnu: TRUE-TAK, FALSE-NIE
      */
-    private boolean isDisabled;
+    private boolean isDisabled = false;
     /**
      * Jeśli pracownik jest niepełnosprawny, numer decyzji ZUS
      */
-    private String disabledZUSNumber;
+    private String disabledZUSNumber = null;
     /**
      * Data, początek niepełnosprawności pracownika
      */
-    private LocalDate disabledFrom;
+    private LocalDate disabledFrom = null;
     /**
      * Data, koniec niepełnosprawności pracownika
      */
-    private LocalDate disabledTo;
+    private LocalDate disabledTo = null;
     /**
      * Pakiet wybrany przez pracownika w ramach MEDICOVER
      */
-    private Medicover medicover;
+    private Medicover medicover = null;
     /**
      * Typ umowy pracownika
      */
-    private ContractType contractType;
+    private ContractType contractType = null;
     /**
      * Dochód brutto na osobę osób pozostających z pracownikiem w wspoólnym
      * gospodarstwie domowym
      */
-    private IncomePerPerson incomePerPerson;
+    private IncomePerPerson incomePerPerson = null;
     /**
      * Pracownik chce korzystać z:
      * leczenie sanatoryjne i wczasy profilaktyczno-lecznicze zakupione
      * indywidualnie przez osobę uprawnioną do korzystania z Funduszu
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean ZFSS1;
+    private boolean ZFSS1 = false;
     /**
      * Pracownik chce korzystać z:
      * pomoc rzeczowa oraz zapomogi pieniężne przyznawane w przypadku
      * indywidualnych zdarzeń losowych, klęsk żywiołowych lub długotrwałej choroby
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean ZFSS2;
+    private boolean ZFSS2 = false;
     /**
      * Pracownik chce korzystać z:
      * w zakresie działalności kulturalno-oświatowej :
      * dopłaty do imprez o charakterze kulturalno – oświatowym
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean ZFSS3;
+    private boolean ZFSS3 = false;
     /**
      * Pracownik chce korzystać z:
      * dofinansowanie do imprez o charakterze sportowym i rekreacyjnym oraz w
@@ -162,121 +215,125 @@ public class Worker
      * i fizykoterapii zdrowotnej oraz do innych form rekreacji ruchowej
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean ZFSS4;
+    private boolean ZFSS4 = false;
     /**
      * Pracownik chce korzystać z:
      * ofinansowanie działalności sportowo-rekreacyjnej,
      * w tym zakup sprzętu rekreacyjno-sportowego , rehabilitacyjnego
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean ZFSS5;
+    private boolean ZFSS5 = false;
     /**
      * Pracownik chce korzystać z:
      * rzeczowe świadczenia okolicznościowe , takie jak: świąteczne bony towarowe,
      * paczki świąteczne, karty przedpłacone
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean ZFSS6;
+    private boolean ZFSS6 = false;
     /**
      * Pracownik chce korzystać z:
      * dofinansowanie do opieki nad dziećmi sprawowanej przez dziennego
      * opiekuna lub nianię oraz w klubach dziecięcych
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean ZFSS7;
+    private boolean ZFSS7 = false;
     /**
      * Pracownik posiada dzieci:
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean hasChildren;
+    private boolean hasChildren = false;
     /**
      * Pracownik chce wypełnić oświadczenie rodzic opiekun prawny
      */
-    private boolean willParent;
+    private boolean willParent = false;
     /**
      * Uprawnienia, z których korzysta pracownik, sprawując opiekę nad dzieckiem do lat 4
      */
-    private ChildUnderFourPermissions childUnderFourPermissions;
+    private ChildUnderFourPermissions childUnderFourPermissions = null;
     /**
      * Uprawnienia, z których korzysta pracownik, sprawując opiekę nad dzieckiem do lat 14
      */
-    private ChildUnderFourteenPermissions childUnderFourteenPermissions;
+    private ChildUnderFourteenPermissions childUnderFourteenPermissions = null;
     /**
      * Czy pracownik chce wypełnić oświadczenie do celów ulgowego obliczania zaliczek
      * na podatek dochodowy od osób fizycznych
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean willReducedTask;
+    private boolean willReducedTask = false;
     /**
      * Opcjonalny sposób opodatkowania dochodów
      * TRUE-łącznie z małżonkiem,
      * FALSE-na zasadach określonych dla osób samotnie wychowujących małoletnie dzieci
      */
-    private boolean methodOfTaxation;
+    private boolean methodOfTaxation = false;
     /**
      * Opcjonalne pole, gdy pracownik chce wypełnić oświadczenie do celów ulgowego obliczania zaliczek
      * przewidywane dochody współmałżonka/dzieci w danym roku
      */
-    private String annualEarningsFamily;
+    private String annualEarningsFamily = null;
     /**
      * Czy pracownik chce wypełnić oświadczenie dotyczące kwoty zmniejszającej podatek
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean willTaxReducingAmount;
+    private boolean willTaxReducingAmount = false;
     /**
      * Czy pracownik chce wypełnić oświadczenie dotyczące wyższej stawki podatkowej
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean willHigherTask;
+    private boolean willHigherTask = false;
     /**
      * Miesiąc, od którego zostanie dla pracownika zastosowana wyższa stawka podatkowa
      */
-    private Month higherTaskMonth;
+    private Month higherTaskMonth = null;
     /**
      * Czy pracownik chce wypełnić oświadczenie
      * do celów stosowania podwyższonych kosztów uzyskania przychodów
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean willIncreasedCosts;
+    private boolean willIncreasedCosts = false;
     /**
      * Czy pracownik chce wypełnić oświadczenie o osiągniętych przychodach
      * dla celów naliczania składek na ubezpieczenia społeczne (ZUS)
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean willZUS;
+    private boolean willZUS = false;
     /**
      * przychody pracownika, będące podstawą naliczania składek na ubezpieczenia społeczne
      */
-    private String annualEarningsZUS;
+    private String annualEarningsZUS = null;
     /**
      * Data i czas utworzenia encji
      */
-    private LocalDateTime createDate;
+    private LocalDateTime createDate = null;
     /**
      * Data i czas ostatniej aktualizacji encji
      */
-    private LocalDateTime updateDate;
+    private LocalDateTime updateDate = null;
     /**
-     * Dane niezbędne do wypełnienia dokumentów dla kandydata
+     * Nazwy szkół i lata ich ukończenia
      */
-    @OneToOne
-    @JoinColumn(name = "ID_CANDIDATE",referencedColumnName = "id")
-    private Candidate candidate;
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "worker")
+    private Set<Education> education = null;
+    /**
+     * Przebieg dotychczasowego zatrudnienia
+     */
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "worker")
+
+    private Set<Employments> employments = null;
     /**
      * Adresy pracownika (zamieszkania, zameldowania, do korespondencji)
      */
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "worker")
-    private Set<Address> addresses;
+    private Set<Address> addresses = null;
     /**
      * Członkowie rodziny pracownika
      */
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "worker")
-    private Set<FamilyMember> familyMembers;
-
-
+    private Set<FamilyMember> familyMembers = null;
 
     public Worker()
     {
+
     }
 
     public int getId()
@@ -284,9 +341,31 @@ public class Worker
         return id;
     }
 
+    /*
     public void setId(int id)
     {
         this.id = id;
+    }
+     */
+
+    public String getEmail()
+    {
+        return email;
+    }
+
+    public void setEmail(String email)
+    {
+        this.email = email;
+    }
+
+    public String getPhoneNumber()
+    {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber)
+    {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getFillLocation()
@@ -297,6 +376,106 @@ public class Worker
     public void setFillLocation(String fillLocation)
     {
         this.fillLocation = fillLocation;
+    }
+
+    public Sex getSex()
+    {
+        return sex;
+    }
+
+    public void setSex(Sex sex)
+    {
+        this.sex = sex;
+    }
+
+    public String getFirstName()
+    {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName)
+    {
+        this.firstName = firstName;
+    }
+
+    public String getSecondName()
+    {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName)
+    {
+        this.secondName = secondName;
+    }
+
+    public String getSurname()
+    {
+        return surname;
+    }
+
+    public void setSurname(String surname)
+    {
+        this.surname = surname;
+    }
+
+    public LocalDate getBirthDate()
+    {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate)
+    {
+        this.birthDate = birthDate;
+    }
+
+    public String getProfession()
+    {
+        return profession;
+    }
+
+    public void setProfession(String profession)
+    {
+        this.profession = profession;
+    }
+
+    public String getSpecialty()
+    {
+        return specialty;
+    }
+
+    public void setSpecialty(String specialty)
+    {
+        this.specialty = specialty;
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public void setTitle(String title)
+    {
+        this.title = title;
+    }
+
+    public String getQualifications()
+    {
+        return qualifications;
+    }
+
+    public void setQualifications(String qualifications)
+    {
+        this.qualifications = qualifications;
+    }
+
+    public String getOptionalData()
+    {
+        return optionalData;
+    }
+
+    public void setOptionalData(String optionalData)
+    {
+        this.optionalData = optionalData;
     }
 
     public boolean isPolishCitizen()
@@ -769,24 +948,24 @@ public class Worker
         this.annualEarningsZUS = annualEarningsZUS;
     }
 
-    public LocalDateTime getCreateDate()
+    public Set<Education> getEducation()
     {
-        return createDate;
+        return education;
     }
 
-    public void setCreateDate(LocalDateTime createDate)
+    public void setEducation(Set<Education> education)
     {
-        this.createDate = createDate;
+        this.education = education;
     }
 
-    public LocalDateTime getUpdateDate()
+    public Set<Employments> getEmployments()
     {
-        return updateDate;
+        return employments;
     }
 
-    public void setUpdateDate(LocalDateTime updateDate)
+    public void setEmployments(Set<Employments> employments)
     {
-        this.updateDate = updateDate;
+        this.employments = employments;
     }
 
     public Set<Address> getAddresses()
@@ -807,5 +986,93 @@ public class Worker
     public void setFamilyMembers(Set<FamilyMember> familyMembers)
     {
         this.familyMembers = familyMembers;
+    }
+
+    /**
+     * Update podstawowych danych pracownika
+     * @param source źródło danych, z którego pobrane zostaną nowe wartości
+     */
+
+
+    public void updateFrom(final Worker source)
+    {
+        this.email = source.email;
+        this.phoneNumber = source.phoneNumber;
+        this.fillLocation = source.fillLocation;
+        this.sex = source.sex;
+        this.firstName = source.firstName;
+        this.secondName = source.secondName;
+        this.surname = source.surname;
+        this.birthDate = source.birthDate;
+        this.profession = source.profession;
+        this.specialty = source.specialty;
+        this.title = source.title;
+        this.qualifications = source.qualifications;
+        this.optionalData = source.optionalData;
+        this.isPolishCitizen = source.isPolishCitizen;
+        this.citizenship = source.citizenship;
+        this.documentNumber = source.documentNumber;
+        this.documentType = source.documentType;
+        this.taxOffice = source.taxOffice;
+        this.authorizedName = source.authorizedName;
+        this.authorizedSurname = source.authorizedSurname;
+        this.authorizedContact = source.authorizedContact;
+        this.willSpecialPowersForFamily = source.willSpecialPowersForFamily;
+        this.NIP = source.NIP;
+        this.willPIT2 = source.willPIT2;
+        this.workplace = source.workplace;
+        this.department = source.department;
+        this.pension = source.pension;
+        this.employmentDate = source.employmentDate;
+        this.bank = source.bank;
+        this.accountNumber = source.accountNumber;
+        this.securityClearance = source.securityClearance;
+        this.NFZ = source.NFZ;
+        this.pensionZUSNumber = source.pensionZUSNumber;
+        this.isDisabled = source.isDisabled;
+        this.disabledZUSNumber = source.disabledZUSNumber;
+        this.disabledFrom = source.disabledFrom;
+        this.disabledTo = source.disabledTo;
+        this.medicover = source.medicover;
+        this.contractType = source.contractType;
+        this.incomePerPerson = source.incomePerPerson;
+        this.ZFSS1 = source.ZFSS1;
+        this.ZFSS2 = source.ZFSS2;
+        this.ZFSS3 = source.ZFSS3;
+        this.ZFSS4 = source.ZFSS4;
+        this.ZFSS5 = source.ZFSS5;
+        this.ZFSS6 = source.ZFSS6;
+        this.ZFSS7 = source.ZFSS7;
+        this.hasChildren = source.hasChildren;
+        this.willParent = source.willParent;
+        this.childUnderFourPermissions = source.childUnderFourPermissions;
+        this.childUnderFourteenPermissions = source.childUnderFourteenPermissions;
+        this.willReducedTask = source.willReducedTask;
+        this.methodOfTaxation = source.methodOfTaxation;
+        this.annualEarningsFamily = source.annualEarningsFamily;
+        this.willTaxReducingAmount = source.willTaxReducingAmount;
+        this.willHigherTask = source.willHigherTask;
+        this.higherTaskMonth = source.higherTaskMonth;
+        this.willIncreasedCosts = source.willIncreasedCosts;
+        this.willZUS = source.willZUS;
+        this.annualEarningsZUS = source.annualEarningsZUS;
+        this.createDate = source.createDate;
+        this.updateDate = source.updateDate;
+        this.education = source.education;
+        this.employments = source.employments;
+        this.addresses = source.addresses;
+        this.familyMembers = source.familyMembers;
+    }
+
+    @PrePersist
+    void prePersist()
+    {
+        this.createDate = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    void preUpdate()
+    {
+        this.updateDate=LocalDateTime.now();
     }
 }

@@ -24,8 +24,8 @@ public class Education
      * Kandydat powiązany z danym wykształceniem
      */
     @ManyToOne
-    @JoinColumn(name = "ID_CANDIDATE",referencedColumnName = "id")
-    private Candidate candidate;
+    @JoinColumn(name = "ID_WORKER",referencedColumnName = "id")
+    private Worker worker;
 
     public Education()
     {
