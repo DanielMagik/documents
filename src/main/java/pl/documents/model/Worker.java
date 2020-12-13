@@ -319,7 +319,7 @@ public class Worker
      */
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "worker")
 
-    private Set<Employments> employments = null;
+    private Set<Employment> employments = null;
     /**
      * Adresy pracownika (zamieszkania, zameldowania, do korespondencji)
      */
@@ -958,12 +958,12 @@ public class Worker
         this.education = education;
     }
 
-    public Set<Employments> getEmployments()
+    public Set<Employment> getEmployments()
     {
         return employments;
     }
 
-    public void setEmployments(Set<Employments> employments)
+    public void setEmployments(Set<Employment> employments)
     {
         this.employments = employments;
     }
@@ -988,10 +988,75 @@ public class Worker
         this.familyMembers = familyMembers;
     }
 
+    public Worker(String email, String phoneNumber, String fillLocation, Sex sex, String firstName, String secondName, String surname, LocalDate birthDate, String profession, String specialty, String title, String qualifications, String optionalData, boolean isPolishCitizen, String citizenship, String documentNumber, String documentType, String taxOffice, String authorizedName, String authorizedSurname, String authorizedContact, boolean willSpecialPowersForFamily, String NIP, boolean willPIT2, String workplace, String department, Pension pension, LocalDate employmentDate, String bank, String accountNumber, SecurityClearance securityClearance, String NFZ, String pensionZUSNumber, boolean isDisabled, String disabledZUSNumber, LocalDate disabledFrom, LocalDate disabledTo, Medicover medicover, ContractType contractType, IncomePerPerson incomePerPerson, boolean ZFSS1, boolean ZFSS2, boolean ZFSS3, boolean ZFSS4, boolean ZFSS5, boolean ZFSS6, boolean ZFSS7, boolean hasChildren, boolean willParent, ChildUnderFourPermissions childUnderFourPermissions, ChildUnderFourteenPermissions childUnderFourteenPermissions, boolean willReducedTask, boolean methodOfTaxation, String annualEarningsFamily, boolean willTaxReducingAmount, boolean willHigherTask, Month higherTaskMonth, boolean willIncreasedCosts, boolean willZUS, String annualEarningsZUS)
+    {
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.fillLocation = fillLocation;
+        this.sex = sex;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.surname = surname;
+        this.birthDate = birthDate;
+        this.profession = profession;
+        this.specialty = specialty;
+        this.title = title;
+        this.qualifications = qualifications;
+        this.optionalData = optionalData;
+        this.isPolishCitizen = isPolishCitizen;
+        this.citizenship = citizenship;
+        this.documentNumber = documentNumber;
+        this.documentType = documentType;
+        this.taxOffice = taxOffice;
+        this.authorizedName = authorizedName;
+        this.authorizedSurname = authorizedSurname;
+        this.authorizedContact = authorizedContact;
+        this.willSpecialPowersForFamily = willSpecialPowersForFamily;
+        this.NIP = NIP;
+        this.willPIT2 = willPIT2;
+        this.workplace = workplace;
+        this.department = department;
+        this.pension = pension;
+        this.employmentDate = employmentDate;
+        this.bank = bank;
+        this.accountNumber = accountNumber;
+        this.securityClearance = securityClearance;
+        this.NFZ = NFZ;
+        this.pensionZUSNumber = pensionZUSNumber;
+        this.isDisabled = isDisabled;
+        this.disabledZUSNumber = disabledZUSNumber;
+        this.disabledFrom = disabledFrom;
+        this.disabledTo = disabledTo;
+        this.medicover = medicover;
+        this.contractType = contractType;
+        this.incomePerPerson = incomePerPerson;
+        this.ZFSS1 = ZFSS1;
+        this.ZFSS2 = ZFSS2;
+        this.ZFSS3 = ZFSS3;
+        this.ZFSS4 = ZFSS4;
+        this.ZFSS5 = ZFSS5;
+        this.ZFSS6 = ZFSS6;
+        this.ZFSS7 = ZFSS7;
+        this.hasChildren = hasChildren;
+        this.willParent = willParent;
+        this.childUnderFourPermissions = childUnderFourPermissions;
+        this.childUnderFourteenPermissions = childUnderFourteenPermissions;
+        this.willReducedTask = willReducedTask;
+        this.methodOfTaxation = methodOfTaxation;
+        this.annualEarningsFamily = annualEarningsFamily;
+        this.willTaxReducingAmount = willTaxReducingAmount;
+        this.willHigherTask = willHigherTask;
+        this.higherTaskMonth = higherTaskMonth;
+        this.willIncreasedCosts = willIncreasedCosts;
+        this.willZUS = willZUS;
+        this.annualEarningsZUS = annualEarningsZUS;
+    }
+
     /**
      * Update podstawowych danych pracownika
      * @param source źródło danych, z którego pobrane zostaną nowe wartości
      */
+
 
 
     public void updateFrom(final Worker source)

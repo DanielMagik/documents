@@ -8,7 +8,7 @@ import java.time.YearMonth;
  */
 @Entity
 @Table(name = "EMPLOYMENTS")
-public class Employments
+public class Employment
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -16,19 +16,19 @@ public class Employments
     /**
      * Początek zatrudnienia(rok i miesiąc)
      */
-    public YearMonth start;
+    private YearMonth start;
     /**
      * Koniec zatrudnienia(rok i miesiąc)
      */
-    public YearMonth finish;
+    private YearMonth finish;
     /**
      * Nazwa firmy
      */
-    public String name;
+    private String name;
     /**
      * Zajmowane stanowisko
      */
-    public String workplace;
+    private String workplace;
     /**
      * Kandydat przypisany do danego zatrudnienia
      */
@@ -36,7 +36,7 @@ public class Employments
     @JoinColumn(name = "ID_WORKER",referencedColumnName = "id")
     private Worker worker;
 
-    public Employments()
+    public Employment()
     {
     }
 
