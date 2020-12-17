@@ -7,6 +7,7 @@ import pl.documents.model.enums.*;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class WorkerReadModel
 {
@@ -138,7 +139,21 @@ public class WorkerReadModel
         this.willIncreasedCosts = source.isWillIncreasedCosts();
         this.willZUS = source.isWillZUS();
         this.annualEarningsZUS = source.getAnnualEarningsZUS();
+        if(source.getAddresses()!=null)
+        this.addresses = source.getAddresses().stream()
+                .map(AddressReadModel::new).collect(Collectors.toSet());
+        if(source.getEducation()!=null)
+        this.education = source.getEducation().stream()
+                .map(EducationReadModel::new).collect(Collectors.toSet());
+        if(source.getEmployments()!=null)
+        this.employments = source.getEmployments().stream()
+                .map(EmploymentReadModel::new).collect(Collectors.toSet());
+        if(source.getFamilyMembers()!=null)
+        this.familyMembers = source.getFamilyMembers().stream()
+                .map(FamilyMemberReadModel::new).collect(Collectors.toSet());
+
     }
+
 
     public Set<AddressReadModel> getAddresses()
     {

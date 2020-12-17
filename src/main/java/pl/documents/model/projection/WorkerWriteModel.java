@@ -1,13 +1,12 @@
 package pl.documents.model.projection;
 
-import pl.documents.model.*;
+import pl.documents.model.Worker;
 import pl.documents.model.enums.*;
 
-import javax.persistence.CascadeType;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class WorkerWriteModel
 {
@@ -72,10 +71,77 @@ public class WorkerWriteModel
     private boolean willZUS;
     private String annualEarningsZUS;
 
+    private Set<AddressWriteModel> addresses = null;
+    private Set<EducationWriteModel> education = null;
+    private Set<EmploymentWriteModel> employments = null;
+    private Set<FamilyMemberWriteModel> familyMembers = null;
+
+
     public Worker toWorker()
     {
         Worker worker = new Worker(email, phoneNumber,fillLocation,sex, firstName, secondName, surname, birthDate, profession, specialty, title, qualifications,  optionalData, isPolishCitizen, citizenship, documentNumber, documentType, taxOffice, authorizedName, authorizedSurname, authorizedContact, willSpecialPowersForFamily, NIP, willPIT2, workplace, department,pension,  employmentDate,bank, accountNumber, securityClearance,  NFZ, pensionZUSNumber, isDisabled, disabledZUSNumber, disabledFrom, disabledTo, medicover, contractType, incomePerPerson, ZFSS1, ZFSS2, ZFSS3,ZFSS4,ZFSS5,ZFSS6, ZFSS7, hasChildren, willParent, childUnderFourPermissions, childUnderFourteenPermissions, willReducedTask, methodOfTaxation, annualEarningsFamily, willTaxReducingAmount, willHigherTask, higherTaskMonth,willIncreasedCosts,willZUS, annualEarningsZUS);
+        if(addresses!=null)
+        {
+            worker.setAddresses(addresses.stream()
+                    .map(AddressWriteModel::toAddress).collect(Collectors.toSet()));
+        }
+        if(education!=null)
+        {
+            worker.setEducation(education.stream()
+                    .map(EducationWriteModel::toEducation).collect(Collectors.toSet()));
+        }
+        if(employments!=null)
+        {
+            worker.setEmployments(employments.stream()
+                    .map(EmploymentWriteModel::toEmployment).collect(Collectors.toSet()));
+        }
+        if(familyMembers!=null)
+        {
+            worker.setFamilyMembers(familyMembers.stream()
+                    .map(FamilyMemberWriteModel::toFamilyMember).collect(Collectors.toSet()));
+        }
         return worker;
+    }
+
+
+    public Set<AddressWriteModel> getAddresses()
+    {
+        return addresses;
+    }
+
+    public void setAddresses(Set<AddressWriteModel> addresses)
+    {
+        this.addresses = addresses;
+    }
+
+    public Set<EducationWriteModel> getEducation()
+    {
+        return education;
+    }
+
+    public void setEducation(Set<EducationWriteModel> education)
+    {
+        this.education = education;
+    }
+
+    public Set<EmploymentWriteModel> getEmployments()
+    {
+        return employments;
+    }
+
+    public void setEmployments(Set<EmploymentWriteModel> employments)
+    {
+        this.employments = employments;
+    }
+
+    public Set<FamilyMemberWriteModel> getFamilyMembers()
+    {
+        return familyMembers;
+    }
+
+    public void setFamilyMembers(Set<FamilyMemberWriteModel> familyMembers)
+    {
+        this.familyMembers = familyMembers;
     }
 
     public String getEmail()

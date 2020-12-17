@@ -11,7 +11,7 @@ import java.time.YearMonth;
 public class Employment
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     /**
      * Początek zatrudnienia(rok i miesiąc)

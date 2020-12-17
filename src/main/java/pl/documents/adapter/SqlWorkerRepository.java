@@ -19,4 +19,5 @@ interface SqlWorkerRepository extends WorkerRepository, JpaRepository<Worker,Int
 
     @Override
     boolean existsByDisabledZUSNumber(String disabledZUSNumber);
+
 }

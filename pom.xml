@@ -20,6 +20,13 @@
 
 	<dependencies>
 
+		<!-- https://mvnrepository.com/artifact/io.lsn/spring-pesel-validator -->
+		<dependency>
+			<groupId>io.lsn</groupId>
+			<artifactId>spring-pesel-validator</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
 		<dependency>
 			<groupId>org.flywaydb</groupId>

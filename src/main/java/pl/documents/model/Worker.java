@@ -16,7 +16,7 @@ import java.util.Set;
 public class Worker
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     /**
      * Dane kontaktowe (e-mail)
@@ -1061,13 +1061,13 @@ public class Worker
 
     public void updateFrom(final Worker source)
     {
-        this.email = source.email;
-        this.phoneNumber = source.phoneNumber;
-        this.fillLocation = source.fillLocation;
+        this.email = source.email;//
+        this.phoneNumber = source.phoneNumber;//
+        this.fillLocation = source.fillLocation;//
         this.sex = source.sex;
-        this.firstName = source.firstName;
+        this.firstName = source.firstName;//
         this.secondName = source.secondName;
-        this.surname = source.surname;
+        this.surname = source.surname;//
         this.birthDate = source.birthDate;
         this.profession = source.profession;
         this.specialty = source.specialty;
@@ -1076,14 +1076,14 @@ public class Worker
         this.optionalData = source.optionalData;
         this.isPolishCitizen = source.isPolishCitizen;
         this.citizenship = source.citizenship;
-        this.documentNumber = source.documentNumber;
-        this.documentType = source.documentType;
+        this.documentNumber = source.documentNumber;//
+        this.documentType = source.documentType;//
         this.taxOffice = source.taxOffice;
         this.authorizedName = source.authorizedName;
         this.authorizedSurname = source.authorizedSurname;
         this.authorizedContact = source.authorizedContact;
         this.willSpecialPowersForFamily = source.willSpecialPowersForFamily;
-        this.NIP = source.NIP;
+        this.NIP = source.NIP;//
         this.willPIT2 = source.willPIT2;
         this.workplace = source.workplace;
         this.department = source.department;
@@ -1123,10 +1123,10 @@ public class Worker
         this.annualEarningsZUS = source.annualEarningsZUS;
         this.createDate = source.createDate;
         this.updateDate = source.updateDate;
-        this.education = source.education;
-        this.employments = source.employments;
-        this.addresses = source.addresses;
-        this.familyMembers = source.familyMembers;
+        //this.education = source.education;
+        // this.employments = source.employments;
+        //this.addresses = source.addresses;
+        // this.familyMembers = source.familyMembers;
     }
 
     @PrePersist

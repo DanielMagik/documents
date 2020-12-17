@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class Education
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     /**
      * Nazwa szkoły
@@ -30,7 +30,11 @@ public class Education
     public Education()
     {
     }
-
+    public void updateForm(final Education source)
+    {
+        this.schoolName = source.schoolName;
+        this.graduationYear = source.graduationYear;
+    }
     public int getId()
     {
         return id;
@@ -59,5 +63,11 @@ public class Education
     public void setGraduationYear(String graduationYear)
     {
         this.graduationYear = graduationYear;
+    }
+
+
+    public void setWorker(Worker worker)
+    {
+        this.worker = worker;
     }
 }

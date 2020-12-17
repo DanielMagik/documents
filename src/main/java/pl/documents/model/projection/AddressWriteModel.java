@@ -13,6 +13,7 @@ public class AddressWriteModel
     private String street;
     private String homeNumber;
     private String flatNumber;
+
     public Address toAddress()
     {
         Address address = new Address();

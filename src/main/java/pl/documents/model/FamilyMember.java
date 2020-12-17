@@ -11,7 +11,7 @@ import java.time.LocalDate;
 public class FamilyMember
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     /**
      * Relacja członka rodziny z pracownikiem
