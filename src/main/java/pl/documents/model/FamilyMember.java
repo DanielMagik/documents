@@ -1,18 +1,24 @@
 package pl.documents.model;
 
+import org.hibernate.annotations.GenericGenerator;
 import pl.documents.model.enums.DisabilityLevel;
 import pl.documents.model.enums.Relationship;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Table(name = "FAMILY_MEMBERS")
 public class FamilyMember
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    private UUID id;
     /**
      * Relacja członka rodziny z pracownikiem
      */
@@ -104,12 +110,12 @@ public class FamilyMember
     {
     }
 
-    public int getId()
+    public UUID getId()
     {
         return id;
     }
 
-    public void setId(int id)
+    public void setId(UUID id)
     {
         this.id = id;
     }

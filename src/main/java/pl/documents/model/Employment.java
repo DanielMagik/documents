@@ -1,7 +1,10 @@
 package pl.documents.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.time.YearMonth;
+import java.util.UUID;
 
 /**
  * Przebieg dotychczasowego zatrudnienia kandydata
@@ -11,8 +14,12 @@ import java.time.YearMonth;
 public class Employment
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    private UUID id;
     /**
      * Początek zatrudnienia(rok i miesiąc)
      */
@@ -40,12 +47,12 @@ public class Employment
     {
     }
 
-    public int getId()
+    public UUID getId()
     {
         return id;
     }
 
-    public void setId(int id)
+    public void setId(UUID id)
     {
         this.id = id;
     }

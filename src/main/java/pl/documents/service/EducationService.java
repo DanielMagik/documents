@@ -1,6 +1,7 @@
 package pl.documents.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.documents.model.Education;
 import pl.documents.model.Worker;
 import pl.documents.repository.EducationRepository;
@@ -9,6 +10,7 @@ import javax.persistence.EntityExistsException;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.Calendar;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +23,7 @@ public class EducationService
     {
         this.repository = educationRepository;
     }
-    public void updateEducation(int id, Education toUpdate)
+    public void updateEducation(UUID id, Education toUpdate)
     {
         if(!repository.existsById(id))
         {
@@ -50,7 +52,8 @@ public class EducationService
             throw new IllegalArgumentException("Podaj poprawny rok!");
         }
     }
-    public boolean deleteById(int id)
+    @Transactional
+    public boolean deleteById(UUID id)
     {
         if(!repository.existsById(id))
         {

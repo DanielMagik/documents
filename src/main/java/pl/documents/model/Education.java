@@ -1,6 +1,9 @@
 package pl.documents.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
+import java.util.UUID;
 
 /**
  * Przebieg edukacji kandydata
@@ -10,8 +13,12 @@ import javax.persistence.*;
 public class Education
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    private UUID id;
     /**
      * Nazwa szkoły
      */
@@ -35,12 +42,13 @@ public class Education
         this.schoolName = source.schoolName;
         this.graduationYear = source.graduationYear;
     }
-    public int getId()
+
+    public UUID getId()
     {
         return id;
     }
 
-    public void setId(int id)
+    public void setId(UUID id)
     {
         this.id = id;
     }

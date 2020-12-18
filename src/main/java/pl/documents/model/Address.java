@@ -1,8 +1,10 @@
 package pl.documents.model;
 
+import org.hibernate.annotations.GenericGenerator;
 import pl.documents.model.enums.AddressType;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 /**
  * Adres pracownika
@@ -12,8 +14,12 @@ import javax.persistence.*;
 public class Address
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    private UUID id;
     /**
      * Rodzaj adresu (zamieszkania, zameldowania, do korespondencji)
      */
@@ -57,12 +63,12 @@ public class Address
     {
     }
 
-    public int getId()
+    public UUID getId()
     {
         return id;
     }
 
-    public void setId(int id)
+    public void setId(UUID id)
     {
         this.id = id;
     }

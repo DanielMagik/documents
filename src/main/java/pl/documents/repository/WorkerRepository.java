@@ -6,15 +6,16 @@ import pl.documents.model.Worker;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface WorkerRepository
 {
     List<Worker> findAll();
     Page<Worker> findAll(Pageable page);
-    Optional<Worker> findById(Integer id);
-    boolean existsById(Integer id);
+    Optional<Worker> findById(UUID id);
+    boolean existsById(UUID id);
     Worker save(Worker entity);
-    void deleteById(Integer id);
+    void deleteById(UUID id);
     boolean existsByDocumentNumberAndDocumentType(String documentNumber, String documentType);
     boolean existsByNIP(String NIP);
     boolean existsByPensionZUSNumber(String pensionZUSNumber);

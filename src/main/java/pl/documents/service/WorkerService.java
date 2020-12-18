@@ -3,6 +3,7 @@ package pl.documents.service;
 import io.lsn.spring.pesel.validator.domain.PeselValidator;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.documents.model.Education;
 import pl.documents.model.Worker;
 import pl.documents.model.projection.EducationReadModel;
@@ -13,6 +14,7 @@ import pl.documents.repository.WorkerRepository;
 
 import javax.persistence.EntityExistsException;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -49,7 +51,7 @@ public class WorkerService
      * @param id zadane id
      * @return odczytany pracownik
      */
-    public WorkerReadModel readById(int id)
+    public WorkerReadModel readById(UUID id)
     {
         Worker result;
             result = repository.findById(id).orElseThrow(
@@ -63,7 +65,8 @@ public class WorkerService
      * @param id id pracownika
      * @return informacja, czy udało się usunąć pracownika
      */
-    public boolean deleteById(int id)
+    @Transactional
+    public boolean deleteById(UUID id)
     {
         if(!repository.existsById(id))
         {
@@ -103,7 +106,7 @@ public class WorkerService
      * @param id id zmienianegp pracownika
      * @param toUpdate nowe dane pracownika
      */
-    public void updateWorker(int id, Worker toUpdate)
+    public void updateWorker(UUID id, Worker toUpdate)
     {
         //zmiana danych pracownika
         repository.findById(id).
@@ -118,7 +121,7 @@ public class WorkerService
      * @param id id pracownika, dla którego zostanie dodana szkoła
      * @param toUpdate nowa szkoła
      */
-    public void addEducation(int id, Education toUpdate)
+    public void addEducation(UUID id, Education toUpdate)
     {
         if(!repository.existsById(id))
         {
@@ -135,7 +138,7 @@ public class WorkerService
                 }
         );
     }
-    public List<EducationReadModel> readWorkerEducation(int id)
+    public List<EducationReadModel> readWorkerEducation(UUID id)
     {
             Worker result = repository.findById(id).orElseThrow(
                     () -> new IllegalArgumentException("Bad ID!")
@@ -143,7 +146,7 @@ public class WorkerService
             return educationRepository.findAllByWorker(result).stream()
                     .map(EducationReadModel::new).collect(Collectors.toList());
     }
-    public void checkData(int id, Worker worker)
+    public void checkData(UUID id, Worker worker)
     {
 
         Worker oldData = repository.findById(id).orElseThrow(

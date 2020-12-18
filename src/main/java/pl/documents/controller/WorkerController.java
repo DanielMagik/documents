@@ -3,6 +3,7 @@ package pl.documents.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pl.documents.model.Education;
 import pl.documents.model.Worker;
@@ -16,6 +17,7 @@ import javax.persistence.EntityExistsException;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class WorkerController
@@ -55,7 +57,7 @@ public class WorkerController
      * @return szukany pracownik lub informacja o jego braku
      */
     @GetMapping("/workers/{id}")
-    ResponseEntity<WorkerReadModel> readWorker(@PathVariable int id)
+    ResponseEntity<WorkerReadModel> readWorker(@PathVariable UUID id)
     {
 
         /*
@@ -114,7 +116,7 @@ public class WorkerController
      * @return informacja o pomyślnej bądź nieudanej aktualizacji
      */
     @PutMapping("/workers/{id}")
-    ResponseEntity<?> updateWorker(@PathVariable int id, @RequestBody Worker toUpdate)
+    ResponseEntity<?> updateWorker(@PathVariable UUID id, @RequestBody Worker toUpdate)
     {
         try
         {
@@ -136,7 +138,7 @@ public class WorkerController
      * @return informacja o pomyślnym bądź nieudanym usunięciu
      */
     @DeleteMapping("/workers/{id}")
-    ResponseEntity<?> deleteCandidate(@PathVariable int id)
+    ResponseEntity<?> deleteCandidate(@PathVariable UUID id)
     {
         if(workerService.deleteById(id))
         {
@@ -156,7 +158,7 @@ public class WorkerController
      * @return lista z przebiegiem wykształcenia
      */
     @GetMapping(value = "/workers/education/{id}")
-    ResponseEntity<List<EducationReadModel>> readAllWorkerEducation(@PathVariable int id)
+    ResponseEntity<List<EducationReadModel>> readAllWorkerEducation(@PathVariable UUID id)
     {
         List<EducationReadModel> result;
         try
@@ -178,7 +180,7 @@ public class WorkerController
      * @return informacja o pomyślnym bądź nieudanym dodaniu
      */
     @PostMapping("/workers/education/{id}")
-    ResponseEntity<?> addWorkerEducation(@PathVariable int id, @RequestBody @Valid Education toUpdate)
+    ResponseEntity<?> addWorkerEducation(@PathVariable UUID id, @RequestBody @Valid Education toUpdate)
     {
         try
         {
@@ -202,7 +204,7 @@ public class WorkerController
      * @return informacja o pomyślnej bądź nieudanej aktualizacji
      */
     @PutMapping("/workers/education/{id}")
-    ResponseEntity<?> updateEducation(@PathVariable int id, @RequestBody Education toUpdate)
+    ResponseEntity<?> updateEducation(@PathVariable UUID id, @RequestBody Education toUpdate)
     {
         try
         {
@@ -225,7 +227,7 @@ public class WorkerController
      * @return informacja o udanym bądź nieudanym usunięciu
      */
     @DeleteMapping("/workers/education/{id}")
-    ResponseEntity<?> deleteEducation(@PathVariable int id)
+    ResponseEntity<?> deleteEducation(@PathVariable UUID id)
     {
         if(educationService.deleteById(id))
         {

@@ -1,5 +1,6 @@
 package pl.documents.model;
 
+import org.hibernate.annotations.GenericGenerator;
 import pl.documents.model.enums.*;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * Dane niezbędne do wypełnienia dokumentów pracownika
@@ -16,8 +18,12 @@ import java.util.Set;
 public class Worker
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
+    private UUID id;
     /**
      * Dane kontaktowe (e-mail)
      */
@@ -336,12 +342,12 @@ public class Worker
 
     }
 
-    public int getId()
+    public UUID getId()
     {
         return id;
     }
 
-    /*
+  /*
     public void setId(int id)
     {
         this.id = id;
