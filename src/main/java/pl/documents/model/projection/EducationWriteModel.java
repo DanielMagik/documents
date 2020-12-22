@@ -9,28 +9,8 @@ public class EducationWriteModel
 
     public Education toEducation()
     {
-        Education education = new Education();
-        education.setSchoolName(schoolName);
-        education.setGraduationYear(graduationYear);
+        Education education = new Education(schoolName,graduationYear);
         return education;
     }
-    public String getSchoolName()
-    {
-        return schoolName;
-    }
 
-    public void setSchoolName(String schoolName)
-    {
-        this.schoolName = schoolName;
-    }
-
-    public String getGraduationYear()
-    {
-        return graduationYear;
-    }
-
-    public void setGraduationYear(String graduationYear)
-    {
-        this.graduationYear = graduationYear;
-    }
 }

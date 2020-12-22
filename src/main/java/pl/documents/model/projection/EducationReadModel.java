@@ -12,23 +12,14 @@ public class EducationReadModel
         this.schoolName = source.getSchoolName();
         this.graduationYear=source.getGraduationYear();
     }
+
     public String getSchoolName()
     {
         return schoolName;
     }
 
-    public void setSchoolName(String schoolName)
-    {
-        this.schoolName = schoolName;
-    }
-
     public String getGraduationYear()
     {
         return graduationYear;
-    }
-
-    public void setGraduationYear(String graduationYear)
-    {
-        this.graduationYear = graduationYear;
     }
 }

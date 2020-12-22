@@ -37,27 +37,33 @@ public class Education
     public Education()
     {
     }
+
+    public Education(String schoolName, String graduationYear)
+    {
+        this.schoolName = schoolName;
+        this.graduationYear = graduationYear;
+    }
+    /**
+     * Update podstawowych danych o edukacji
+     * @param source źródło danych, z którego pobrane zostaną nowe wartości
+     */
     public void updateForm(final Education source)
     {
         this.schoolName = source.schoolName;
         this.graduationYear = source.graduationYear;
     }
 
+    //todo getId jest tymczasowo publiczne
     public UUID getId()
     {
         return id;
-    }
-
-    public void setId(UUID id)
-    {
-        this.id = id;
     }
 
     public String getSchoolName()
     {
         return schoolName;
     }
-
+    //TODO SETTER JEST TYMCZASOWY
     public void setSchoolName(String schoolName)
     {
         this.schoolName = schoolName;
@@ -67,12 +73,6 @@ public class Education
     {
         return graduationYear;
     }
-
-    public void setGraduationYear(String graduationYear)
-    {
-        this.graduationYear = graduationYear;
-    }
-
 
     public void setWorker(Worker worker)
     {

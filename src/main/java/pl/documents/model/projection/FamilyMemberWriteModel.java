@@ -28,217 +28,34 @@ public class FamilyMemberWriteModel
     private String homeNumber;
     private String flatNumber;
 
-    public FamilyMember toFamilyMember()
-    {
-        FamilyMember familyMember = new FamilyMember();
-        familyMember.setRelationship(relationship);
-        familyMember.setName(name);
-        familyMember.setSurname(surname);
-        familyMember.setBirthDate(birthDate);
-        familyMember.setInsuredAtEmployee(insuredAtEmployee);
-        familyMember.setLegalGuardian(legalGuardian);
-        familyMember.setDisabled(isDisabled);
-        familyMember.setDisabledZUSNumber(disabledZUSNumber);
-        familyMember.setDisabilityLevel(disabilityLevel);
-        familyMember.setOnExclusiveMaintenance(onExclusiveMaintenance);
-        familyMember.setSharedHousehold(isSharedHousehold);
-        familyMember.setPESEL(PESEL);
-        familyMember.setLocation(location);
-        familyMember.setPostCode(postCode);
-        familyMember.setDistrict(district);
-        familyMember.setCommunity(community);
-        familyMember.setStreet(street);
-        familyMember.setHomeNumber(homeNumber);
-        familyMember.setFlatNumber(flatNumber);
-        return familyMember;
-    }
-    public Relationship getRelationship()
-    {
-        return relationship;
-    }
-
-    public void setRelationship(Relationship relationship)
+    public FamilyMemberWriteModel(Relationship relationship, String name, String surname, LocalDate birthDate, boolean insuredAtEmployee, boolean legalGuardian, boolean isDisabled, String disabledZUSNumber, DisabilityLevel disabilityLevel, boolean onExclusiveMaintenance, boolean isSharedHousehold, String PESEL, String location, String postCode, String district, String community, String street, String homeNumber, String flatNumber)
     {
         this.relationship = relationship;
-    }
-
-    public String getName()
-    {
-        return name;
-    }
-
-    public void setName(String name)
-    {
         this.name = name;
-    }
-
-    public String getSurname()
-    {
-        return surname;
-    }
-
-    public void setSurname(String surname)
-    {
         this.surname = surname;
-    }
-
-    public LocalDate getBirthDate()
-    {
-        return birthDate;
-    }
-
-    public void setBirthDate(LocalDate birthDate)
-    {
         this.birthDate = birthDate;
-    }
-
-    public boolean isInsuredAtEmployee()
-    {
-        return insuredAtEmployee;
-    }
-
-    public void setInsuredAtEmployee(boolean insuredAtEmployee)
-    {
         this.insuredAtEmployee = insuredAtEmployee;
-    }
-
-    public boolean isLegalGuardian()
-    {
-        return legalGuardian;
-    }
-
-    public void setLegalGuardian(boolean legalGuardian)
-    {
         this.legalGuardian = legalGuardian;
-    }
-
-    public boolean isDisabled()
-    {
-        return isDisabled;
-    }
-
-    public void setDisabled(boolean disabled)
-    {
-        isDisabled = disabled;
-    }
-
-    public String getDisabledZUSNumber()
-    {
-        return disabledZUSNumber;
-    }
-
-    public void setDisabledZUSNumber(String disabledZUSNumber)
-    {
+        this.isDisabled = isDisabled;
         this.disabledZUSNumber = disabledZUSNumber;
-    }
-
-    public DisabilityLevel getDisabilityLevel()
-    {
-        return disabilityLevel;
-    }
-
-    public void setDisabilityLevel(DisabilityLevel disabilityLevel)
-    {
         this.disabilityLevel = disabilityLevel;
-    }
-
-    public boolean isOnExclusiveMaintenance()
-    {
-        return onExclusiveMaintenance;
-    }
-
-    public void setOnExclusiveMaintenance(boolean onExclusiveMaintenance)
-    {
         this.onExclusiveMaintenance = onExclusiveMaintenance;
-    }
-
-    public boolean isSharedHousehold()
-    {
-        return isSharedHousehold;
-    }
-
-    public void setSharedHousehold(boolean sharedHousehold)
-    {
-        isSharedHousehold = sharedHousehold;
-    }
-
-    public String getPESEL()
-    {
-        return PESEL;
-    }
-
-    public void setPESEL(String PESEL)
-    {
+        this.isSharedHousehold = isSharedHousehold;
         this.PESEL = PESEL;
-    }
-
-    public String getLocation()
-    {
-        return location;
-    }
-
-    public void setLocation(String location)
-    {
         this.location = location;
-    }
-
-    public String getPostCode()
-    {
-        return postCode;
-    }
-
-    public void setPostCode(String postCode)
-    {
         this.postCode = postCode;
-    }
-
-    public String getDistrict()
-    {
-        return district;
-    }
-
-    public void setDistrict(String district)
-    {
         this.district = district;
-    }
-
-    public String getCommunity()
-    {
-        return community;
-    }
-
-    public void setCommunity(String community)
-    {
         this.community = community;
-    }
-
-    public String getStreet()
-    {
-        return street;
-    }
-
-    public void setStreet(String street)
-    {
         this.street = street;
-    }
-
-    public String getHomeNumber()
-    {
-        return homeNumber;
-    }
-
-    public void setHomeNumber(String homeNumber)
-    {
         this.homeNumber = homeNumber;
-    }
-
-    public String getFlatNumber()
-    {
-        return flatNumber;
-    }
-
-    public void setFlatNumber(String flatNumber)
-    {
         this.flatNumber = flatNumber;
     }
+
+    public FamilyMember toFamilyMember()
+    {
+        FamilyMember familyMember = new FamilyMember(relationship,name,surname,birthDate,insuredAtEmployee,legalGuardian,isDisabled,disabledZUSNumber,disabilityLevel,
+                onExclusiveMaintenance,isSharedHousehold,PESEL,location,postCode,district,community,street,homeNumber,flatNumber);
+        return familyMember;
+    }
+
 }

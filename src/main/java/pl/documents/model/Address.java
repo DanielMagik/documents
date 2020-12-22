@@ -76,14 +76,21 @@ public class Address
         this.flatNumber=address.getFlatNumber();
     }
 
+    public Address(AddressType addressType, String postalCode, String location, String district, String community, String street, String homeNumber, String flatNumber)
+    {
+        this.addressType = addressType;
+        this.postalCode = postalCode;
+        this.location = location;
+        this.district = district;
+        this.community = community;
+        this.street = street;
+        this.homeNumber = homeNumber;
+        this.flatNumber = flatNumber;
+    }
+
     public UUID getId()
     {
         return id;
-    }
-
-    public void setId(UUID id)
-    {
-        this.id = id;
     }
 
     public AddressType getAddressType()
@@ -91,19 +98,9 @@ public class Address
         return addressType;
     }
 
-    public void setAddressType(AddressType addressType)
-    {
-        this.addressType = addressType;
-    }
-
     public String getPostalCode()
     {
         return postalCode;
-    }
-
-    public void setPostalCode(String postalCode)
-    {
-        this.postalCode = postalCode;
     }
 
     public String getLocation()
@@ -111,19 +108,9 @@ public class Address
         return location;
     }
 
-    public void setLocation(String location)
-    {
-        this.location = location;
-    }
-
     public String getDistrict()
     {
         return district;
-    }
-
-    public void setDistrict(String district)
-    {
-        this.district = district;
     }
 
     public String getCommunity()
@@ -131,19 +118,9 @@ public class Address
         return community;
     }
 
-    public void setCommunity(String community)
-    {
-        this.community = community;
-    }
-
     public String getStreet()
     {
         return street;
-    }
-
-    public void setStreet(String street)
-    {
-        this.street = street;
     }
 
     public String getHomeNumber()
@@ -151,19 +128,9 @@ public class Address
         return homeNumber;
     }
 
-    public void setHomeNumber(String homeNumber)
-    {
-        this.homeNumber = homeNumber;
-    }
-
     public String getFlatNumber()
     {
         return flatNumber;
-    }
-
-    public void setFlatNumber(String flatNumber)
-    {
-        this.flatNumber = flatNumber;
     }
 
     public void setWorker(Worker worker)

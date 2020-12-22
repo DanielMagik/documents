@@ -46,6 +46,19 @@ public class Employment
     public Employment()
     {
     }
+
+    public Employment(YearMonth start, YearMonth finish, String name, String workplace)
+    {
+        this.start = start;
+        this.finish = finish;
+        this.name = name;
+        this.workplace = workplace;
+    }
+
+    /**
+     * Update podstawowych danych zatrudnienia
+     * @param source źródło danych, z którego pobrane zostaną nowe wartości
+     */
     public void updateForm(final Employment source)
     {
         this.name = source.name;
@@ -54,14 +67,10 @@ public class Employment
         this.finish = source.finish;
     }
 
+    //Todo to jest tymczasowe
     public UUID getId()
     {
         return id;
-    }
-
-    public void setId(UUID id)
-    {
-        this.id = id;
     }
 
     public void setWorker(Worker worker)
@@ -74,19 +83,9 @@ public class Employment
         return start;
     }
 
-    public void setStart(YearMonth start)
-    {
-        this.start = start;
-    }
-
     public YearMonth getFinish()
     {
         return finish;
-    }
-
-    public void setFinish(YearMonth finish)
-    {
-        this.finish = finish;
     }
 
     public String getName()
@@ -94,6 +93,7 @@ public class Employment
         return name;
     }
 
+    //TODO to jest tymczasowy setter
     public void setName(String name)
     {
         this.name = name;
@@ -104,8 +104,4 @@ public class Employment
         return workplace;
     }
 
-    public void setWorkplace(String workplace)
-    {
-        this.workplace = workplace;
-    }
 }

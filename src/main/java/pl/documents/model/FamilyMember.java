@@ -109,6 +109,34 @@ public class FamilyMember
     public FamilyMember()
     {
     }
+
+    public FamilyMember(Relationship relationship, String name, String surname, LocalDate birthDate, boolean insuredAtEmployee, boolean legalGuardian, boolean isDisabled, String disabledZUSNumber, DisabilityLevel disabilityLevel, boolean onExclusiveMaintenance, boolean isSharedHousehold, String PESEL, String location, String postCode, String district, String community, String street, String homeNumber, String flatNumber)
+    {
+        this.relationship = relationship;
+        this.name = name;
+        this.surname = surname;
+        this.birthDate = birthDate;
+        this.insuredAtEmployee = insuredAtEmployee;
+        this.legalGuardian = legalGuardian;
+        this.isDisabled = isDisabled;
+        this.disabledZUSNumber = disabledZUSNumber;
+        this.disabilityLevel = disabilityLevel;
+        this.onExclusiveMaintenance = onExclusiveMaintenance;
+        this.isSharedHousehold = isSharedHousehold;
+        this.PESEL = PESEL;
+        this.location = location;
+        this.postCode = postCode;
+        this.district = district;
+        this.community = community;
+        this.street = street;
+        this.homeNumber = homeNumber;
+        this.flatNumber = flatNumber;
+    }
+
+    /**
+     * Update podstawowych danych członka rodziny
+     * @param source źródło danych, z którego pobrane zostaną nowe wartości
+     */
     public void updateForm(final FamilyMember source)
     {
         this.relationship = source.relationship;
@@ -132,15 +160,12 @@ public class FamilyMember
         this.flatNumber = source.flatNumber;
     }
 
+    //TODO Getter Id jest tymczasowo publiczny
     public UUID getId()
     {
         return id;
     }
 
-    public void setId(UUID id)
-    {
-        this.id = id;
-    }
 
     public void setWorker(Worker worker)
     {
@@ -152,16 +177,12 @@ public class FamilyMember
         return relationship;
     }
 
-    public void setRelationship(Relationship relationship)
-    {
-        this.relationship = relationship;
-    }
-
     public String getName()
     {
         return name;
     }
 
+    //todo setter jest tymczasowy
     public void setName(String name)
     {
         this.name = name;
@@ -172,19 +193,9 @@ public class FamilyMember
         return surname;
     }
 
-    public void setSurname(String surname)
-    {
-        this.surname = surname;
-    }
-
     public LocalDate getBirthDate()
     {
         return birthDate;
-    }
-
-    public void setBirthDate(LocalDate birthDate)
-    {
-        this.birthDate = birthDate;
     }
 
     public boolean isInsuredAtEmployee()
@@ -192,19 +203,9 @@ public class FamilyMember
         return insuredAtEmployee;
     }
 
-    public void setInsuredAtEmployee(boolean insuredAtEmployee)
-    {
-        this.insuredAtEmployee = insuredAtEmployee;
-    }
-
     public boolean isLegalGuardian()
     {
         return legalGuardian;
-    }
-
-    public void setLegalGuardian(boolean legalGuardian)
-    {
-        this.legalGuardian = legalGuardian;
     }
 
     public boolean isDisabled()
@@ -212,19 +213,9 @@ public class FamilyMember
         return isDisabled;
     }
 
-    public void setDisabled(boolean disabled)
-    {
-        isDisabled = disabled;
-    }
-
     public String getDisabledZUSNumber()
     {
         return disabledZUSNumber;
-    }
-
-    public void setDisabledZUSNumber(String disabledZUSNumber)
-    {
-        this.disabledZUSNumber = disabledZUSNumber;
     }
 
     public DisabilityLevel getDisabilityLevel()
@@ -232,19 +223,9 @@ public class FamilyMember
         return disabilityLevel;
     }
 
-    public void setDisabilityLevel(DisabilityLevel disabilityLevel)
-    {
-        this.disabilityLevel = disabilityLevel;
-    }
-
     public boolean isOnExclusiveMaintenance()
     {
         return onExclusiveMaintenance;
-    }
-
-    public void setOnExclusiveMaintenance(boolean onExclusiveMaintenance)
-    {
-        this.onExclusiveMaintenance = onExclusiveMaintenance;
     }
 
     public boolean isSharedHousehold()
@@ -252,19 +233,9 @@ public class FamilyMember
         return isSharedHousehold;
     }
 
-    public void setSharedHousehold(boolean sharedHousehold)
-    {
-        isSharedHousehold = sharedHousehold;
-    }
-
     public String getPESEL()
     {
         return PESEL;
-    }
-
-    public void setPESEL(String PESEL)
-    {
-        this.PESEL = PESEL;
     }
 
     public String getLocation()
@@ -272,19 +243,9 @@ public class FamilyMember
         return location;
     }
 
-    public void setLocation(String location)
-    {
-        this.location = location;
-    }
-
     public String getPostCode()
     {
         return postCode;
-    }
-
-    public void setPostCode(String postCode)
-    {
-        this.postCode = postCode;
     }
 
     public String getDistrict()
@@ -292,19 +253,9 @@ public class FamilyMember
         return district;
     }
 
-    public void setDistrict(String district)
-    {
-        this.district = district;
-    }
-
     public String getCommunity()
     {
         return community;
-    }
-
-    public void setCommunity(String community)
-    {
-        this.community = community;
     }
 
     public String getStreet()
@@ -312,19 +263,9 @@ public class FamilyMember
         return street;
     }
 
-    public void setStreet(String street)
-    {
-        this.street = street;
-    }
-
     public String getHomeNumber()
     {
         return homeNumber;
-    }
-
-    public void setHomeNumber(String homeNumber)
-    {
-        this.homeNumber = homeNumber;
     }
 
     public String getFlatNumber()
@@ -332,8 +273,4 @@ public class FamilyMember
         return flatNumber;
     }
 
-    public void setFlatNumber(String flatNumber)
-    {
-        this.flatNumber = flatNumber;
-    }
 }

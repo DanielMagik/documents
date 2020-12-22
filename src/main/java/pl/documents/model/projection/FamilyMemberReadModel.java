@@ -50,14 +50,10 @@ public class FamilyMemberReadModel
         this.homeNumber=source.getHomeNumber();
         this.flatNumber=source.getFlatNumber();
     }
+
     public Relationship getRelationship()
     {
         return relationship;
-    }
-
-    public void setRelationship(Relationship relationship)
-    {
-        this.relationship = relationship;
     }
 
     public String getName()
@@ -65,19 +61,9 @@ public class FamilyMemberReadModel
         return name;
     }
 
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
     public String getSurname()
     {
         return surname;
-    }
-
-    public void setSurname(String surname)
-    {
-        this.surname = surname;
     }
 
     public LocalDate getBirthDate()
@@ -85,19 +71,9 @@ public class FamilyMemberReadModel
         return birthDate;
     }
 
-    public void setBirthDate(LocalDate birthDate)
-    {
-        this.birthDate = birthDate;
-    }
-
     public boolean isInsuredAtEmployee()
     {
         return insuredAtEmployee;
-    }
-
-    public void setInsuredAtEmployee(boolean insuredAtEmployee)
-    {
-        this.insuredAtEmployee = insuredAtEmployee;
     }
 
     public boolean isLegalGuardian()
@@ -105,19 +81,9 @@ public class FamilyMemberReadModel
         return legalGuardian;
     }
 
-    public void setLegalGuardian(boolean legalGuardian)
-    {
-        this.legalGuardian = legalGuardian;
-    }
-
     public boolean isDisabled()
     {
         return isDisabled;
-    }
-
-    public void setDisabled(boolean disabled)
-    {
-        isDisabled = disabled;
     }
 
     public String getDisabledZUSNumber()
@@ -125,19 +91,9 @@ public class FamilyMemberReadModel
         return disabledZUSNumber;
     }
 
-    public void setDisabledZUSNumber(String disabledZUSNumber)
-    {
-        this.disabledZUSNumber = disabledZUSNumber;
-    }
-
     public DisabilityLevel getDisabilityLevel()
     {
         return disabilityLevel;
-    }
-
-    public void setDisabilityLevel(DisabilityLevel disabilityLevel)
-    {
-        this.disabilityLevel = disabilityLevel;
     }
 
     public boolean isOnExclusiveMaintenance()
@@ -145,19 +101,9 @@ public class FamilyMemberReadModel
         return onExclusiveMaintenance;
     }
 
-    public void setOnExclusiveMaintenance(boolean onExclusiveMaintenance)
-    {
-        this.onExclusiveMaintenance = onExclusiveMaintenance;
-    }
-
     public boolean isSharedHousehold()
     {
         return isSharedHousehold;
-    }
-
-    public void setSharedHousehold(boolean sharedHousehold)
-    {
-        isSharedHousehold = sharedHousehold;
     }
 
     public String getPESEL()
@@ -165,19 +111,9 @@ public class FamilyMemberReadModel
         return PESEL;
     }
 
-    public void setPESEL(String PESEL)
-    {
-        this.PESEL = PESEL;
-    }
-
     public String getLocation()
     {
         return location;
-    }
-
-    public void setLocation(String location)
-    {
-        this.location = location;
     }
 
     public String getPostCode()
@@ -185,19 +121,9 @@ public class FamilyMemberReadModel
         return postCode;
     }
 
-    public void setPostCode(String postCode)
-    {
-        this.postCode = postCode;
-    }
-
     public String getDistrict()
     {
         return district;
-    }
-
-    public void setDistrict(String district)
-    {
-        this.district = district;
     }
 
     public String getCommunity()
@@ -205,19 +131,9 @@ public class FamilyMemberReadModel
         return community;
     }
 
-    public void setCommunity(String community)
-    {
-        this.community = community;
-    }
-
     public String getStreet()
     {
         return street;
-    }
-
-    public void setStreet(String street)
-    {
-        this.street = street;
     }
 
     public String getHomeNumber()
@@ -225,18 +141,8 @@ public class FamilyMemberReadModel
         return homeNumber;
     }
 
-    public void setHomeNumber(String homeNumber)
-    {
-        this.homeNumber = homeNumber;
-    }
-
     public String getFlatNumber()
     {
         return flatNumber;
-    }
-
-    public void setFlatNumber(String flatNumber)
-    {
-        this.flatNumber = flatNumber;
     }
 }

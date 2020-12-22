@@ -10,6 +10,7 @@ import pl.documents.logic.DataChecker;
 import pl.documents.model.Address;
 import pl.documents.model.Education;
 import pl.documents.model.FamilyMember;
+import pl.documents.model.enums.AddressType;
 import pl.documents.repository.FamilyMemberRepository;
 
 import javax.persistence.EntityExistsException;
@@ -56,14 +57,8 @@ public class FamilyMemberService
             e.setErrorMessage("Podaj poprawny PESEL członka rodziny!");
             throw e;
         }
-        Address address = new Address();
-        address.setPostalCode(familyMember.getPostCode());
-        address.setDistrict(familyMember.getDistrict());
-        address.setLocation(familyMember.getLocation());
-        address.setCommunity(familyMember.getCommunity());
-        address.setStreet(familyMember.getStreet());
-        address.setHomeNumber(familyMember.getHomeNumber());
-        address.setFlatNumber(familyMember.getFlatNumber());
+        Address address = new Address(AddressType.ALL,familyMember.getPostCode(),familyMember.getLocation(),familyMember.getDistrict(),
+                familyMember.getCommunity(),familyMember.getStreet(),familyMember.getHomeNumber(),familyMember.getFlatNumber());
         DataChecker.checkAddressCorrectness(address);
     }
     /**

@@ -340,15 +340,10 @@ public class Worker
     {
 
     }
+    //TODO Getter ID JEST TYMCZASOWO PUBLICZNY
     public UUID getId()
     {
         return id;
-    }
-
-
-    public void setId(UUID id)
-    {
-        this.id = id;
     }
 
     public String getEmail()
@@ -356,19 +351,9 @@ public class Worker
         return email;
     }
 
-    public void setEmail(String email)
-    {
-        this.email = email;
-    }
-
     public String getPhoneNumber()
     {
         return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber)
-    {
-        this.phoneNumber = phoneNumber;
     }
 
     public String getFillLocation()
@@ -376,19 +361,9 @@ public class Worker
         return fillLocation;
     }
 
-    public void setFillLocation(String fillLocation)
-    {
-        this.fillLocation = fillLocation;
-    }
-
     public Sex getSex()
     {
         return sex;
-    }
-
-    public void setSex(Sex sex)
-    {
-        this.sex = sex;
     }
 
     public String getFirstName()
@@ -396,6 +371,7 @@ public class Worker
         return firstName;
     }
 
+    //TODO SETTER JEST TYMCZASOWY
     public void setFirstName(String firstName)
     {
         this.firstName = firstName;
@@ -406,19 +382,9 @@ public class Worker
         return secondName;
     }
 
-    public void setSecondName(String secondName)
-    {
-        this.secondName = secondName;
-    }
-
     public String getSurname()
     {
         return surname;
-    }
-
-    public void setSurname(String surname)
-    {
-        this.surname = surname;
     }
 
     public LocalDate getBirthDate()
@@ -426,19 +392,9 @@ public class Worker
         return birthDate;
     }
 
-    public void setBirthDate(LocalDate birthDate)
-    {
-        this.birthDate = birthDate;
-    }
-
     public String getProfession()
     {
         return profession;
-    }
-
-    public void setProfession(String profession)
-    {
-        this.profession = profession;
     }
 
     public String getSpecialty()
@@ -446,19 +402,9 @@ public class Worker
         return specialty;
     }
 
-    public void setSpecialty(String specialty)
-    {
-        this.specialty = specialty;
-    }
-
     public String getTitle()
     {
         return title;
-    }
-
-    public void setTitle(String title)
-    {
-        this.title = title;
     }
 
     public String getQualifications()
@@ -466,19 +412,9 @@ public class Worker
         return qualifications;
     }
 
-    public void setQualifications(String qualifications)
-    {
-        this.qualifications = qualifications;
-    }
-
     public String getOptionalData()
     {
         return optionalData;
-    }
-
-    public void setOptionalData(String optionalData)
-    {
-        this.optionalData = optionalData;
     }
 
     public boolean isPolishCitizen()
@@ -486,19 +422,9 @@ public class Worker
         return isPolishCitizen;
     }
 
-    public void setPolishCitizen(boolean polishCitizen)
-    {
-        isPolishCitizen = polishCitizen;
-    }
-
     public String getCitizenship()
     {
         return citizenship;
-    }
-
-    public void setCitizenship(String citizenship)
-    {
-        this.citizenship = citizenship;
     }
 
     public String getDocumentNumber()
@@ -506,19 +432,9 @@ public class Worker
         return documentNumber;
     }
 
-    public void setDocumentNumber(String documentNumber)
-    {
-        this.documentNumber = documentNumber;
-    }
-
     public String getDocumentType()
     {
         return documentType;
-    }
-
-    public void setDocumentType(String documentType)
-    {
-        this.documentType = documentType;
     }
 
     public String getTaxOffice()
@@ -526,19 +442,9 @@ public class Worker
         return taxOffice;
     }
 
-    public void setTaxOffice(String taxOffice)
-    {
-        this.taxOffice = taxOffice;
-    }
-
     public String getAuthorizedName()
     {
         return authorizedName;
-    }
-
-    public void setAuthorizedName(String authorizedName)
-    {
-        this.authorizedName = authorizedName;
     }
 
     public String getAuthorizedSurname()
@@ -546,19 +452,9 @@ public class Worker
         return authorizedSurname;
     }
 
-    public void setAuthorizedSurname(String authorizedSurname)
-    {
-        this.authorizedSurname = authorizedSurname;
-    }
-
     public String getAuthorizedContact()
     {
         return authorizedContact;
-    }
-
-    public void setAuthorizedContact(String authorizedContact)
-    {
-        this.authorizedContact = authorizedContact;
     }
 
     public boolean isWillSpecialPowersForFamily()
@@ -566,19 +462,9 @@ public class Worker
         return willSpecialPowersForFamily;
     }
 
-    public void setWillSpecialPowersForFamily(boolean willSpecialPowersForFamily)
-    {
-        this.willSpecialPowersForFamily = willSpecialPowersForFamily;
-    }
-
     public String getNIP()
     {
         return NIP;
-    }
-
-    public void setNIP(String NIP)
-    {
-        this.NIP = NIP;
     }
 
     public boolean isWillPIT2()
@@ -586,19 +472,9 @@ public class Worker
         return willPIT2;
     }
 
-    public void setWillPIT2(boolean willPIT2)
-    {
-        this.willPIT2 = willPIT2;
-    }
-
     public String getWorkplace()
     {
         return workplace;
-    }
-
-    public void setWorkplace(String workplace)
-    {
-        this.workplace = workplace;
     }
 
     public String getDepartment()
@@ -606,19 +482,9 @@ public class Worker
         return department;
     }
 
-    public void setDepartment(String department)
-    {
-        this.department = department;
-    }
-
     public Pension getPension()
     {
         return pension;
-    }
-
-    public void setPension(Pension pension)
-    {
-        this.pension = pension;
     }
 
     public LocalDate getEmploymentDate()
@@ -626,19 +492,9 @@ public class Worker
         return employmentDate;
     }
 
-    public void setEmploymentDate(LocalDate employmentDate)
-    {
-        this.employmentDate = employmentDate;
-    }
-
     public String getBank()
     {
         return bank;
-    }
-
-    public void setBank(String bank)
-    {
-        this.bank = bank;
     }
 
     public String getAccountNumber()
@@ -646,19 +502,9 @@ public class Worker
         return accountNumber;
     }
 
-    public void setAccountNumber(String accountNumber)
-    {
-        this.accountNumber = accountNumber;
-    }
-
     public SecurityClearance getSecurityClearance()
     {
         return securityClearance;
-    }
-
-    public void setSecurityClearance(SecurityClearance securityClearance)
-    {
-        this.securityClearance = securityClearance;
     }
 
     public String getNFZ()
@@ -666,19 +512,9 @@ public class Worker
         return NFZ;
     }
 
-    public void setNFZ(String NFZ)
-    {
-        this.NFZ = NFZ;
-    }
-
     public String getPensionZUSNumber()
     {
         return pensionZUSNumber;
-    }
-
-    public void setPensionZUSNumber(String pensionZUSNumber)
-    {
-        this.pensionZUSNumber = pensionZUSNumber;
     }
 
     public boolean isDisabled()
@@ -686,19 +522,9 @@ public class Worker
         return isDisabled;
     }
 
-    public void setDisabled(boolean disabled)
-    {
-        isDisabled = disabled;
-    }
-
     public String getDisabledZUSNumber()
     {
         return disabledZUSNumber;
-    }
-
-    public void setDisabledZUSNumber(String disabledZUSNumber)
-    {
-        this.disabledZUSNumber = disabledZUSNumber;
     }
 
     public LocalDate getDisabledFrom()
@@ -706,19 +532,9 @@ public class Worker
         return disabledFrom;
     }
 
-    public void setDisabledFrom(LocalDate disabledFrom)
-    {
-        this.disabledFrom = disabledFrom;
-    }
-
     public LocalDate getDisabledTo()
     {
         return disabledTo;
-    }
-
-    public void setDisabledTo(LocalDate disabledTo)
-    {
-        this.disabledTo = disabledTo;
     }
 
     public Medicover getMedicover()
@@ -726,19 +542,9 @@ public class Worker
         return medicover;
     }
 
-    public void setMedicover(Medicover medicover)
-    {
-        this.medicover = medicover;
-    }
-
     public ContractType getContractType()
     {
         return contractType;
-    }
-
-    public void setContractType(ContractType contractType)
-    {
-        this.contractType = contractType;
     }
 
     public IncomePerPerson getIncomePerPerson()
@@ -746,19 +552,9 @@ public class Worker
         return incomePerPerson;
     }
 
-    public void setIncomePerPerson(IncomePerPerson incomePerPerson)
-    {
-        this.incomePerPerson = incomePerPerson;
-    }
-
     public boolean isZFSS1()
     {
         return ZFSS1;
-    }
-
-    public void setZFSS1(boolean ZFSS1)
-    {
-        this.ZFSS1 = ZFSS1;
     }
 
     public boolean isZFSS2()
@@ -766,19 +562,9 @@ public class Worker
         return ZFSS2;
     }
 
-    public void setZFSS2(boolean ZFSS2)
-    {
-        this.ZFSS2 = ZFSS2;
-    }
-
     public boolean isZFSS3()
     {
         return ZFSS3;
-    }
-
-    public void setZFSS3(boolean ZFSS3)
-    {
-        this.ZFSS3 = ZFSS3;
     }
 
     public boolean isZFSS4()
@@ -786,19 +572,9 @@ public class Worker
         return ZFSS4;
     }
 
-    public void setZFSS4(boolean ZFSS4)
-    {
-        this.ZFSS4 = ZFSS4;
-    }
-
     public boolean isZFSS5()
     {
         return ZFSS5;
-    }
-
-    public void setZFSS5(boolean ZFSS5)
-    {
-        this.ZFSS5 = ZFSS5;
     }
 
     public boolean isZFSS6()
@@ -806,19 +582,9 @@ public class Worker
         return ZFSS6;
     }
 
-    public void setZFSS6(boolean ZFSS6)
-    {
-        this.ZFSS6 = ZFSS6;
-    }
-
     public boolean isZFSS7()
     {
         return ZFSS7;
-    }
-
-    public void setZFSS7(boolean ZFSS7)
-    {
-        this.ZFSS7 = ZFSS7;
     }
 
     public boolean isHasChildren()
@@ -826,19 +592,9 @@ public class Worker
         return hasChildren;
     }
 
-    public void setHasChildren(boolean hasChildren)
-    {
-        this.hasChildren = hasChildren;
-    }
-
     public boolean isWillParent()
     {
         return willParent;
-    }
-
-    public void setWillParent(boolean willParent)
-    {
-        this.willParent = willParent;
     }
 
     public ChildUnderFourPermissions getChildUnderFourPermissions()
@@ -846,19 +602,9 @@ public class Worker
         return childUnderFourPermissions;
     }
 
-    public void setChildUnderFourPermissions(ChildUnderFourPermissions childUnderFourPermissions)
-    {
-        this.childUnderFourPermissions = childUnderFourPermissions;
-    }
-
     public ChildUnderFourteenPermissions getChildUnderFourteenPermissions()
     {
         return childUnderFourteenPermissions;
-    }
-
-    public void setChildUnderFourteenPermissions(ChildUnderFourteenPermissions childUnderFourteenPermissions)
-    {
-        this.childUnderFourteenPermissions = childUnderFourteenPermissions;
     }
 
     public boolean isWillReducedTask()
@@ -866,19 +612,9 @@ public class Worker
         return willReducedTask;
     }
 
-    public void setWillReducedTask(boolean willReducedTask)
-    {
-        this.willReducedTask = willReducedTask;
-    }
-
     public boolean isMethodOfTaxation()
     {
         return methodOfTaxation;
-    }
-
-    public void setMethodOfTaxation(boolean methodOfTaxation)
-    {
-        this.methodOfTaxation = methodOfTaxation;
     }
 
     public String getAnnualEarningsFamily()
@@ -886,19 +622,9 @@ public class Worker
         return annualEarningsFamily;
     }
 
-    public void setAnnualEarningsFamily(String annualEarningsFamily)
-    {
-        this.annualEarningsFamily = annualEarningsFamily;
-    }
-
     public boolean isWillTaxReducingAmount()
     {
         return willTaxReducingAmount;
-    }
-
-    public void setWillTaxReducingAmount(boolean willTaxReducingAmount)
-    {
-        this.willTaxReducingAmount = willTaxReducingAmount;
     }
 
     public boolean isWillHigherTask()
@@ -906,19 +632,9 @@ public class Worker
         return willHigherTask;
     }
 
-    public void setWillHigherTask(boolean willHigherTask)
-    {
-        this.willHigherTask = willHigherTask;
-    }
-
     public Month getHigherTaskMonth()
     {
         return higherTaskMonth;
-    }
-
-    public void setHigherTaskMonth(Month higherTaskMonth)
-    {
-        this.higherTaskMonth = higherTaskMonth;
     }
 
     public boolean isWillIncreasedCosts()
@@ -926,29 +642,14 @@ public class Worker
         return willIncreasedCosts;
     }
 
-    public void setWillIncreasedCosts(boolean willIncreasedCosts)
-    {
-        this.willIncreasedCosts = willIncreasedCosts;
-    }
-
     public boolean isWillZUS()
     {
         return willZUS;
     }
 
-    public void setWillZUS(boolean willZUS)
-    {
-        this.willZUS = willZUS;
-    }
-
     public String getAnnualEarningsZUS()
     {
         return annualEarningsZUS;
-    }
-
-    public void setAnnualEarningsZUS(String annualEarningsZUS)
-    {
-        this.annualEarningsZUS = annualEarningsZUS;
     }
 
     public Set<Education> getEducation()
@@ -1059,9 +760,6 @@ public class Worker
      * Update podstawowych danych pracownika
      * @param source źródło danych, z którego pobrane zostaną nowe wartości
      */
-
-
-
     public void updateFrom(final Worker source)
     {
         this.email = source.email;//
@@ -1126,10 +824,6 @@ public class Worker
         this.annualEarningsZUS = source.annualEarningsZUS;
         this.createDate = source.createDate;
         this.updateDate = source.updateDate;
-        //this.education = source.education;
-        // this.employments = source.employments;
-        //this.addresses = source.addresses;
-        // this.familyMembers = source.familyMembers;
     }
 
     @PrePersist

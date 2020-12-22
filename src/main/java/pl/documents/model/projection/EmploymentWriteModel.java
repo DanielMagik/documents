@@ -13,50 +13,8 @@ public class EmploymentWriteModel
 
     public Employment toEmployment()
     {
-        Employment employment = new Employment();
-        employment.setStart(start);
-        employment.setFinish(finish);
-        employment.setName(name);
-        employment.setWorkplace(workplace);
+        Employment employment = new Employment(start,finish,name,workplace);
         return employment;
     }
-    public YearMonth getStart()
-    {
-        return start;
-    }
 
-    public void setStart(YearMonth start)
-    {
-        this.start = start;
-    }
-
-    public YearMonth getFinish()
-    {
-        return finish;
-    }
-
-    public void setFinish(YearMonth finish)
-    {
-        this.finish = finish;
-    }
-
-    public String getName()
-    {
-        return name;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    public String getWorkplace()
-    {
-        return workplace;
-    }
-
-    public void setWorkplace(String workplace)
-    {
-        this.workplace = workplace;
-    }
 }

@@ -18,14 +18,10 @@ public class EmploymentReadModel
        this.name=source.getName();
        this.workplace=source.getWorkplace();
    }
+
     public YearMonth getStart()
     {
         return start;
-    }
-
-    public void setStart(YearMonth start)
-    {
-        this.start = start;
     }
 
     public YearMonth getFinish()
@@ -33,28 +29,13 @@ public class EmploymentReadModel
         return finish;
     }
 
-    public void setFinish(YearMonth finish)
-    {
-        this.finish = finish;
-    }
-
     public String getName()
     {
         return name;
     }
 
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
     public String getWorkplace()
     {
         return workplace;
-    }
-
-    public void setWorkplace(String workplace)
-    {
-        this.workplace = workplace;
     }
 }
