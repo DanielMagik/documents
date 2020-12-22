@@ -5,8 +5,11 @@ import org.springframework.stereotype.Repository;
 import pl.documents.model.Worker;
 import pl.documents.repository.WorkerRepository;
 
+import java.util.UUID;
+
 @Repository
-interface SqlWorkerRepository extends WorkerRepository, JpaRepository<Worker,Integer>
+
+interface SqlWorkerRepository extends WorkerRepository, JpaRepository<Worker, UUID>
 {
     @Override
     boolean existsByDocumentNumberAndDocumentType(String documentNumber, String documentType);

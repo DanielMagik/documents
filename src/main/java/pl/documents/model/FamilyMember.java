@@ -109,6 +109,28 @@ public class FamilyMember
     public FamilyMember()
     {
     }
+    public void updateForm(final FamilyMember source)
+    {
+        this.relationship = source.relationship;
+        this.name = source.name;
+        this.surname = source.surname;
+        this.birthDate = source.birthDate;
+        this.insuredAtEmployee = source.insuredAtEmployee;
+        this.legalGuardian = source.legalGuardian;
+        this.isDisabled = source.isDisabled;
+        this.disabledZUSNumber = source.disabledZUSNumber;
+        this.disabilityLevel = source.disabilityLevel;
+        this.onExclusiveMaintenance = source.onExclusiveMaintenance;
+        this.isSharedHousehold = source.isSharedHousehold;
+        this.PESEL = source.PESEL;
+        this.location = source.location;
+        this.postCode = source.postCode;
+        this.district = source.district;
+        this.community = source.community;
+        this.street = source.street;
+        this.homeNumber = source.homeNumber;
+        this.flatNumber = source.flatNumber;
+    }
 
     public UUID getId()
     {
@@ -118,6 +140,11 @@ public class FamilyMember
     public void setId(UUID id)
     {
         this.id = id;
+    }
+
+    public void setWorker(Worker worker)
+    {
+        this.worker = worker;
     }
 
     public Relationship getRelationship()

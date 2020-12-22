@@ -46,6 +46,13 @@ public class Employment
     public Employment()
     {
     }
+    public void updateForm(final Employment source)
+    {
+        this.name = source.name;
+        this.workplace=source.workplace;
+        this.start = source.start;
+        this.finish = source.finish;
+    }
 
     public UUID getId()
     {
@@ -55,6 +62,11 @@ public class Employment
     public void setId(UUID id)
     {
         this.id = id;
+    }
+
+    public void setWorker(Worker worker)
+    {
+        this.worker = worker;
     }
 
     public YearMonth getStart()

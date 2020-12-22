@@ -3,26 +3,30 @@ package pl.documents.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.documents.model.Education;
-import pl.documents.model.Worker;
 import pl.documents.repository.EducationRepository;
 
 import javax.persistence.EntityExistsException;
-import java.time.LocalDateTime;
 import java.time.Year;
-import java.util.Calendar;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+//TODO ZASTANOWIĆ SIĘ NAD @Scope
 @Service
 public class EducationService
 {
-    private EducationRepository repository;
+    private final EducationRepository repository;
 
     public EducationService(final EducationRepository educationRepository)
     {
         this.repository = educationRepository;
     }
+
+    /**
+     * Zmiana Edukacji o id na tą przekazaną
+     * @param id id zmienianej edukacji
+     * @param toUpdate nowe wartości Edukacji
+     */
     public void updateEducation(UUID id, Education toUpdate)
     {
         if(!repository.existsById(id))
@@ -35,6 +39,11 @@ public class EducationService
                     repository.save(education);
                 });
     }
+
+    /**
+     * Sprawdzenie poprawności danych, jeśli są niepoprawne, wyrzucany jest wyjątek
+     * @param education dane do sprawdzenia
+     */
     public void checkData(Education education)
     {
         Pattern yearPattern = Pattern.compile("[12]\\d{3}");
@@ -52,6 +61,12 @@ public class EducationService
             throw new IllegalArgumentException("Podaj poprawny rok!");
         }
     }
+
+    /**
+     * Usuwanie edukacji o danym id
+     * @param id id usuwanej Edukacji
+     * @return informacja, czy usunięcie zakończyło się sukcesem
+     */
     @Transactional
     public boolean deleteById(UUID id)
     {

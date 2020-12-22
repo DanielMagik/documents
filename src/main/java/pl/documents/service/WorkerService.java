@@ -1,16 +1,15 @@
 package pl.documents.service;
 
 import io.lsn.spring.pesel.validator.domain.PeselValidator;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.documents.model.Education;
-import pl.documents.model.Worker;
+import pl.documents.logic.DataChecker;
+import pl.documents.model.*;
 import pl.documents.model.projection.EducationReadModel;
+import pl.documents.model.projection.EmploymentReadModel;
+import pl.documents.model.projection.FamilyMemberReadModel;
 import pl.documents.model.projection.WorkerReadModel;
-import pl.documents.model.projection.WorkerWriteModel;
-import pl.documents.repository.EducationRepository;
-import pl.documents.repository.WorkerRepository;
+import pl.documents.repository.*;
 
 import javax.persistence.EntityExistsException;
 import java.util.List;
@@ -19,22 +18,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+//TODO ZASTANOWIĆ SIĘ NAD @Scope
 @Service
 public class WorkerService
 {
-    /**
-     * Repozytorium dla tabeli WORKERS
-     */
-    private WorkerRepository repository;
-    /**
-     * Repozytorium dla tabeli EDUCATION
-     */
-    private EducationRepository educationRepository;
 
-    public WorkerService(final WorkerRepository repository, final EducationRepository educationRepository)
+    private final WorkerRepository repository;
+    private final EducationRepository educationRepository;
+    private final AddressRepository addressRepository;
+    private final EmploymentRepository employmentRepository;
+    private final FamilyMemberRepository familyMemberRepository;
+
+    public WorkerService(final WorkerRepository repository, final EducationRepository educationRepository,
+                         final AddressRepository addressRepository, final EmploymentRepository employmentRepository, final FamilyMemberRepository familyMemberRepository)
     {
         this.repository = repository;
         this.educationRepository = educationRepository;
+        this.addressRepository = addressRepository;
+        this.employmentRepository = employmentRepository;
+        this.familyMemberRepository = familyMemberRepository;
     }
     /**
      * Odczyt wszystkich pracowników
@@ -80,14 +82,13 @@ public class WorkerService
      * @param source pracownik do zapisu w bazie
      * @return zapisany pracownik
      */
-    public WorkerReadModel createWorker(WorkerWriteModel source)
+    public WorkerReadModel createWorker(Worker source)
     {
-        Worker result = source.toWorker();
+        repository.save(source);
         //todo to niepotrzebne, tylko do testów
-        repository.save(result);
-        result.setFirstName(String.valueOf(result.getId()));
-        repository.save(result);
-        return new WorkerReadModel(result);
+        source.setFirstName(String.valueOf(source.getId()));
+        repository.save(source);
+        return new WorkerReadModel(source);
     }
 
     /**
@@ -117,27 +118,10 @@ public class WorkerService
     }
 
     /**
-     * Dodanie szkoły dla pracownika o danym id
-     * @param id id pracownika, dla którego zostanie dodana szkoła
-     * @param toUpdate nowa szkoła
+     * Odczyt całej edukacji pracownika o zadanym id
+     * @param id id pracownika
+     * @return lista edukacji
      */
-    public void addEducation(UUID id, Education toUpdate)
-    {
-        if(!repository.existsById(id))
-        {
-            throw new EntityExistsException("Worker with id "+id+" don't exists");
-        }
-        repository.findById(id).ifPresent(
-                worker ->
-                {
-                    toUpdate.setWorker(worker);
-
-                    educationRepository.save(toUpdate);
-                    toUpdate.setSchoolName(toUpdate.getSchoolName() + " id: " + toUpdate.getId());
-                    educationRepository.save(toUpdate);
-                }
-        );
-    }
     public List<EducationReadModel> readWorkerEducation(UUID id)
     {
             Worker result = repository.findById(id).orElseThrow(
@@ -145,6 +129,47 @@ public class WorkerService
             );
             return educationRepository.findAllByWorker(result).stream()
                     .map(EducationReadModel::new).collect(Collectors.toList());
+    }
+    /**
+     * Odczyt przebiegu zatrudnienia pracownika o zadanym id
+     * @param id id pracownika
+     * @return lista zatrudnień
+     */
+    public List<EmploymentReadModel> readWorkerEmployment(UUID id)
+    {
+        Worker result = repository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("Bad ID!")
+        );
+        return employmentRepository.findAllByWorker(result).stream()
+                .map(EmploymentReadModel::new).collect(Collectors.toList());
+    }
+
+
+    /**
+     * Odczyt wszystkich adresów pracownika o zadanym id
+     * @param id id pracownika
+     * @return lista adresów
+     */
+    public List<Address> readWorkerAddresses(UUID id)
+    {
+        Worker result = repository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("Bad ID!")
+        );
+        return addressRepository.findAllByWorker(result);
+
+    }
+    /**
+     * Odczyt wszystkich członków rodziny o zadanym id
+     * @param id id pracownika
+     * @return lista członków rodziny
+     */
+    public List<FamilyMemberReadModel> readWorkerFamily(UUID id)
+    {
+        Worker result = repository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("Bad ID!")
+        );
+        return familyMemberRepository.findAllByWorker(result).stream()
+                .map(FamilyMemberReadModel::new).collect(Collectors.toList());
     }
     public void checkData(UUID id, Worker worker)
     {
@@ -177,7 +202,7 @@ public class WorkerService
 
         //numer dokumentu będzie zmieniany
         //różne numery dokumentów lub typy dokumentów
-        if(!compareStrings(oldData.getDocumentNumber(),worker.getDocumentNumber()) || !compareStrings(oldData.getDocumentType(),worker.getDocumentType()))
+        if(!DataChecker.compareStrings(oldData.getDocumentNumber(),worker.getDocumentNumber()) || !DataChecker.compareStrings(oldData.getDocumentType(),worker.getDocumentType()))
         {
             // w bazie istnieje pracownik, który podał ten sam numer dokumentu i typ dokumentu
             if(repository.existsByDocumentNumberAndDocumentType(worker.getDocumentNumber(),worker.getDocumentType()))
@@ -200,7 +225,7 @@ public class WorkerService
         }
         //NIP
         //wprowadzono nowy nip
-        if(!compareStrings(worker.getNIP(),oldData.getNIP()))
+        if(!DataChecker.compareStrings(worker.getNIP(),oldData.getNIP()))
         {
             //NIP jest niepoprawny
             if(!checkNIP(worker.getNIP()))
@@ -242,11 +267,94 @@ public class WorkerService
         }
             return false;
     }
-    private boolean compareStrings(String s1, String s2)
+
+    /**
+     * Dodanie szkoły dla pracownika o danym id
+     * @param id id pracownika, dla którego zostanie dodana szkoła
+     * @param education nowa szkoła
+     */
+    public void addEducation(UUID id, Education education)
     {
-        if(s1==null)
-            return s2 == null;
-        return s1.equals(s2);
+        if(!repository.existsById(id))
+        {
+            throw new EntityExistsException("Worker with id "+id+" doesn't exists!");
+        }
+        repository.findById(id).ifPresent(
+                worker ->
+                {
+                    education.setWorker(worker);
+                    educationRepository.save(education);
+                    //TODO TO JEST TYMCZASOWE, DO TESTÓW
+                    education.setSchoolName(education.getSchoolName() + " id: " + education.getId());
+                    educationRepository.save(education);
+                }
+        );
     }
+    /**
+     * Dodanie zatrudnienia dla pracownika o danym id
+     * @param id id pracownika, dla którego zostanie dodana szkoła
+     * @param employment nowe zatrudnienie
+     */
+    public void addEmployment(UUID id, Employment employment)
+    {
+        if(!repository.existsById(id))
+        {
+            throw new EntityExistsException("Worker with id "+id+" doesn't exists!");
+        }
+        repository.findById(id).ifPresent(
+                worker ->
+                {
+                    employment.setWorker(worker);
+                    employmentRepository.save(employment);
+                    //TODO TO JEST TYMCZASOWE, DO TESTÓW
+                    employment.setName(employment.getName() + " id: " + employment.getId());
+                    employmentRepository.save(employment);
+                }
+        );
+    }
+
+
+    /**
+     * Dodanie adresu dla pracownika o danym id
+     * @param id id pracownika, dla którego zostanie dodany adres
+     * @param address nowy adres
+     */
+    public void addAddress(UUID id, Address address) throws EntityExistsException
+    {
+        if(!repository.existsById(id))
+        {
+            throw new EntityExistsException("Worker with id "+id+" doesn't exists!");
+        }
+        repository.findById(id).ifPresent(
+                worker ->
+                {
+                    address.setWorker(worker);
+                    addressRepository.save(address);
+                }
+        );
+    }
+    /**
+     * Dodanie członka rodziny dla pracownika o danym id
+     * @param id id pracownika, dla którego zostanie dodany członek rodziny
+     * @param familyMember nowy członek rodziny
+     */
+    public void addFamilyMember(UUID id, FamilyMember familyMember) throws EntityExistsException
+    {
+        if(!repository.existsById(id))
+        {
+            throw new EntityExistsException("Worker with id "+id+" doesn't exists!");
+        }
+        repository.findById(id).ifPresent(
+                worker ->
+                {
+                    familyMember.setWorker(worker);
+                    familyMemberRepository.save(familyMember);
+                    familyMember.setName(familyMember.getName()+" id: "+familyMember.getId());
+                    familyMemberRepository.save(familyMember);
+                }
+        );
+    }
+
+
 
 }

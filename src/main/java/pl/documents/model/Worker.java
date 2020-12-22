@@ -324,7 +324,6 @@ public class Worker
      * Przebieg dotychczasowego zatrudnienia
      */
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "worker")
-
     private Set<Employment> employments = null;
     /**
      * Adresy pracownika (zamieszkania, zameldowania, do korespondencji)
@@ -341,18 +340,16 @@ public class Worker
     {
 
     }
-
     public UUID getId()
     {
         return id;
     }
 
-  /*
-    public void setId(int id)
+
+    public void setId(UUID id)
     {
         this.id = id;
     }
-     */
 
     public String getEmail()
     {
