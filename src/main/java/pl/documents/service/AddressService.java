@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.documents.exception.AddressTypeExistsException;
 import pl.documents.exception.BadAddressException;
+import pl.documents.logic.DataChecker;
 import pl.documents.model.Address;
 import pl.documents.model.enums.AddressType;
 import pl.documents.model.projection.AddressReadModel;
@@ -11,9 +12,8 @@ import pl.documents.repository.AddressRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+//TODO ZASTANOWIĆ SIĘ NAD @Scope
 @Service
 public class AddressService
 {
@@ -25,13 +25,15 @@ public class AddressService
     }
 
     /**
-     * Sprawdzenie poprawności danego adresu oraz czy
+     * Sprawdzenie poprawności danego adresu oraz czy można go dodać do bazy bez usuania innych. Jeśni nie, wyrzucany jest wyjątek
      * @param address
      * @param addressList
      * @throws AddressTypeExistsException
      */
-    public void checkTypeExists(Address address, List<AddressReadModel> addressList) throws AddressTypeExistsException
+    public void checkTypeExists(Address address, List<AddressReadModel> addressList) throws AddressTypeExistsException, BadAddressException
     {
+        //tu może być wyrzucony wyjątek BadAddressException
+        DataChecker.checkAddressCorrectness(address);
         AddressType addressType = address.getAddressType();
         List<AddressType> addressTypeList = new ArrayList<>();
         for(AddressReadModel a : addressList)
@@ -41,9 +43,7 @@ public class AddressService
         //zamiar stworzenia każdego adresu, gdy w liście jest jakikolwiek adres
         if(addressType == AddressType.ALL && addressTypeList.size()>0)
         {
-            AddressTypeExistsException e = new AddressTypeExistsException();
-            e.setErrorMessage("Can,t create address of type ALL! In database exists some Address!");
-            throw e;
+             throw  new AddressTypeExistsException("Can,t create address of type ALL! In database exists some Address!");
         }
         //zamiar stworzenia adresu zamieszkania
         if(addressType==AddressType.RESIDENCE || addressType==AddressType.RESIDENCE_CHECKIN || addressType==AddressType.RESIDENCE_CORRESPONDENCE)
@@ -52,9 +52,8 @@ public class AddressService
             {
                 if(a== AddressType.ALL || a == AddressType.RESIDENCE || a==AddressType.RESIDENCE_CHECKIN || a==AddressType.RESIDENCE_CORRESPONDENCE)
                 {
-                    AddressTypeExistsException e = new AddressTypeExistsException();
-                    e.setErrorMessage("Can,t create address of type "+addressType+" In database exists Address of type "+a);
-                    throw e;
+                   throw new AddressTypeExistsException("Can,t create address of type "+addressType+" In database exists Address of type "+a);
+
                 }
             }
         }
@@ -65,9 +64,7 @@ public class AddressService
             {
                 if(a== AddressType.ALL || a == AddressType.CHECKIN || a==AddressType.RESIDENCE_CHECKIN || a==AddressType.CHECKIN_CORRESPONDENCE)
                 {
-                    AddressTypeExistsException e = new AddressTypeExistsException();
-                    e.setErrorMessage("Can,t create address of type "+addressType+" In database exists Address of type "+a);
-                    throw e;
+                    throw new AddressTypeExistsException("Can,t create address of type "+addressType+" In database exists Address of type "+a);
                 }
             }
         }
@@ -78,9 +75,7 @@ public class AddressService
             {
                 if(a== AddressType.ALL || a == AddressType.CORRESPONDENCE || a==AddressType.RESIDENCE_CORRESPONDENCE || a==AddressType.CHECKIN_CORRESPONDENCE)
                 {
-                    AddressTypeExistsException e = new AddressTypeExistsException();
-                    e.setErrorMessage("Can,t create address of type "+addressType+" In database exists Address of type "+a);
-                    throw e;
+                    throw new AddressTypeExistsException("Can,t create address of type "+addressType+" In database exists Address of type "+a);
                 }
             }
         }
@@ -88,10 +83,10 @@ public class AddressService
     }
 
     /**
-     * Lista updatuje adresy, czasami usuwa te stare
+     * Lista updatuje adresy pracownika, usuwa te stare
      * @param address nowy adres, który należy dodać
      * @param addressList aktualna lista adresów pracownika
-     * @return nowo utworzony adres
+     * @return lista adresów pracownika po transakcji
      */
     @Transactional
     public List<Address> updateAddress(Address address, List<Address> addressList)
@@ -145,6 +140,7 @@ public class AddressService
                 }
             }
         }
+        //usuwanie starych adresów
         for(Address a : addressList)
         {
             repository.deleteById(a.getId());

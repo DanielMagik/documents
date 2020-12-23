@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.documents.exception.BadIdException;
+import pl.documents.exception.BadWorkerException;
 import pl.documents.model.Worker;
 import pl.documents.model.projection.EducationReadModel;
 import pl.documents.model.projection.WorkerReadModel;
@@ -58,19 +60,18 @@ public class WorkerController
         try
         {
             result = workerService.readById(id);
-            logger.info("Read worker with id "+ id+"! Read successful!");
+            logger.info("Read worker with id "+ id+"!Read successful!");
+            return ResponseEntity.ok(result);
         }
-        catch (IllegalArgumentException e)
+        catch (BadIdException e)
         {
-            logger.info("Try to read worker with id "+ id+". Not found!");
+            logger.info("Read worker with id "+ id+".Worker not found!");
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(result);
-
     }
 
     /**
-     * Stworzenie nowego pracownika o pustuch polach
+     * Stworzenie nowego pracownika o pustych polach
      * @return stworzony pracownik
      */
     @PostMapping("/workers")
@@ -97,12 +98,16 @@ public class WorkerController
             workerService.updateWorker(id, toUpdate);
             logger.info("Update worker with id " + id+ " successful!");
         }
-        catch (EntityExistsException e)
+        catch (BadIdException e)
         {
-            logger.info("Update worker with id " + id+ ".Worker Not found!");
+            logger.info("Update worker with id "+ id+".Worker not found!");
             return ResponseEntity.notFound().build();
         }
-        //TODO obsługa wyjątków gdy podano błędne dane
+        catch (BadWorkerException e)
+        {
+            logger.info("Update worker with id "+ id+". Bad data!");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+        }
         return ResponseEntity.noContent().build();
     }
     /**

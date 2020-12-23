@@ -1,8 +1,11 @@
 package pl.documents.service;
 
 import io.lsn.spring.pesel.validator.domain.PeselValidator;
+import nl.garvelink.iban.Modulo97;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.documents.exception.BadIdException;
+import pl.documents.exception.BadWorkerException;
 import pl.documents.logic.DataChecker;
 import pl.documents.model.*;
 import pl.documents.model.projection.EducationReadModel;
@@ -11,7 +14,6 @@ import pl.documents.model.projection.FamilyMemberReadModel;
 import pl.documents.model.projection.WorkerReadModel;
 import pl.documents.repository.*;
 
-import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -38,6 +40,7 @@ public class WorkerService
         this.employmentRepository = employmentRepository;
         this.familyMemberRepository = familyMemberRepository;
     }
+
     /**
      * Odczyt wszystkich pracowników
      * @return lista pracowników
@@ -53,11 +56,11 @@ public class WorkerService
      * @param id zadane id
      * @return odczytany pracownik
      */
-    public WorkerReadModel readById(UUID id)
+    public WorkerReadModel readById(UUID id) throws BadIdException
     {
         Worker result;
             result = repository.findById(id).orElseThrow(
-                    () -> new IllegalArgumentException("Bad ID!")
+                    () -> new BadIdException("Worker with id "+id+" doesn't exists!")
             );
             return new WorkerReadModel(result);
     }
@@ -77,6 +80,7 @@ public class WorkerService
         repository.deleteById(id);
         return true;
     }
+
     /**
      * Tworzenie nowego pracownika z pustymi polami i dodanie go do bazy danych
      * @param source pracownik do zapisu w bazie
@@ -92,19 +96,8 @@ public class WorkerService
     }
 
     /**
-     * Odczyt wszystkich pracowników
-     * @return lista pracowników
-     */
-    public List<WorkerReadModel> readAll()
-    {
-        return repository.findAll().stream()
-                .map(WorkerReadModel::new)
-                .collect(Collectors.toList());
-    }
-
-    /**
      * Zmiana danych pracownika o zadanym id
-     * @param id id zmienianegp pracownika
+     * @param id id zmienianego pracownika
      * @param toUpdate nowe dane pracownika
      */
     public void updateWorker(UUID id, Worker toUpdate)
@@ -118,14 +111,103 @@ public class WorkerService
     }
 
     /**
+     * Sprawdzenie, czy pracownik o zadanym id istnieje w bazie oraz czy nowe dane pracownika są poprawne
+     * @param id id pracownika, któremu zostaną zmienione dane
+     * @param worker nowe dane pracownika
+     */
+    public void checkData(UUID id, Worker worker) throws BadWorkerException, BadIdException
+    {
+
+        Worker oldData = repository.findById(id).orElseThrow(
+                ()-> new BadIdException("Worker with id "+id+" doesn't exists")
+        );
+        Pattern pattern;
+        Matcher matcher;
+        //email
+        pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)");
+        matcher = pattern.matcher(worker.getEmail());
+        if(!matcher.matches())
+            throw new BadWorkerException("Bad e-mail!");
+        //numer telefonu
+        pattern = Pattern.compile("\\d{9,11}");
+        matcher = pattern.matcher(worker.getPhoneNumber());
+        if(!matcher.matches())
+            throw new BadWorkerException("Bad phone number");
+        //miejscowość wypełnienia
+        if(isNotWord(worker.getFillLocation()))
+            throw new BadWorkerException("Enter the place of filling!");
+        //imię
+        if(isNotWord(worker.getFirstName()))
+            throw new BadWorkerException("Enter name!");
+        //nazwisko
+        if(isNotWord(worker.getSurname()))
+            throw new BadWorkerException("Enter surname!");
+        //numer PESEL/dokumentu
+
+        //numer dokumentu będzie zmieniany
+        //różne numery dokumentów lub typy dokumentów
+        if(!DataChecker.compareStrings(oldData.getDocumentNumber(),worker.getDocumentNumber()) || !DataChecker.compareStrings(oldData.getDocumentType(),worker.getDocumentType()))
+        {
+            // w bazie istnieje pracownik, który podał ten sam numer dokumentu i typ dokumentu
+            if(repository.existsByDocumentNumberAndDocumentType(worker.getDocumentNumber(),worker.getDocumentType()))
+            {
+                if(worker.getDocumentType()==null)//PESEL
+                    throw new BadWorkerException("There is a person in the database with the same PESEL number!");
+                else
+                    throw new BadWorkerException("There is a person in the database with the same document number!");
+            }
+            //wprowadzono numer PESEL
+            if(worker.getDocumentType()==null)
+            {
+                //PESEL jest niepoprawny
+                //TODO sprawdzić, czy faktycznie ta metoda sprawdza poprawność PESEL
+                if(!PeselValidator.isValid(worker.getDocumentNumber()))
+                {
+                    throw new BadWorkerException("Bad PESEL!");
+                }
+            }
+        }
+        //NIP
+        //wprowadzono nowy nip
+        if(!DataChecker.compareStrings(worker.getNIP(),oldData.getNIP()))
+        {
+            //NIP jest niepoprawny
+            if(!checkNIP(worker.getNIP()))
+            {
+                throw new BadWorkerException("Bad NIP!");
+            }
+        }
+        //numer konta
+        //wprowadzono nowy numer konta
+        if(!DataChecker.compareStrings(worker.getAccountNumber(),oldData.getAccountNumber()))
+        {
+            try
+            {
+                boolean accountValid = Modulo97.verifyCheckDigits(worker.getAccountNumber());
+                if(!accountValid)
+                {
+                    throw new BadWorkerException("Bad account number!");
+                }
+            }
+            catch (IllegalArgumentException e)
+            {
+                throw new BadWorkerException("Bad account number format!");
+            }
+
+        }
+
+        //TODO SPRAWDZANIE NUMERU KONTA CHYBA DZIAŁA
+    }
+
+    /**
      * Odczyt całej edukacji pracownika o zadanym id
      * @param id id pracownika
      * @return lista edukacji
      */
-    public List<EducationReadModel> readWorkerEducation(UUID id)
+    public List<EducationReadModel> readWorkerEducation(UUID id) throws BadIdException
     {
             Worker result = repository.findById(id).orElseThrow(
-                    () -> new IllegalArgumentException("Bad ID!")
+                    () -> new BadIdException("Worker with id "+id+" doesn't exists!")
             );
             return educationRepository.findAllByWorker(result).stream()
                     .map(EducationReadModel::new).collect(Collectors.toList());
@@ -135,10 +217,10 @@ public class WorkerService
      * @param id id pracownika
      * @return lista zatrudnień
      */
-    public List<EmploymentReadModel> readWorkerEmployment(UUID id)
+    public List<EmploymentReadModel> readWorkerEmployment(UUID id) throws BadIdException
     {
         Worker result = repository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Bad ID!")
+                () -> new BadIdException("Worker with id "+id+" doesn't exists!")
         );
         return employmentRepository.findAllByWorker(result).stream()
                 .map(EmploymentReadModel::new).collect(Collectors.toList());
@@ -150,94 +232,33 @@ public class WorkerService
      * @param id id pracownika
      * @return lista adresów
      */
-    public List<Address> readWorkerAddresses(UUID id)
+    public List<Address> readWorkerAddresses(UUID id) throws BadIdException
     {
         Worker result = repository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Bad ID!")
+                () -> new BadIdException("Worker with id "+id+" doesn't exists!")
         );
         return addressRepository.findAllByWorker(result);
 
     }
     /**
-     * Odczyt wszystkich członków rodziny o zadanym id
+     * Odczyt wszystkich członków rodziny pracownika o zadanym id
      * @param id id pracownika
      * @return lista członków rodziny
      */
-    public List<FamilyMemberReadModel> readWorkerFamily(UUID id)
+    public List<FamilyMemberReadModel> readWorkerFamily(UUID id) throws BadIdException
     {
         Worker result = repository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("Bad ID!")
+                () -> new BadIdException("Worker with id "+id+" doesn't exists!")
         );
         return familyMemberRepository.findAllByWorker(result).stream()
                 .map(FamilyMemberReadModel::new).collect(Collectors.toList());
     }
-    public void checkData(UUID id, Worker worker)
-    {
 
-        Worker oldData = repository.findById(id).orElseThrow(
-                ()-> new EntityExistsException("Worker with id "+id+" doesn't exists")
-        );
-        Pattern pattern;
-        Matcher matcher;
-        //email
-        pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)");
-        matcher = pattern.matcher(worker.getEmail());
-        if(!matcher.matches())
-            throw new IllegalArgumentException("Podaj poprawny e-mail!");
-        //numer telefonu
-        pattern = Pattern.compile("\\d{9,12}");
-        matcher = pattern.matcher(worker.getPhoneNumber());
-        if(!matcher.matches())
-            throw new IllegalArgumentException("Podaj poprawny numer telefonu!");
-        //miejscowość wypełnienia
-        if(isNotWord(worker.getFillLocation()))
-            throw new IllegalArgumentException("Wprowadź miejscowośc wypełnienia!");
-        //imię
-        if(isNotWord(worker.getFirstName()))
-            throw new IllegalArgumentException("Wprowadź imię!");
-        //nazwisko
-        if(isNotWord(worker.getSurname()))
-            throw new IllegalArgumentException("Wprowadź nazwisko!");
-        //numer PESEL/dokumentu
-
-        //numer dokumentu będzie zmieniany
-        //różne numery dokumentów lub typy dokumentów
-        if(!DataChecker.compareStrings(oldData.getDocumentNumber(),worker.getDocumentNumber()) || !DataChecker.compareStrings(oldData.getDocumentType(),worker.getDocumentType()))
-        {
-            // w bazie istnieje pracownik, który podał ten sam numer dokumentu i typ dokumentu
-            if(repository.existsByDocumentNumberAndDocumentType(worker.getDocumentNumber(),worker.getDocumentType()))
-            {
-                if(worker.getDocumentType()==null)//PESEL
-                    throw new IllegalArgumentException("W bazie istnieje osoba z tym samym numerem PESEL!");
-                else
-                    throw new IllegalArgumentException("W bazie istnieje osoba z tym samym numerem dokumentu!");
-            }
-            //wprowadzono numer PESEL
-            if(worker.getDocumentType()==null)
-            {
-                //PESEL jest niepoprawny
-                //TODO sprawdzić, czy faktycznie ta metoda sprawdza poprawność PESEL
-                if(!PeselValidator.isValid(worker.getDocumentNumber()))
-                {
-                    throw new IllegalArgumentException("Podany PESEL jest niepoprawny!");
-                }
-            }
-        }
-        //NIP
-        //wprowadzono nowy nip
-        if(!DataChecker.compareStrings(worker.getNIP(),oldData.getNIP()))
-        {
-            //NIP jest niepoprawny
-            if(!checkNIP(worker.getNIP()))
-            {
-                throw new IllegalArgumentException("Podany NIP jest niepoprawny!");
-            }
-        }
-        //TODO napisać sprawdzanie numeru konta w banku
-
-
-
-    }
+    /**
+     * Sprawdzenie, czy przekazane słowo zawiera znaki inne niż białe
+     * @param data przekazane słowo
+     * @return informacja, czy data jest słowem
+     */
     private boolean isNotWord(String data)
     {
         if(data==null)
@@ -246,6 +267,12 @@ public class WorkerService
             return true;
         return data.isBlank();
     }
+
+    /**
+     * Sprawdzenie, czy przekazany string jest prawidłowym NIP-em
+     * @param NIP nip
+     * @return informacja zwrotna, true lub false
+     */
     private boolean checkNIP(String NIP)
     {
         Pattern pattern = Pattern.compile("\\d{10}");
@@ -273,11 +300,11 @@ public class WorkerService
      * @param id id pracownika, dla którego zostanie dodana szkoła
      * @param education nowa szkoła
      */
-    public void addEducation(UUID id, Education education)
+    public void addEducation(UUID id, Education education) throws BadIdException
     {
         if(!repository.existsById(id))
         {
-            throw new EntityExistsException("Worker with id "+id+" doesn't exists!");
+            throw new BadIdException("Worker with id "+id+" doesn't exists!");
         }
         repository.findById(id).ifPresent(
                 worker ->
@@ -292,14 +319,14 @@ public class WorkerService
     }
     /**
      * Dodanie zatrudnienia dla pracownika o danym id
-     * @param id id pracownika, dla którego zostanie dodana szkoła
+     * @param id id pracownika, dla którego zostanie dodane zatrudnienie
      * @param employment nowe zatrudnienie
      */
-    public void addEmployment(UUID id, Employment employment)
+    public void addEmployment(UUID id, Employment employment) throws BadIdException
     {
         if(!repository.existsById(id))
         {
-            throw new EntityExistsException("Worker with id "+id+" doesn't exists!");
+            throw new BadIdException("Worker with id "+id+" doesn't exists!");
         }
         repository.findById(id).ifPresent(
                 worker ->
@@ -319,11 +346,11 @@ public class WorkerService
      * @param id id pracownika, dla którego zostanie dodany adres
      * @param address nowy adres
      */
-    public void addAddress(UUID id, Address address) throws EntityExistsException
+    public void addAddress(UUID id, Address address) throws BadIdException
     {
         if(!repository.existsById(id))
         {
-            throw new EntityExistsException("Worker with id "+id+" doesn't exists!");
+            throw new BadIdException("Worker with id "+id+" doesn't exists!");
         }
         repository.findById(id).ifPresent(
                 worker ->
@@ -338,17 +365,18 @@ public class WorkerService
      * @param id id pracownika, dla którego zostanie dodany członek rodziny
      * @param familyMember nowy członek rodziny
      */
-    public void addFamilyMember(UUID id, FamilyMember familyMember) throws EntityExistsException
+    public void addFamilyMember(UUID id, FamilyMember familyMember) throws BadIdException
     {
         if(!repository.existsById(id))
         {
-            throw new EntityExistsException("Worker with id "+id+" doesn't exists!");
+            throw new BadIdException("Worker with id "+id+" doesn't exists!");
         }
         repository.findById(id).ifPresent(
                 worker ->
                 {
                     familyMember.setWorker(worker);
                     familyMemberRepository.save(familyMember);
+                    //TODO TO JEST TYMCZASOWE, DO TESTÓW
                     familyMember.setName(familyMember.getName()+" id: "+familyMember.getId());
                     familyMemberRepository.save(familyMember);
                 }

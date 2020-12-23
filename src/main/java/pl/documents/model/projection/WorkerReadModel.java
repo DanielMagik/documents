@@ -1,6 +1,5 @@
 package pl.documents.model.projection;
 
-import pl.documents.model.Address;
 import pl.documents.model.Worker;
 import pl.documents.model.enums.*;
 

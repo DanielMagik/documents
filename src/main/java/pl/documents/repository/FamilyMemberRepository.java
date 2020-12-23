@@ -1,6 +1,5 @@
 package pl.documents.repository;
 
-import pl.documents.model.Employment;
 import pl.documents.model.FamilyMember;
 import pl.documents.model.Worker;
 

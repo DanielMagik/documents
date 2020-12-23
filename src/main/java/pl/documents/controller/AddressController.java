@@ -7,15 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.documents.exception.AddressTypeExistsException;
 import pl.documents.exception.BadAddressException;
+import pl.documents.exception.BadIdException;
 import pl.documents.logic.DataChecker;
 import pl.documents.model.Address;
-import pl.documents.model.Education;
 import pl.documents.model.projection.AddressReadModel;
-import pl.documents.model.projection.EducationReadModel;
 import pl.documents.service.AddressService;
 import pl.documents.service.WorkerService;
 
-import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -47,7 +45,7 @@ public class AddressController
                     .map(AddressReadModel::new).collect(Collectors.toList());
             logger.info("Read addresses from worker with id "+id+"!");
         }
-        catch (IllegalArgumentException e)
+        catch (BadIdException e)
         {
             logger.info("Read addresses from worker with id "+id+"!Worker not Found!");
             return ResponseEntity.notFound().build();
@@ -57,7 +55,7 @@ public class AddressController
     /**
      * Dodanie adresu do pracownika o zadanym id bądź aktualizacja adresu
      * @param id id pracownika
-     * @param toUpdate edukacja
+     * @param toUpdate adres
      * @return informacja o pomyślnym bądź nieudanym dodaniu
      */
     @PostMapping("/workers/address/{id}")
@@ -72,28 +70,21 @@ public class AddressController
             workerService.addAddress(id,toUpdate);
             logger.info("Add address to worker with id " + id+ " successful!");
         }
-        catch (EntityExistsException e)
-        {
-            logger.info("Add address to worker with id " + id+ ".Worker not found!");
-            return ResponseEntity.notFound().build();
-        }
         catch (AddressTypeExistsException e)
         {
-            logger.info("Add address to worker with id " + id+ ". Bad type");
-
+            logger.info("Add address to worker with id " + id+ ". Old addresses deleted!");
             return updateWorkerAddress(id,toUpdate);
-        }
-        catch (IllegalArgumentException e)
-        {
-            logger.info("Read addresses from worker with id "+id+"!Worker not Found!");
-            return ResponseEntity.notFound().build();
         }
         catch (BadAddressException e)
         {
             logger.info("Add address to worker with id " + id+ ". Bad address");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
         }
-        //TODO ZŁAP WYJĄTEK IllegalArgumentException, złe dane wejściowe
+        catch (BadIdException e)
+        {
+            logger.info("Update address to worker with id " + id+ ". Worker not found!");
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.noContent().build();
     }
 
@@ -110,13 +101,16 @@ public class AddressController
                 workerService.addAddress(id,a);
             }
             logger.info("Update address to worker with id " + id+ " successful!");
-
-
         }
         catch (BadAddressException e)
         {
             logger.info("Update address to worker with id " + id+ ". Bad address");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+        }
+        catch (BadIdException e)
+        {
+            logger.info("Update address to worker with id " + id+ ". Worker not found!");
+            return ResponseEntity.notFound().build();
         }
         return ResponseEntity.noContent().build();
     }

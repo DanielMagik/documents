@@ -4,11 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.documents.model.Education;
+import pl.documents.exception.BadIdException;
 import pl.documents.model.Employment;
-import pl.documents.model.projection.EducationReadModel;
 import pl.documents.model.projection.EmploymentReadModel;
-import pl.documents.model.projection.EmploymentWriteModel;
 import pl.documents.service.EmploymentService;
 import pl.documents.service.WorkerService;
 
@@ -28,6 +26,7 @@ public class EmploymentController
         this.employmentService = employmentService;
         this.workerService = workerService;
     }
+
     /**
      * Odczyt przebiegu zatrudnienia pracownika o zadanym id
      * @param id id pracownika
@@ -42,11 +41,12 @@ public class EmploymentController
             result = workerService.readWorkerEmployment(id);
             logger.info("Read employment from worker with id "+id+"!");
         }
-        catch (IllegalArgumentException e)
+        catch (BadIdException e)
         {
-            logger.info("Read employment from worker with id "+id+"!Worker not Found!");
+            logger.info("Read employment from worker with id "+id+".Worker not found! ");
             return ResponseEntity.notFound().build();
         }
+
         return ResponseEntity.ok(result);
     }
     /**
@@ -62,12 +62,11 @@ public class EmploymentController
             workerService.addEmployment(id, toUpdate);
             logger.info("Add employment to worker with id " + id+ " successful!");
         }
-        catch (EntityExistsException e)
+        catch (BadIdException e)
         {
-            logger.info("Add employment to worker with id " + id+ ".Worker not found!");
+            logger.info("Read employment from worker with id "+id+".Worker not found! ");
             return ResponseEntity.notFound().build();
         }
-        //BRAK SPRAWDZANIA DANYCH WEJŚCIOWYCH
         return ResponseEntity.noContent().build();
     }
     /**
@@ -84,12 +83,11 @@ public class EmploymentController
             employmentService.updateEmployment(id, toUpdate);
             logger.info("Update employment with id " + id+ " successful!");
         }
-        catch (EntityExistsException e)
+        catch (BadIdException e)
         {
-            logger.info("Update employment with id " + id+ ".Worker Not found!");
+            logger.info("Update employment with id "+id+".Employment not found!");
             return ResponseEntity.notFound().build();
         }
-        //brak sprawdzania danych wejściowych
         return ResponseEntity.noContent().build();
     }
     /**

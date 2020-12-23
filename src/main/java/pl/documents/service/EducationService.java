@@ -2,6 +2,8 @@ package pl.documents.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.documents.exception.BadEducationException;
+import pl.documents.exception.BadIdException;
 import pl.documents.model.Education;
 import pl.documents.repository.EducationRepository;
 
@@ -27,11 +29,11 @@ public class EducationService
      * @param id id zmienianej edukacji
      * @param toUpdate nowe wartości Edukacji
      */
-    public void updateEducation(UUID id, Education toUpdate)
+    public void updateEducation(UUID id, Education toUpdate) throws BadIdException
     {
         if(!repository.existsById(id))
         {
-            throw new EntityExistsException("Education with id "+id+" doesn't exists");
+            throw new BadIdException("Education with id "+id+" doesn't exists");
         }
         repository.findById(id).
                 ifPresent(education ->{
@@ -44,7 +46,7 @@ public class EducationService
      * Sprawdzenie poprawności danych, jeśli są niepoprawne, wyrzucany jest wyjątek
      * @param education dane do sprawdzenia
      */
-    public void checkData(Education education)
+    public void checkData(Education education) throws BadEducationException
     {
         Pattern yearPattern = Pattern.compile("[12]\\d{3}");
         Matcher matcher = yearPattern.matcher(education.getGraduationYear());
@@ -53,12 +55,12 @@ public class EducationService
             int year = Integer.parseInt(education.getGraduationYear());
             if(year > Year.now().getValue() || year < 1900)
             {
-                throw new IllegalArgumentException("Podaj poprawny rok!");
+                throw new BadEducationException("Enter correct year!");
             }
         }
         else
         {
-            throw new IllegalArgumentException("Podaj poprawny rok!");
+            throw new IllegalArgumentException("Enter correct year!");
         }
     }
 

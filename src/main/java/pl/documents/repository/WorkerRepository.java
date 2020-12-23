@@ -17,7 +17,4 @@ public interface WorkerRepository
     Worker save(Worker entity);
     void deleteById(UUID id);
     boolean existsByDocumentNumberAndDocumentType(String documentNumber, String documentType);
-    boolean existsByNIP(String NIP);
-    boolean existsByPensionZUSNumber(String pensionZUSNumber);
-    boolean existsByDisabledZUSNumber(String disabledZUSNumber);
 }

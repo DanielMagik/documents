@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.documents.exception.BadAddressException;
 import pl.documents.exception.BadFamilyMemberException;
+import pl.documents.exception.BadIdException;
 import pl.documents.model.Education;
 import pl.documents.model.FamilyMember;
 import pl.documents.model.projection.EducationReadModel;
@@ -44,7 +45,7 @@ public class FamilyMemberController
             result = workerService.readWorkerFamily(id);
             logger.info("Read family from worker with id "+id+"!");
         }
-        catch (IllegalArgumentException e)
+        catch (BadIdException e)
         {
             logger.info("Read family from worker with id "+id+"!Worker not Found!");
             return ResponseEntity.notFound().build();
@@ -67,17 +68,16 @@ public class FamilyMemberController
             workerService.addFamilyMember(id, toUpdate);
             logger.info("Add family member to worker with id " + id+ " successful!");
         }
-        catch (EntityExistsException e)
-        {
-            logger.info("Add family member to worker with id " + id+ ".Worker not found!");
-            return ResponseEntity.notFound().build();
-        }
         catch (BadAddressException | BadFamilyMemberException e)
         {
             logger.info("Add family member to worker with id " + id+ ".Bad data");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
         }
-        //TODO ZŁAP WYJĄTEK IllegalArgumentException, złe dane wejściowe
+        catch (BadIdException e)
+        {
+            logger.info("Add family member to worker with id "+id+"!Worker not Found!");
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.noContent().build();
     }
     /**
@@ -95,17 +95,16 @@ public class FamilyMemberController
             familyMemberService.updateFamilyMember(id,toUpdate);
             logger.info("Update family member with id " + id+ " successful!");
         }
-        catch (EntityExistsException e)
-        {
-            logger.info("Update family member with id " + id+ ".Family member Not found!");
-            return ResponseEntity.notFound().build();
-        }
         catch (BadAddressException | BadFamilyMemberException e)
         {
-            logger.info("Update family member to worker with id " + id+ ".Bad data");
+            logger.info("Update family member with id " + id+ ".Bad data");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
         }
-        //TODO ZŁAP WYJĄTEK IllegalArgumentException, złe dane wejściowe
+        catch (BadIdException e)
+        {
+            logger.info("Update family member with id "+id+"!Family member not Found!");
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.noContent().build();
     }
 
@@ -124,7 +123,7 @@ public class FamilyMemberController
         }
         else
         {
-            logger.info("Delete family member with id " + id+ ".Education not found!");
+            logger.info("Delete family member with id " + id+ ".Family member not found!");
             return ResponseEntity.notFound().build();
         }
     }

@@ -5,20 +5,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.documents.exception.BadAddressException;
 import pl.documents.exception.BadFamilyMemberException;
-import pl.documents.exception.BasicException;
+import pl.documents.exception.BadIdException;
 import pl.documents.logic.DataChecker;
 import pl.documents.model.Address;
-import pl.documents.model.Education;
 import pl.documents.model.FamilyMember;
 import pl.documents.model.enums.AddressType;
 import pl.documents.repository.FamilyMemberRepository;
 
-import javax.persistence.EntityExistsException;
-import java.time.Year;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
+//TODO ZASTANOWIĆ SIĘ NAD @Scope
 @Service
 public class FamilyMemberService
 {
@@ -33,11 +29,11 @@ public class FamilyMemberService
      * @param id id zmienianego członka
      * @param toUpdate nowe wartości członka
      */
-    public void updateFamilyMember(UUID id, FamilyMember toUpdate)
+    public void updateFamilyMember(UUID id, FamilyMember toUpdate) throws BadIdException
     {
         if(!repository.existsById(id))
         {
-            throw new EntityExistsException("Family member with id "+id+" doesn't exists");
+            throw new BadIdException("Family member with id "+id+" doesn't exists");
         }
         repository.findById(id).
                 ifPresent(familyMember ->{
@@ -53,12 +49,11 @@ public class FamilyMemberService
     {
         if(!PeselValidator.isValid(familyMember.getPESEL()))
         {
-            BadFamilyMemberException e = new BadFamilyMemberException();
-            e.setErrorMessage("Podaj poprawny PESEL członka rodziny!");
-            throw e;
+           throw new BadFamilyMemberException("Bad PESEL of family member!");
         }
         Address address = new Address(AddressType.ALL,familyMember.getPostCode(),familyMember.getLocation(),familyMember.getDistrict(),
                 familyMember.getCommunity(),familyMember.getStreet(),familyMember.getHomeNumber(),familyMember.getFlatNumber());
+        //tu może być wyrzucony wyjątek BadAddressException
         DataChecker.checkAddressCorrectness(address);
     }
     /**

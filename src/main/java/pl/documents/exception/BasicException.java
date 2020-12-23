@@ -2,6 +2,10 @@ package pl.documents.exception;
 
 public class BasicException extends Throwable
 {
+    BasicException(String errorMessage)
+    {
+        this.errorMessage=errorMessage;
+    }
     private String errorMessage;
 
     public String getErrorMessage()

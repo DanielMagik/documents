@@ -19,27 +19,22 @@ public class DataChecker
         matcher = pattern.matcher(address.getPostalCode());
         if(!matcher.matches())
         {
-            BadAddressException e = new BadAddressException();
-            e.setErrorMessage("Enter a correct postal code!");
-            throw e;
+            throw new BadAddressException("Enter a correct postal code!");
         }
         pattern=Pattern.compile("\\d{1,}\\w{0,1}");
         matcher=pattern.matcher(address.getHomeNumber());
         if(!matcher.matches())
         {
-            BadAddressException e = new BadAddressException();
-            e.setErrorMessage("Enter a correct home number!");
-            throw e;
+            throw  new BadAddressException("Enter a correct home number!");
         }
         if(address.getFlatNumber()!=null)
         {
             matcher = pattern.matcher(address.getHomeNumber());
             if(!matcher.matches())
             {
-                BadAddressException e = new BadAddressException();
-                e.setErrorMessage("Enter a correct flat number!");
-                throw e;
+                throw new BadAddressException("Enter a correct flat number!");
             }
         }
     }
+
 }

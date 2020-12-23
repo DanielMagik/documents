@@ -2,13 +2,13 @@ package pl.documents.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.documents.model.Education;
+import pl.documents.exception.BadIdException;
 import pl.documents.model.Employment;
 import pl.documents.repository.EmploymentRepository;
 
-import javax.persistence.EntityExistsException;
 import java.util.UUID;
 
+//TODO ZASTANOWIĆ SIĘ NAD @Scope
 @Service
 public class EmploymentService
 {
@@ -24,11 +24,11 @@ public class EmploymentService
      * @param id id zmienianego zatrudnienia
      * @param toUpdate nowe wartości zatrudnienia
      */
-    public void updateEmployment(UUID id, Employment toUpdate)
+    public void updateEmployment(UUID id, Employment toUpdate) throws BadIdException
     {
         if(!repository.existsById(id))
         {
-            throw new EntityExistsException("Education with id "+id+" doesn't exists");
+            throw new BadIdException("Employment with id "+id+" doesn't exists");
         }
         repository.findById(id).
                 ifPresent(employment ->{

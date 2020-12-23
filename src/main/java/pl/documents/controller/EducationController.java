@@ -2,14 +2,16 @@ package pl.documents.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.documents.exception.BadEducationException;
+import pl.documents.exception.BadIdException;
 import pl.documents.model.Education;
 import pl.documents.model.projection.EducationReadModel;
 import pl.documents.service.EducationService;
 import pl.documents.service.WorkerService;
 
-import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,9 +42,9 @@ public class EducationController
             result = workerService.readWorkerEducation(id);
             logger.info("Read education from worker with id "+id+"!");
         }
-        catch (IllegalArgumentException e)
+        catch (BadIdException e)
         {
-            logger.info("Read education from worker with id "+id+"!Worker not Found!");
+            logger.info("Read education from worker with id "+id+"! Worker not Found!");
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(result);
@@ -63,12 +65,16 @@ public class EducationController
             workerService.addEducation(id, toUpdate);
             logger.info("Add education to worker with id " + id+ " successful!");
         }
-        catch (EntityExistsException e)
+        catch (BadEducationException e)
+        {
+            logger.info("Add education to worker with id " + id+ ".Bad education data!");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+        }
+        catch (BadIdException e)
         {
             logger.info("Add education to worker with id " + id+ ".Worker not found!");
             return ResponseEntity.notFound().build();
         }
-        //TODO ZŁAP WYJĄTEK IllegalArgumentException, złe dane wejściowe
         return ResponseEntity.noContent().build();
     }
 
@@ -87,12 +93,16 @@ public class EducationController
             educationService.updateEducation(id,toUpdate);
             logger.info("Update education with id " + id+ " successful!");
         }
-        catch (EntityExistsException e)
+        catch (BadIdException e)
         {
-            logger.info("Update education with id " + id+ ".Worker Not found!");
+            logger.info("Update education with id " + id+ ".Education Not found!");
             return ResponseEntity.notFound().build();
         }
-        //TODO ZŁAP WYJĄTEK IllegalArgumentException, złe dane wejściowe
+        catch (BadEducationException e)
+        {
+            logger.info("Update education with id " + id+ ".Bad education data!");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+        }
         return ResponseEntity.noContent().build();
     }
 
