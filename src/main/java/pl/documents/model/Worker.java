@@ -340,6 +340,17 @@ public class Worker
     {
 
     }
+    public Worker(String email, String password)
+    {
+        this.email = email;
+        this.password = password;
+    }
+
+    public String getPassword()
+    {
+        return password;
+    }
+
     //TODO Getter ID JEST TYMCZASOWO PUBLICZNY
     public UUID getId()
     {

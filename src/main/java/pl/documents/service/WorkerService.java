@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.documents.exception.BadIdException;
 import pl.documents.exception.BadWorkerException;
+import pl.documents.exception.LoginException;
+import pl.documents.exception.RegisterException;
 import pl.documents.logic.DataChecker;
 import pl.documents.model.*;
 import pl.documents.model.projection.EducationReadModel;
@@ -64,6 +66,14 @@ public class WorkerService
             );
             return new WorkerReadModel(result);
     }
+    public WorkerReadModel readByEmailAndPassword(Worker worker) throws LoginException
+    {
+        Worker result;
+        result=repository.findByEmailAndPassword(worker.getEmail(),worker.getPassword()).orElseThrow(
+                () -> new LoginException("Bad login or password!")
+        );
+        return new WorkerReadModel(result);
+    }
 
     /**
      * Usunięcie pracownika o zadanym id
@@ -86,8 +96,10 @@ public class WorkerService
      * @param source pracownik do zapisu w bazie
      * @return zapisany pracownik
      */
-    public WorkerReadModel createWorker(Worker source)
+    public WorkerReadModel createWorker(Worker source) throws RegisterException
     {
+        if(repository.existsByEmail(source.getEmail()))
+            throw new RegisterException("In database already exists worker with e-mail: " + source.getEmail()+ " !");
         repository.save(source);
         //todo to niepotrzebne, tylko do testów
         source.setFirstName(String.valueOf(source.getId()));

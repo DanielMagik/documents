@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.documents.exception.BadIdException;
 import pl.documents.exception.BadWorkerException;
+import pl.documents.exception.LoginException;
+import pl.documents.exception.RegisterException;
 import pl.documents.model.Worker;
 import pl.documents.model.projection.EducationReadModel;
 import pl.documents.model.projection.WorkerReadModel;
@@ -69,11 +71,32 @@ public class WorkerController
             return ResponseEntity.notFound().build();
         }
     }
-
     /**
+     * Odczyt pracownika o danym loginie i haśle
+     * @param login dane logowania pracownika
+     * @return szukany pracownik lub informacja o jego braku
+     */
+    @GetMapping("/login")
+    ResponseEntity<WorkerReadModel> login(@RequestBody Worker login)
+    {
+        WorkerReadModel result;
+        try
+        {
+            result = workerService.readByEmailAndPassword(login);
+            logger.info("Login worker with e-mail "+login.getEmail()+" !");
+            return ResponseEntity.ok(result);
+        }
+        catch (LoginException e)
+        {
+            logger.info("Bad login or password!");
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /*
      * Stworzenie nowego pracownika o pustych polach
      * @return stworzony pracownik
-     */
+     *
     @PostMapping("/workers")
     ResponseEntity<WorkerReadModel> createWorker()
     {
@@ -82,6 +105,32 @@ public class WorkerController
         WorkerReadModel result = workerService.createWorker(worker);
         return ResponseEntity.created(URI.create("")).body(result);
     }
+    */
+
+    /**
+     * Stworzenie nowego pracownika o pustych polach w czasie rejestracji
+     * @return stworzony pracownik
+     */
+    @PostMapping("/register")
+    ResponseEntity<WorkerReadModel> registerWorker(@RequestBody Worker newWorker)
+    {
+        logger.info("Register new worker!");
+        Worker worker = new Worker(newWorker.getEmail(), newWorker.getPassword());
+        //TODO SPRAWDZENIE POPRAWNOŚCI MAILA I HASŁA
+        WorkerReadModel result = null;
+        try
+        {
+            result = workerService.createWorker(worker);
+            logger.info("Register success!");
+        }
+        catch (RegisterException e)
+        {
+            logger.info("Register fail!");
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.created(URI.create("")).body(result);
+    }
+
 
     /**
      * Akutalizacja danych pracownika o zadanym id
