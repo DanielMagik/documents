@@ -351,7 +351,6 @@ public class Worker
         return password;
     }
 
-    //TODO Getter ID JEST TYMCZASOWO PUBLICZNY
     public UUID getId()
     {
         return id;
@@ -380,12 +379,6 @@ public class Worker
     public String getFirstName()
     {
         return firstName;
-    }
-
-    //TODO SETTER JEST TYMCZASOWY
-    public void setFirstName(String firstName)
-    {
-        this.firstName = firstName;
     }
 
     public String getSecondName()

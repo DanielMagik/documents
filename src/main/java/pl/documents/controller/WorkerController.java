@@ -10,11 +10,9 @@ import pl.documents.exception.BadWorkerException;
 import pl.documents.exception.LoginException;
 import pl.documents.exception.RegisterException;
 import pl.documents.model.Worker;
-import pl.documents.model.projection.EducationReadModel;
 import pl.documents.model.projection.WorkerReadModel;
 import pl.documents.service.WorkerService;
 
-import javax.persistence.EntityExistsException;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
@@ -112,7 +110,7 @@ public class WorkerController
      * @return stworzony pracownik
      */
     @PostMapping("/register")
-    ResponseEntity<WorkerReadModel> registerWorker(@RequestBody Worker newWorker)
+    ResponseEntity<?> registerWorker(@RequestBody Worker newWorker)
     {
         logger.info("Register new worker!");
         Worker worker = new Worker(newWorker.getEmail(), newWorker.getPassword());
@@ -126,7 +124,7 @@ public class WorkerController
         catch (RegisterException e)
         {
             logger.info("Register fail!");
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
         }
         return ResponseEntity.created(URI.create("")).body(result);
     }

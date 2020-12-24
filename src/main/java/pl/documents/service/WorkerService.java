@@ -100,9 +100,42 @@ public class WorkerService
     {
         if(repository.existsByEmail(source.getEmail()))
             throw new RegisterException("In database already exists worker with e-mail: " + source.getEmail()+ " !");
-        repository.save(source);
-        //todo to niepotrzebne, tylko do testów
-        source.setFirstName(String.valueOf(source.getId()));
+        String password = source.getPassword();
+        if(password.length()<8)
+        {
+            throw new RegisterException("Too short password. It must contain at least 8 characters!");
+        }
+        Pattern digit = Pattern.compile("^(?=.*[0-9]).{8,}$");
+        Pattern smallLetter = Pattern.compile("^(?=.*[a-z]).{8,}$");
+        Pattern bigLetter = Pattern.compile("^(?=.*[A-Z]).{8,}$");
+        Pattern blank = Pattern.compile("^(?=\\S+$).{8,}$");
+        Pattern special = Pattern.compile("^(?=.*[~`!@#$%^&*()_+=\\-|\\\\/?:;'\"{}\\[\\]]).{8,}$");
+        Matcher matcher = digit.matcher(password);
+        if(!matcher.matches())
+        {
+            throw new RegisterException("Password doesn't contains any digit!");
+        }
+        matcher = smallLetter.matcher(password);
+        if(!matcher.matches())
+        {
+            throw new RegisterException("Password doesn't contains any small letter!");
+        }
+        matcher = bigLetter.matcher(password);
+        if(!matcher.matches())
+        {
+            throw new RegisterException("Password doesn't contains any big letter!");
+        }
+        matcher = blank.matcher(password);
+        if(!matcher.matches())
+        {
+            throw new RegisterException("Password contains whitespace characters!");
+        }
+        matcher = special.matcher(password);
+        if(!matcher.matches())
+        {
+            throw new RegisterException("Password doesn't contains any special character!");
+        }
+
         repository.save(source);
         return new WorkerReadModel(source);
     }
@@ -172,7 +205,6 @@ public class WorkerService
             if(worker.getDocumentType()==null)
             {
                 //PESEL jest niepoprawny
-                //TODO sprawdzić, czy faktycznie ta metoda sprawdza poprawność PESEL
                 if(!PeselValidator.isValid(worker.getDocumentNumber()))
                 {
                     throw new BadWorkerException("Bad PESEL!");
@@ -207,8 +239,6 @@ public class WorkerService
             }
 
         }
-
-        //TODO SPRAWDZANIE NUMERU KONTA CHYBA DZIAŁA
     }
 
     /**
@@ -323,9 +353,6 @@ public class WorkerService
                 {
                     education.setWorker(worker);
                     educationRepository.save(education);
-                    //TODO TO JEST TYMCZASOWE, DO TESTÓW
-                    education.setSchoolName(education.getSchoolName() + " id: " + education.getId());
-                    educationRepository.save(education);
                 }
         );
     }
@@ -344,9 +371,6 @@ public class WorkerService
                 worker ->
                 {
                     employment.setWorker(worker);
-                    employmentRepository.save(employment);
-                    //TODO TO JEST TYMCZASOWE, DO TESTÓW
-                    employment.setName(employment.getName() + " id: " + employment.getId());
                     employmentRepository.save(employment);
                 }
         );
@@ -387,9 +411,6 @@ public class WorkerService
                 worker ->
                 {
                     familyMember.setWorker(worker);
-                    familyMemberRepository.save(familyMember);
-                    //TODO TO JEST TYMCZASOWE, DO TESTÓW
-                    familyMember.setName(familyMember.getName()+" id: "+familyMember.getId());
                     familyMemberRepository.save(familyMember);
                 }
         );

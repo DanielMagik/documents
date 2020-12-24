@@ -10,7 +10,6 @@ import pl.documents.model.projection.EmploymentReadModel;
 import pl.documents.service.EmploymentService;
 import pl.documents.service.WorkerService;
 
-import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.UUID;
 

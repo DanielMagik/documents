@@ -53,7 +53,6 @@ public class Education
         this.graduationYear = source.graduationYear;
     }
 
-    //todo getId jest tymczasowo publiczne
     public UUID getId()
     {
         return id;
@@ -62,11 +61,6 @@ public class Education
     public String getSchoolName()
     {
         return schoolName;
-    }
-    //TODO SETTER JEST TYMCZASOWY
-    public void setSchoolName(String schoolName)
-    {
-        this.schoolName = schoolName;
     }
 
     public String getGraduationYear()

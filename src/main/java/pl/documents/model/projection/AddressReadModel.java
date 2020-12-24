@@ -3,8 +3,11 @@ package pl.documents.model.projection;
 import pl.documents.model.Address;
 import pl.documents.model.enums.AddressType;
 
+import java.util.UUID;
+
 public class AddressReadModel
 {
+    private UUID id;
     private AddressType addressType;
     private String postalCode;
     private String location;
@@ -16,6 +19,7 @@ public class AddressReadModel
 
     public AddressReadModel(Address source)
     {
+        this.id=source.getId();
         this.addressType = source.getAddressType();
         this.postalCode = source.getPostalCode();
         this.location = source.getLocation();
@@ -24,6 +28,11 @@ public class AddressReadModel
         this.street = source.getStreet();
         this.homeNumber = source.getHomeNumber();
         this.flatNumber = source.getFlatNumber();
+    }
+
+    public UUID getId()
+    {
+        return id;
     }
 
     public AddressType getAddressType()

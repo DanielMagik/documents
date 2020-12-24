@@ -67,7 +67,6 @@ public class Employment
         this.finish = source.finish;
     }
 
-    //Todo to jest tymczasowe
     public UUID getId()
     {
         return id;
@@ -91,12 +90,6 @@ public class Employment
     public String getName()
     {
         return name;
-    }
-
-    //TODO to jest tymczasowy setter
-    public void setName(String name)
-    {
-        this.name = name;
     }
 
     public String getWorkplace()

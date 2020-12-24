@@ -5,9 +5,11 @@ import pl.documents.model.enums.DisabilityLevel;
 import pl.documents.model.enums.Relationship;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 public class FamilyMemberReadModel
 {
+    private UUID id;
     private Relationship relationship;
     private String name;
     private String surname;
@@ -30,6 +32,7 @@ public class FamilyMemberReadModel
 
     public FamilyMemberReadModel(FamilyMember source)
     {
+        this.id=source.getId();
         this.relationship=source.getRelationship();
         this.name = source.getName();
         this.surname=source.getSurname();
@@ -49,6 +52,11 @@ public class FamilyMemberReadModel
         this.street=source.getStreet();
         this.homeNumber=source.getHomeNumber();
         this.flatNumber=source.getFlatNumber();
+    }
+
+    public UUID getId()
+    {
+        return id;
     }
 
     public Relationship getRelationship()

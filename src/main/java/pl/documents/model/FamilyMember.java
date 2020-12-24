@@ -160,12 +160,10 @@ public class FamilyMember
         this.flatNumber = source.flatNumber;
     }
 
-    //TODO Getter Id jest tymczasowo publiczny
     public UUID getId()
     {
         return id;
     }
-
 
     public void setWorker(Worker worker)
     {
@@ -180,12 +178,6 @@ public class FamilyMember
     public String getName()
     {
         return name;
-    }
-
-    //todo setter jest tymczasowy
-    public void setName(String name)
-    {
-        this.name = name;
     }
 
     public String getSurname()

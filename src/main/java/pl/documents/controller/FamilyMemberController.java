@@ -8,14 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import pl.documents.exception.BadAddressException;
 import pl.documents.exception.BadFamilyMemberException;
 import pl.documents.exception.BadIdException;
-import pl.documents.model.Education;
 import pl.documents.model.FamilyMember;
-import pl.documents.model.projection.EducationReadModel;
 import pl.documents.model.projection.FamilyMemberReadModel;
 import pl.documents.service.FamilyMemberService;
 import pl.documents.service.WorkerService;
 
-import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.UUID;
 

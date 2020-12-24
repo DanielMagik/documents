@@ -6,10 +6,12 @@ import pl.documents.model.enums.*;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class WorkerReadModel
 {
+    private UUID id;
     private String email;
     private String phoneNumber;
     private String fillLocation;
@@ -78,6 +80,7 @@ public class WorkerReadModel
 
     public WorkerReadModel(Worker source)
     {
+        this.id=source.getId();
         this.email = source.getEmail();
         this.phoneNumber = source.getPhoneNumber();
         this.fillLocation = source.getFillLocation();
@@ -151,6 +154,11 @@ public class WorkerReadModel
         this.familyMembers = source.getFamilyMembers().stream()
                 .map(FamilyMemberReadModel::new).collect(Collectors.toSet());
 
+    }
+
+    public UUID getId()
+    {
+        return id;
     }
 
     public String getEmail()
