@@ -12,6 +12,7 @@ import pl.documents.exception.RegisterException;
 import pl.documents.model.Worker;
 import pl.documents.model.projection.WorkerReadModel;
 import pl.documents.model.projection.WorkerWriteModel;
+import pl.documents.model.projection.WorkerWriteModelRegister;
 import pl.documents.service.WorkerService;
 
 import java.net.URI;
@@ -76,7 +77,7 @@ public class WorkerController
      * @return szukany pracownik lub informacja o jego braku
      */
     @GetMapping("/login")
-    ResponseEntity<WorkerReadModel> login(@RequestBody WorkerWriteModel workerWriteModel)
+    ResponseEntity<WorkerReadModel> login(@RequestBody WorkerWriteModelRegister workerWriteModel)
     {
         WorkerReadModel result;
         try
@@ -112,11 +113,11 @@ public class WorkerController
      * @return stworzony pracownik
      */
     @PostMapping("/register")
-    ResponseEntity<?> registerWorker(@RequestBody WorkerWriteModel workerWriteModel)
+    ResponseEntity<?> registerWorker(@RequestBody WorkerWriteModelRegister workerWriteModel)
     {
         Worker newWorker = workerWriteModel.toWorker();
         logger.info("Register new worker!");
-        Worker worker = new Worker(newWorker.getEmail(), newWorker.getPassword());
+        Worker worker = workerWriteModel.toWorker();
         WorkerReadModel result = null;
         try
         {

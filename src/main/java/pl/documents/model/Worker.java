@@ -766,7 +766,7 @@ public class Worker
      */
     public void updateFrom(final Worker source)
     {
-        this.email = source.email;//
+        //this.email = source.email;//
         this.phoneNumber = source.phoneNumber;//
         this.fillLocation = source.fillLocation;//
         this.sex = source.sex;

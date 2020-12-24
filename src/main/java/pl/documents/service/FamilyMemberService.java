@@ -51,6 +51,14 @@ public class FamilyMemberService
         {
            throw new BadFamilyMemberException("Bad PESEL of family member!");
         }
+        else if(familyMember.getName().isBlank())
+        {
+            throw new BadFamilyMemberException("Bad name of family member!");
+        }
+        else if(familyMember.getSurname().isBlank())
+        {
+            throw new BadFamilyMemberException("Bad surname of family member!");
+        }
         Address address = new Address(AddressType.ALL,familyMember.getPostCode(),familyMember.getLocation(),familyMember.getDistrict(),
                 familyMember.getCommunity(),familyMember.getStreet(),familyMember.getHomeNumber(),familyMember.getFlatNumber());
         //tu może być wyrzucony wyjątek BadAddressException
