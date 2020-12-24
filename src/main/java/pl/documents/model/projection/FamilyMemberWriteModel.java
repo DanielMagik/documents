@@ -58,4 +58,98 @@ public class FamilyMemberWriteModel
         return familyMember;
     }
 
+    public void setRelationship(Relationship relationship)
+    {
+        this.relationship = relationship;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public void setSurname(String surname)
+    {
+        this.surname = surname;
+    }
+
+    public void setBirthDate(LocalDate birthDate)
+    {
+        this.birthDate = birthDate;
+    }
+
+    public void setInsuredAtEmployee(boolean insuredAtEmployee)
+    {
+        this.insuredAtEmployee = insuredAtEmployee;
+    }
+
+    public void setLegalGuardian(boolean legalGuardian)
+    {
+        this.legalGuardian = legalGuardian;
+    }
+
+    public void setDisabled(boolean disabled)
+    {
+        isDisabled = disabled;
+    }
+
+    public void setDisabledZUSNumber(String disabledZUSNumber)
+    {
+        this.disabledZUSNumber = disabledZUSNumber;
+    }
+
+    public void setDisabilityLevel(DisabilityLevel disabilityLevel)
+    {
+        this.disabilityLevel = disabilityLevel;
+    }
+
+    public void setOnExclusiveMaintenance(boolean onExclusiveMaintenance)
+    {
+        this.onExclusiveMaintenance = onExclusiveMaintenance;
+    }
+
+    public void setSharedHousehold(boolean sharedHousehold)
+    {
+        isSharedHousehold = sharedHousehold;
+    }
+
+    public void setPESEL(String PESEL)
+    {
+        this.PESEL = PESEL;
+    }
+
+    public void setLocation(String location)
+    {
+        this.location = location;
+    }
+
+    public void setPostCode(String postCode)
+    {
+        this.postCode = postCode;
+    }
+
+    public void setDistrict(String district)
+    {
+        this.district = district;
+    }
+
+    public void setCommunity(String community)
+    {
+        this.community = community;
+    }
+
+    public void setStreet(String street)
+    {
+        this.street = street;
+    }
+
+    public void setHomeNumber(String homeNumber)
+    {
+        this.homeNumber = homeNumber;
+    }
+
+    public void setFlatNumber(String flatNumber)
+    {
+        this.flatNumber = flatNumber;
+    }
 }

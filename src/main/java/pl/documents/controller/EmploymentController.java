@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.documents.exception.BadIdException;
 import pl.documents.model.Employment;
 import pl.documents.model.projection.EmploymentReadModel;
+import pl.documents.model.projection.EmploymentWriteModel;
 import pl.documents.service.EmploymentService;
 import pl.documents.service.WorkerService;
 
@@ -51,13 +52,14 @@ public class EmploymentController
     /**
      * Dodanie zatrudnienia do pracownika o zadanym id
      * @param id id pracownika
-     * @param toUpdate zatrudnienie
+     * @param employmentWriteModel zatrudnienie
      */
     @PostMapping("/workers/employment/{id}")
-    ResponseEntity<?> addWorkerEmployment(@PathVariable UUID id, @RequestBody Employment toUpdate)
+    ResponseEntity<?> addWorkerEmployment(@PathVariable UUID id, @RequestBody EmploymentWriteModel employmentWriteModel)
     {
         try
         {
+            Employment toUpdate = employmentWriteModel.toEmployment();
             workerService.addEmployment(id, toUpdate);
             logger.info("Add employment to worker with id " + id+ " successful!");
         }
@@ -71,14 +73,15 @@ public class EmploymentController
     /**
      * Aktualizacja encji z zatrudnieniem
      * @param id id aktualizowanej encji
-     * @param toUpdate nowe dane o zatrudnieniu
+     * @param employmentWriteModel nowe dane o zatrudnieniu
      * @return informacja o pomyślnej bądź nieudanej aktualizacji
      */
     @PutMapping("/workers/employment/{id}")
-    ResponseEntity<?> updateEmployment(@PathVariable UUID id, @RequestBody Employment toUpdate)
+    ResponseEntity<?> updateEmployment(@PathVariable UUID id, @RequestBody EmploymentWriteModel employmentWriteModel)
     {
         try
         {
+            Employment toUpdate = employmentWriteModel.toEmployment();
             employmentService.updateEmployment(id, toUpdate);
             logger.info("Update employment with id " + id+ " successful!");
         }

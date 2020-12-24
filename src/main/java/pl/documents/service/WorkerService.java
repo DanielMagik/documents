@@ -135,6 +135,12 @@ public class WorkerService
         {
             throw new RegisterException("Password doesn't contains any special character!");
         }
+        Pattern email = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)");
+        matcher = email.matcher(source.getEmail());
+        if(!matcher.matches())
+        {
+            throw new RegisterException("Bad e-mail!");
+        }
 
         repository.save(source);
         return new WorkerReadModel(source);

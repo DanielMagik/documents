@@ -17,4 +17,23 @@ public class EmploymentWriteModel
         return employment;
     }
 
+    public void setStart(YearMonth start)
+    {
+        this.start = start;
+    }
+
+    public void setFinish(YearMonth finish)
+    {
+        this.finish = finish;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public void setWorkplace(String workplace)
+    {
+        this.workplace = workplace;
+    }
 }

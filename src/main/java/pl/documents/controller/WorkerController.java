@@ -11,6 +11,7 @@ import pl.documents.exception.LoginException;
 import pl.documents.exception.RegisterException;
 import pl.documents.model.Worker;
 import pl.documents.model.projection.WorkerReadModel;
+import pl.documents.model.projection.WorkerWriteModel;
 import pl.documents.service.WorkerService;
 
 import java.net.URI;
@@ -71,15 +72,16 @@ public class WorkerController
     }
     /**
      * Odczyt pracownika o danym loginie i haśle
-     * @param login dane logowania pracownika
+     * @param workerWriteModel dane logowania pracownika
      * @return szukany pracownik lub informacja o jego braku
      */
     @GetMapping("/login")
-    ResponseEntity<WorkerReadModel> login(@RequestBody Worker login)
+    ResponseEntity<WorkerReadModel> login(@RequestBody WorkerWriteModel workerWriteModel)
     {
         WorkerReadModel result;
         try
         {
+            Worker login = workerWriteModel.toWorker();
             result = workerService.readByEmailAndPassword(login);
             logger.info("Login worker with e-mail "+login.getEmail()+" !");
             return ResponseEntity.ok(result);
@@ -110,11 +112,11 @@ public class WorkerController
      * @return stworzony pracownik
      */
     @PostMapping("/register")
-    ResponseEntity<?> registerWorker(@RequestBody Worker newWorker)
+    ResponseEntity<?> registerWorker(@RequestBody WorkerWriteModel workerWriteModel)
     {
+        Worker newWorker = workerWriteModel.toWorker();
         logger.info("Register new worker!");
         Worker worker = new Worker(newWorker.getEmail(), newWorker.getPassword());
-        //TODO SPRAWDZENIE POPRAWNOŚCI MAILA I HASŁA
         WorkerReadModel result = null;
         try
         {
@@ -133,14 +135,15 @@ public class WorkerController
     /**
      * Akutalizacja danych pracownika o zadanym id
      * @param id id aktualizowaneg pracownika
-     * @param toUpdate nowe dane pracownika
+     * @param workerWriteModel nowe dane pracownika
      * @return informacja o pomyślnej bądź nieudanej aktualizacji
      */
     @PutMapping("/workers/{id}")
-    ResponseEntity<?> updateWorker(@PathVariable UUID id, @RequestBody Worker toUpdate)
+    ResponseEntity<?> updateWorker(@PathVariable UUID id, @RequestBody WorkerWriteModel workerWriteModel)
     {
         try
         {
+            Worker toUpdate = workerWriteModel.toWorker();
             workerService.checkData(id, toUpdate);
             workerService.updateWorker(id, toUpdate);
             logger.info("Update worker with id " + id+ " successful!");

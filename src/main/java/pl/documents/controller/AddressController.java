@@ -11,6 +11,7 @@ import pl.documents.exception.BadIdException;
 import pl.documents.logic.DataChecker;
 import pl.documents.model.Address;
 import pl.documents.model.projection.AddressReadModel;
+import pl.documents.model.projection.AddressWriteModel;
 import pl.documents.service.AddressService;
 import pl.documents.service.WorkerService;
 
@@ -55,14 +56,15 @@ public class AddressController
     /**
      * Dodanie adresu do pracownika o zadanym id bądź aktualizacja adresu
      * @param id id pracownika
-     * @param toUpdate adres
+     * @param addressWriteModel adres
      * @return informacja o pomyślnym bądź nieudanym dodaniu
      */
     @PostMapping("/workers/address/{id}")
-    ResponseEntity<?> addWorkerAddress(@PathVariable UUID id, @RequestBody Address toUpdate)
+    ResponseEntity<?> addWorkerAddress(@PathVariable UUID id, @RequestBody AddressWriteModel addressWriteModel)
     {
         try
         {
+            Address toUpdate = addressWriteModel.toAddress();
             List<AddressReadModel> addressList = workerService.readWorkerAddresses(id).stream()
                     .map(AddressReadModel::new).collect(Collectors.toList());;
             DataChecker.checkAddressCorrectness(toUpdate);
@@ -73,7 +75,7 @@ public class AddressController
         catch (AddressTypeExistsException e)
         {
             logger.info("Add address to worker with id " + id+ ". Old addresses deleted!");
-            return updateWorkerAddress(id,toUpdate);
+            return updateWorkerAddress(id,addressWriteModel);
         }
         catch (BadAddressException e)
         {
@@ -88,8 +90,9 @@ public class AddressController
         return ResponseEntity.noContent().build();
     }
 
-    ResponseEntity<?> updateWorkerAddress(@PathVariable UUID id, @RequestBody Address toUpdate)
+    ResponseEntity<?> updateWorkerAddress(UUID id, AddressWriteModel addressWriteModel)
     {
+        Address toUpdate = addressWriteModel.toAddress();
         try
         {
             List<Address> addressList = workerService.readWorkerAddresses(id);

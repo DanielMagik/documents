@@ -10,6 +10,7 @@ import pl.documents.exception.BadFamilyMemberException;
 import pl.documents.exception.BadIdException;
 import pl.documents.model.FamilyMember;
 import pl.documents.model.projection.FamilyMemberReadModel;
+import pl.documents.model.projection.FamilyMemberWriteModel;
 import pl.documents.service.FamilyMemberService;
 import pl.documents.service.WorkerService;
 
@@ -53,14 +54,15 @@ public class FamilyMemberController
     /**
      * Dodanie członka rodziny do pracownika o zadanym id
      * @param id id pracownika
-     * @param toUpdate członek rodziny
+     * @param familyMemberWriteModel członek rodziny
      * @return informacja o pomyślnym bądź nieudanym dodaniu
      */
     @PostMapping("/workers/family/{id}")
-    ResponseEntity<?> addWorkerFamilyMember(@PathVariable UUID id, @RequestBody FamilyMember toUpdate)
+    ResponseEntity<?> addWorkerFamilyMember(@PathVariable UUID id, @RequestBody FamilyMemberWriteModel familyMemberWriteModel)
     {
         try
         {
+            FamilyMember toUpdate = familyMemberWriteModel.toFamilyMember();
             familyMemberService.checkData(toUpdate);
             workerService.addFamilyMember(id, toUpdate);
             logger.info("Add family member to worker with id " + id+ " successful!");
@@ -80,14 +82,15 @@ public class FamilyMemberController
     /**
      * Aktualizacja encji z członkiem rodziny
      * @param id id aktualizowanego członka rodziny
-     * @param toUpdate nowe dane o członku rodziny
+     * @param familyMemberWriteModel nowe dane o członku rodziny
      * @return informacja o pomyślnej bądź nieudanej aktualizacji
      */
     @PutMapping("/workers/family/{id}")
-    ResponseEntity<?> updateFamily(@PathVariable UUID id, @RequestBody FamilyMember toUpdate)
+    ResponseEntity<?> updateFamily(@PathVariable UUID id, @RequestBody FamilyMemberWriteModel familyMemberWriteModel)
     {
         try
         {
+            FamilyMember toUpdate = familyMemberWriteModel.toFamilyMember();
             familyMemberService.checkData(toUpdate);
             familyMemberService.updateFamilyMember(id,toUpdate);
             logger.info("Update family member with id " + id+ " successful!");

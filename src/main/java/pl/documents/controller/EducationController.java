@@ -9,6 +9,7 @@ import pl.documents.exception.BadEducationException;
 import pl.documents.exception.BadIdException;
 import pl.documents.model.Education;
 import pl.documents.model.projection.EducationReadModel;
+import pl.documents.model.projection.EducationWriteModel;
 import pl.documents.service.EducationService;
 import pl.documents.service.WorkerService;
 
@@ -53,14 +54,15 @@ public class EducationController
     /**
      * Dodanie edukacji do pracownika o zadanym id
      * @param id id pracownika
-     * @param toUpdate edukacja
+     * @param educationWriteModel edukacja
      * @return informacja o pomyślnym bądź nieudanym dodaniu
      */
     @PostMapping("/workers/education/{id}")
-    ResponseEntity<?> addWorkerEducation(@PathVariable UUID id, @RequestBody Education toUpdate)
+    ResponseEntity<?> addWorkerEducation(@PathVariable UUID id, @RequestBody EducationWriteModel educationWriteModel)
     {
         try
         {
+            Education toUpdate = educationWriteModel.toEducation();
             educationService.checkData(toUpdate);
             workerService.addEducation(id, toUpdate);
             logger.info("Add education to worker with id " + id+ " successful!");
@@ -81,14 +83,15 @@ public class EducationController
     /**
      * Aktualizacja encji z edukacją
      * @param id id aktualizowanej encji
-     * @param toUpdate nowe dane o edukacji
+     * @param educationWriteModel nowe dane o edukacji
      * @return informacja o pomyślnej bądź nieudanej aktualizacji
      */
     @PutMapping("/workers/education/{id}")
-    ResponseEntity<?> updateEducation(@PathVariable UUID id, @RequestBody Education toUpdate)
+    ResponseEntity<?> updateEducation(@PathVariable UUID id, @RequestBody EducationWriteModel educationWriteModel)
     {
         try
         {
+            Education toUpdate = educationWriteModel.toEducation();
             educationService.checkData(toUpdate);
             educationService.updateEducation(id,toUpdate);
             logger.info("Update education with id " + id+ " successful!");

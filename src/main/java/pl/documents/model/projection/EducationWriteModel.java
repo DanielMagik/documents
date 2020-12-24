@@ -13,4 +13,13 @@ public class EducationWriteModel
         return education;
     }
 
+    public void setSchoolName(String schoolName)
+    {
+        this.schoolName = schoolName;
+    }
+
+    public void setGraduationYear(String graduationYear)
+    {
+        this.graduationYear = graduationYear;
+    }
 }
