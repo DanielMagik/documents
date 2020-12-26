@@ -97,4 +97,15 @@ public class Employment
         return workplace;
     }
 
+
+    //Tylko do testów
+    public Worker getWorker()
+    {
+        return worker;
+    }
+
+    public void setId(UUID id)
+    {
+        this.id = id;
+    }
 }

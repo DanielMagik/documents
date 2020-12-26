@@ -1,6 +1,5 @@
 package pl.documents.service;
 
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import pl.documents.exception.AddressTypeExistsException;
 import pl.documents.exception.BadAddressException;
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AddressServiceTest
 {
@@ -207,7 +206,150 @@ class AddressServiceTest
         assertThat(exception).doesNotThrowAnyException();
     }
 
+    @Test
+    void updateAddress1()
+    {
+        AddressRepository addressRepository = inMemoryRepository;
+        Worker worker = new Worker();
+        Address address = new Address(AddressType.RESIDENCE, "44-444","a","b","c","d","1","2");
+        Address a1 = new Address(AddressType.RESIDENCE, "44-444","b","b","c","d","1","2");
+        Address a2 = new Address(AddressType.CHECKIN, "44-444","c","b","c","d","1","2");
+        Address a3 = new Address(AddressType.CORRESPONDENCE, "44-444","d","b","c","d","1","2");
+        List<Address> addresses = new ArrayList<>();
+        addresses.add(a1);
+        addresses.add(a2);
+        addresses.add(a3);
+        AddressService service = new AddressService(addressRepository);
+        List<Address> result = service.updateAddress(address,addresses);
+        List<Address> expected = new ArrayList<>();
+        expected.add(address);
+        expected.add(a2);
+        expected.add(a3);
+        for(int i=0;i<result.size();i++)
+        {
+            assertEquals(result.get(i),expected.get(i));
+        }
+    }
+    @Test
+    void updateAddress2()
+    {
+        AddressRepository addressRepository = inMemoryRepository;
+        Address address = new Address(AddressType.ALL, "44-444","a","b","c","d","1","2");
+        Address a1 = new Address(AddressType.RESIDENCE, "44-444","b","b","c","d","1","2");
+        Address a2 = new Address(AddressType.CHECKIN, "44-444","c","b","c","d","1","2");
+        Address a3 = new Address(AddressType.CORRESPONDENCE, "44-444","d","b","c","d","1","2");
+        List<Address> addresses = new ArrayList<>();
+        addresses.add(a1);
+        addresses.add(a2);
+        addresses.add(a3);
+        AddressService service = new AddressService(addressRepository);
+        List<Address> result = service.updateAddress(address,addresses);
+        List<Address> expected = new ArrayList<>();
+        expected.add(address);
+        for(int i=0;i<result.size();i++)
+        {
+            assertEquals(result.get(i),expected.get(i));
+        }
+    }
+    @Test
+    void updateAddress3()
+    {
+        AddressRepository addressRepository = inMemoryRepository;
+        Address address = new Address(AddressType.RESIDENCE, "44-444","a","b","c","d","1","2");
+        Address a1 = new Address(AddressType.RESIDENCE, "44-444","a","b","c","d","1","2");
+        Address a2 = new Address(AddressType.CHECKIN, "44-444","a","b","c","d","1","2");
+        Address a3 = new Address(AddressType.CORRESPONDENCE, "44-444","a","b","c","d","1","2");
+        List<Address> addresses = new ArrayList<>();
+        addresses.add(a1);
+        addresses.add(a2);
+        addresses.add(a3);
+        AddressService service = new AddressService(addressRepository);
+        List<Address> result = service.updateAddress(address,addresses);
+        List<Address> expected = new ArrayList<>();
+        address.setAddressType(AddressType.ALL);
+        expected.add(address);
+        for(int i=0;i<result.size();i++)
+        {
+            assertEquals(result.get(i),expected.get(i));
+        }
+    }
+    @Test
+    void updateAddress4()
+    {
+        AddressRepository addressRepository = inMemoryRepository;
+        Address address = new Address(AddressType.RESIDENCE_CHECKIN, "44-444","a","b","c","d","1","2");
+        Address a1 = new Address(AddressType.RESIDENCE, "44-444","b","b","c","d","1","2");
+        Address a2 = new Address(AddressType.CHECKIN, "44-444","c","b","c","d","1","2");
+        Address a3 = new Address(AddressType.CORRESPONDENCE, "44-444","d","b","c","d","1","2");
+        List<Address> addresses = new ArrayList<>();
+        addresses.add(a1);
+        addresses.add(a2);
+        addresses.add(a3);
+        AddressService service = new AddressService(addressRepository);
+        List<Address> result = service.updateAddress(address,addresses);
+        List<Address> expected = new ArrayList<>();
+        expected.add(address);
+        expected.add(a3);
+        for(int i=0;i<result.size();i++)
+        {
+            assertEquals(result.get(i),expected.get(i));
+        }
+    }
+    @Test
+    void updateAddress5()
+    {
+        AddressRepository addressRepository = inMemoryRepository;
+        Address address = new Address(AddressType.CORRESPONDENCE, "44-444","b","b","c","d","1","2");
 
+        Address a1 = new Address(AddressType.RESIDENCE, "44-444","a","b","c","d","1","2");
+        Address a2 = new Address(AddressType.CHECKIN, "44-444","b","b","c","d","1","2");
+        Address a3 = new Address(AddressType.CORRESPONDENCE, "44-444","c","b","c","d","1","2");
+        List<Address> addresses = new ArrayList<>();
+        addresses.add(a1);
+        addresses.add(a2);
+        addresses.add(a3);
+        AddressService service = new AddressService(addressRepository);
+        List<Address> result = service.updateAddress(address,addresses);
+        List<Address> expected = new ArrayList<>();
+        address.setAddressType(AddressType.CHECKIN_CORRESPONDENCE);
+        expected.add(address);
+        expected.add(a1);
+        for(int i=0;i<result.size();i++)
+        {
+            assertEquals(result.get(i),expected.get(i));
+        }
+    }
+    @Test
+    void wasAddressesDeleted()
+    {
+        AddressRepository addressRepository = inMemoryRepository;
+        Address address = new Address(AddressType.CORRESPONDENCE, "44-444","b","b","c","d","1","2");
+
+        Address a1 = new Address(AddressType.RESIDENCE, "44-444","a","b","c","d","1","2");
+        Address a2 = new Address(AddressType.CHECKIN, "44-444","b","b","c","d","1","2");
+        Address a3 = new Address(AddressType.CORRESPONDENCE, "44-444","c","b","c","d","1","2");
+        a1.setId(new UUID(5,6));
+        a2.setId(new UUID(5,7));
+        a3.setId(new UUID(5,8));
+        Worker worker = new Worker();
+        worker.setId(new UUID(1,1));
+        a1.setWorker(worker);
+        a2.setWorker(worker);
+        a3.setWorker(worker);
+        inMemoryRepository.save(a1);
+        inMemoryRepository.save(a2);
+        inMemoryRepository.save(a3);
+        List<Address> addresses = new ArrayList<>();
+        addresses.add(a1);
+        addresses.add(a2);
+        addresses.add(a3);
+        List<Address> actual = inMemoryRepository.findAllByWorker(worker);
+        assertEquals(3,actual.size());
+        AddressService service = new AddressService(addressRepository);
+        service.updateAddress(address,addresses);
+        actual = inMemoryRepository.findAllByWorker(worker);
+        assertEquals(0,actual.size());
+    }
     private AddressRepository inMemoryRepository = new AddressRepository()
     {
         int counter = 0;

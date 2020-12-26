@@ -91,22 +91,21 @@ class EducationServiceTest
         Education e1 = new Education();
         Education e2 = new Education();
         Education e3 = new Education();
-
-        e1.setId(new UUID(1,6));
-        e2.setId(new UUID(2,5));
-        e3.setId(new UUID(3,4));
+        UUID id1 = UUID.randomUUID();
+        UUID id2 = UUID.randomUUID();
+        UUID id3 = UUID.randomUUID();
+        e1.setId(id1);
+        e2.setId(id2);
+        e3.setId(id3);
         educationRepository.save(e1);
         educationRepository.save(e2);
         educationRepository.save(e3);
         EducationService service = new EducationService(educationRepository);
-        service.deleteById(new UUID(1,6));
-        service.deleteById(new UUID(3,4));
-        assertFalse(educationRepository.existsById(new UUID(1, 6)));
-        assertFalse(educationRepository.existsById(new UUID(3, 4)));
-        assertTrue(educationRepository.existsById(new UUID(2, 5)));
-
-
-        UUID id = UUID.randomUUID();
+        service.deleteById(id1);
+        service.deleteById(id3);
+        assertFalse(educationRepository.existsById(id1));
+        assertFalse(educationRepository.existsById(id3));
+        assertTrue(educationRepository.existsById(id2));
     }
     @Test
     void checkEducationBadYear()
