@@ -29,7 +29,7 @@ public class DataChecker
         }
         if(address.getFlatNumber()!=null)
         {
-            matcher = pattern.matcher(address.getHomeNumber());
+            matcher = pattern.matcher(address.getFlatNumber());
             if(!matcher.matches())
             {
                 throw new BadAddressException("Enter a correct flat number!");

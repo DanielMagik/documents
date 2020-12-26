@@ -72,4 +72,16 @@ public class Education
     {
         this.worker = worker;
     }
+
+
+
+    //TYLKO DO TESTÓW
+    public void setId(UUID id)
+    {
+        this.id = id;
+    }
+    public Worker getWorker()
+    {
+        return worker;
+    }
 }

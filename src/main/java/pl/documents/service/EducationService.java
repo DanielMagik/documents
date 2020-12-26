@@ -7,7 +7,6 @@ import pl.documents.exception.BadIdException;
 import pl.documents.model.Education;
 import pl.documents.repository.EducationRepository;
 
-import javax.persistence.EntityExistsException;
 import java.time.Year;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -60,7 +59,7 @@ public class EducationService
         }
         else
         {
-            throw new IllegalArgumentException("Enter correct year!");
+            throw new BadEducationException("Enter correct year!");
         }
     }
 

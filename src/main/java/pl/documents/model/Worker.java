@@ -841,4 +841,12 @@ public class Worker
     {
         this.updateDate=LocalDateTime.now();
     }
+
+
+
+    //TYLKO DO TESTÓW
+    public void setId(UUID id)
+    {
+        this.id = id;
+    }
 }
