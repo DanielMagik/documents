@@ -67,40 +67,7 @@ class EducationServiceTest
         assertEquals(education2.getGraduationYear(),"1990");
 
     }
-    @Test
-    void deleteByIdNotFound()
-    {
-        var mockEducationRepo = mock(EducationRepository.class);
-        when(mockEducationRepo.existsById(any(UUID.class))).thenReturn(false);
-        EducationService service = new EducationService(mockEducationRepo);
-        UUID id = UUID.randomUUID();
-        boolean result = service.deleteById(id);
-        assertEquals(false,result);
-    }
-    @Test
-    void deleteByIdSuccess()
-    {
-        EducationRepository educationRepository = inMemoryRepository;
 
-        Education e1 = new Education();
-        Education e2 = new Education();
-        Education e3 = new Education();
-        UUID id1 = UUID.randomUUID();
-        UUID id2 = UUID.randomUUID();
-        UUID id3 = UUID.randomUUID();
-        e1.setId(id1);
-        e2.setId(id2);
-        e3.setId(id3);
-        educationRepository.save(e1);
-        educationRepository.save(e2);
-        educationRepository.save(e3);
-        EducationService service = new EducationService(educationRepository);
-        service.deleteById(id1);
-        service.deleteById(id3);
-        assertFalse(educationRepository.existsById(id1));
-        assertFalse(educationRepository.existsById(id3));
-        assertTrue(educationRepository.existsById(id2));
-    }
     @Test
     void checkEducationBadYear()
     {

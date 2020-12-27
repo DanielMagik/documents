@@ -74,41 +74,6 @@ class EmploymentServiceTest
 
     }
 
-    @Test
-    void deleteByIdNotFound()
-    {
-        var mockEmploymentRepo = mock(EmploymentRepository.class);
-        when(mockEmploymentRepo.existsById(any(UUID.class))).thenReturn(false);
-        EmploymentService service = new EmploymentService(mockEmploymentRepo);
-        UUID id = UUID.randomUUID();
-        boolean result = service.deleteById(id);
-        assertFalse(result);
-    }
-    @Test
-    void deleteByIdSuccess()
-    {
-        EmploymentRepository employmentRepository = inMemoryRepository;
-
-        Employment e1 = new Employment();
-        Employment e2 = new Employment();
-        Employment e3 = new Employment();
-        UUID id1 = UUID.randomUUID();
-        UUID id2 = UUID.randomUUID();
-        UUID id3 = UUID.randomUUID();
-        e1.setId(id1);
-        e2.setId(id2);
-        e3.setId(id3);
-        employmentRepository.save(e1);
-        employmentRepository.save(e2);
-        employmentRepository.save(e3);
-        EmploymentService service = new EmploymentService (employmentRepository);
-        service.deleteById(id1);
-        service.deleteById(id2);
-        assertFalse(employmentRepository.existsById(id1));
-        assertFalse(employmentRepository.existsById(id2));
-        assertTrue(employmentRepository.existsById(id3));
-    }
-
         private EmploymentRepository inMemoryRepository = new EmploymentRepository()
     {
         int counter = 0;

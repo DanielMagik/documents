@@ -226,41 +226,6 @@ class FamilyMemberServiceTest
                 hasFieldOrPropertyWithValue("errorMessage", "Enter a correct flat number!");
     }
 
-    @Test
-    void deleteByIdNotFound()
-    {
-        var mockFamilyMemberRepo = mock(FamilyMemberRepository.class);
-        when(mockFamilyMemberRepo.existsById(any(UUID.class))).thenReturn(false);
-        FamilyMemberService service = new FamilyMemberService(mockFamilyMemberRepo);
-        UUID id = UUID.randomUUID();
-        boolean result = service.deleteById(id);
-        assertFalse(result);
-    }
-    @Test
-    void deleteByIdSuccess()
-    {
-        FamilyMemberRepository familyMemberRepository = inMemoryRepository;
-
-        FamilyMember e1 = new FamilyMember();
-        FamilyMember e2 = new FamilyMember();
-        FamilyMember e3 = new FamilyMember();
-        UUID id1 = UUID.randomUUID();
-        UUID id2 = UUID.randomUUID();
-        UUID id3 = UUID.randomUUID();
-        e1.setId(id1);
-        e2.setId(id2);
-        e3.setId(id3);
-        familyMemberRepository.save(e1);
-        familyMemberRepository.save(e2);
-        familyMemberRepository.save(e3);
-        FamilyMemberService service = new FamilyMemberService (familyMemberRepository);
-        service.deleteById(id1);
-        service.deleteById(id2);
-        assertFalse(familyMemberRepository.existsById(id1));
-        assertFalse(familyMemberRepository.existsById(id2));
-        assertTrue(familyMemberRepository.existsById(id3));
-    }
-
     private FamilyMemberRepository inMemoryRepository = new FamilyMemberRepository()
     {
         int counter = 0;
