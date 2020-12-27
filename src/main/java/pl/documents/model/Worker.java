@@ -849,4 +849,54 @@ public class Worker
     {
         this.id = id;
     }
+
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
+
+    public void setEmail(String email)
+    {
+        this.email = email;
+    }
+
+    public void setPhoneNumber(String phoneNumber)
+    {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setFillLocation(String fillLocation)
+    {
+        this.fillLocation = fillLocation;
+    }
+
+    public void setFirstName(String firstName)
+    {
+        this.firstName = firstName;
+    }
+
+    public void setSurname(String surname)
+    {
+        this.surname = surname;
+    }
+
+    public void setDocumentNumber(String documentNumber)
+    {
+        this.documentNumber = documentNumber;
+    }
+
+    public void setDocumentType(String documentType)
+    {
+        this.documentType = documentType;
+    }
+
+    public void setNIP(String NIP)
+    {
+        this.NIP = NIP;
+    }
+
+    public void setAccountNumber(String accountNumber)
+    {
+        this.accountNumber = accountNumber;
+    }
 }

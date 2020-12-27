@@ -27,16 +27,16 @@ import java.util.stream.Collectors;
 public class WorkerService
 {
 
-    private final WorkerRepository repository;
+    private final WorkerRepository workerRepository;
     private final EducationRepository educationRepository;
     private final AddressRepository addressRepository;
     private final EmploymentRepository employmentRepository;
     private final FamilyMemberRepository familyMemberRepository;
 
-    public WorkerService(final WorkerRepository repository, final EducationRepository educationRepository,
+    public WorkerService(final WorkerRepository workerRepository, final EducationRepository educationRepository,
                          final AddressRepository addressRepository, final EmploymentRepository employmentRepository, final FamilyMemberRepository familyMemberRepository)
     {
-        this.repository = repository;
+        this.workerRepository = workerRepository;
         this.educationRepository = educationRepository;
         this.addressRepository = addressRepository;
         this.employmentRepository = employmentRepository;
@@ -49,7 +49,7 @@ public class WorkerService
      */
     public List<WorkerReadModel> readAllWorkers()
     {
-        return repository.findAll().stream()
+        return workerRepository.findAll().stream()
                 .map(WorkerReadModel::new).collect(Collectors.toList());
     }
 
@@ -61,7 +61,7 @@ public class WorkerService
     public WorkerReadModel readById(UUID id) throws BadIdException
     {
         Worker result;
-            result = repository.findById(id).orElseThrow(
+            result = workerRepository.findById(id).orElseThrow(
                     () -> new BadIdException("Worker with id "+id+" doesn't exists!")
             );
             return new WorkerReadModel(result);
@@ -69,7 +69,7 @@ public class WorkerService
     public WorkerReadModel readByEmailAndPassword(Worker worker) throws LoginException
     {
         Worker result;
-        result=repository.findByEmailAndPassword(worker.getEmail(),worker.getPassword()).orElseThrow(
+        result= workerRepository.findByEmailAndPassword(worker.getEmail(),worker.getPassword()).orElseThrow(
                 () -> new LoginException("Bad login or password!")
         );
         return new WorkerReadModel(result);
@@ -83,11 +83,11 @@ public class WorkerService
     @Transactional
     public boolean deleteById(UUID id)
     {
-        if(!repository.existsById(id))
+        if(!workerRepository.existsById(id))
         {
             return false;
         }
-        repository.deleteById(id);
+        workerRepository.deleteById(id);
         return true;
     }
 
@@ -98,7 +98,15 @@ public class WorkerService
      */
     public WorkerReadModel createWorker(Worker source) throws RegisterException
     {
-        if(repository.existsByEmail(source.getEmail()))
+
+        Pattern email = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)");
+        Matcher matcher = email.matcher(source.getEmail());
+        if(!matcher.matches())
+        {
+            throw new RegisterException("Bad e-mail!");
+        }
+
+        if(workerRepository.existsByEmail(source.getEmail()))
             throw new RegisterException("In database already exists worker with e-mail: " + source.getEmail()+ " !");
         String password = source.getPassword();
         if(password.length()<8)
@@ -110,7 +118,7 @@ public class WorkerService
         Pattern bigLetter = Pattern.compile("^(?=.*[A-Z]).{8,}$");
         Pattern blank = Pattern.compile("^(?=\\S+$).{8,}$");
         Pattern special = Pattern.compile("^(?=.*[~`!@#$%^&*()_+=\\-|\\\\/?:;'\"{}\\[\\]]).{8,}$");
-        Matcher matcher = digit.matcher(password);
+        matcher = digit.matcher(password);
         if(!matcher.matches())
         {
             throw new RegisterException("Password doesn't contains any digit!");
@@ -135,14 +143,9 @@ public class WorkerService
         {
             throw new RegisterException("Password doesn't contains any special character!");
         }
-        Pattern email = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)");
-        matcher = email.matcher(source.getEmail());
-        if(!matcher.matches())
-        {
-            throw new RegisterException("Bad e-mail!");
-        }
 
-        repository.save(source);
+
+        workerRepository.save(source);
         return new WorkerReadModel(source);
     }
 
@@ -151,13 +154,16 @@ public class WorkerService
      * @param id id zmienianego pracownika
      * @param toUpdate nowe dane pracownika
      */
-    public void updateWorker(UUID id, Worker toUpdate)
+    public void updateWorker(UUID id, Worker toUpdate) throws BadIdException
     {
-        //zmiana danych pracownika
-        repository.findById(id).
+        if(!workerRepository.existsById(id))
+        {
+            throw new BadIdException("Worker with id "+id+" doesn't exists");
+        }
+        workerRepository.findById(id).
                 ifPresent(worker ->{
                     worker.updateFrom(toUpdate);
-                    repository.save(worker);
+                    workerRepository.save(worker);
                 });
     }
 
@@ -169,21 +175,22 @@ public class WorkerService
     public void checkData(UUID id, Worker worker) throws BadWorkerException, BadIdException
     {
 
-        Worker oldData = repository.findById(id).orElseThrow(
+        Worker oldData = workerRepository.findById(id).orElseThrow(
                 ()-> new BadIdException("Worker with id "+id+" doesn't exists")
         );
         Pattern pattern;
         Matcher matcher;
+        //E-MAIL NIE MUSI BYĆ SPRAWDZANY, ZMIANA MAILA NASTĄPI W INNEJ FUNKCJI!
         //email
-        pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)");
-        matcher = pattern.matcher(worker.getEmail());
-        if(!matcher.matches())
-            throw new BadWorkerException("Bad e-mail!");
+        //pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)");
+        //matcher = pattern.matcher(worker.getEmail());
+        //if(!matcher.matches())
+        //    throw new BadWorkerException("Bad e-mail!");
         //numer telefonu
         pattern = Pattern.compile("\\d{9,11}");
         matcher = pattern.matcher(worker.getPhoneNumber());
         if(!matcher.matches())
-            throw new BadWorkerException("Bad phone number");
+            throw new BadWorkerException("Bad phone number!");
         //miejscowość wypełnienia
         if(worker.getFillLocation().isBlank())
             throw new BadWorkerException("Enter the place of filling!");
@@ -200,7 +207,7 @@ public class WorkerService
         if(!DataChecker.compareStrings(oldData.getDocumentNumber(),worker.getDocumentNumber()) || !DataChecker.compareStrings(oldData.getDocumentType(),worker.getDocumentType()))
         {
             // w bazie istnieje pracownik, który podał ten sam numer dokumentu i typ dokumentu
-            if(repository.existsByDocumentNumberAndDocumentType(worker.getDocumentNumber(),worker.getDocumentType()))
+            if(workerRepository.existsByDocumentNumberAndDocumentType(worker.getDocumentNumber(),worker.getDocumentType()))
             {
                 if(worker.getDocumentType()==null)//PESEL
                     throw new BadWorkerException("There is a person in the database with the same PESEL number!");
@@ -254,7 +261,7 @@ public class WorkerService
      */
     public List<EducationReadModel> readWorkerEducation(UUID id) throws BadIdException
     {
-            Worker result = repository.findById(id).orElseThrow(
+            Worker result = workerRepository.findById(id).orElseThrow(
                     () -> new BadIdException("Worker with id "+id+" doesn't exists!")
             );
             return educationRepository.findAllByWorker(result).stream()
@@ -267,7 +274,7 @@ public class WorkerService
      */
     public List<EmploymentReadModel> readWorkerEmployment(UUID id) throws BadIdException
     {
-        Worker result = repository.findById(id).orElseThrow(
+        Worker result = workerRepository.findById(id).orElseThrow(
                 () -> new BadIdException("Worker with id "+id+" doesn't exists!")
         );
         return employmentRepository.findAllByWorker(result).stream()
@@ -282,7 +289,7 @@ public class WorkerService
      */
     public List<Address> readWorkerAddresses(UUID id) throws BadIdException
     {
-        Worker result = repository.findById(id).orElseThrow(
+        Worker result = workerRepository.findById(id).orElseThrow(
                 () -> new BadIdException("Worker with id "+id+" doesn't exists!")
         );
         return addressRepository.findAllByWorker(result);
@@ -295,7 +302,7 @@ public class WorkerService
      */
     public List<FamilyMemberReadModel> readWorkerFamily(UUID id) throws BadIdException
     {
-        Worker result = repository.findById(id).orElseThrow(
+        Worker result = workerRepository.findById(id).orElseThrow(
                 () -> new BadIdException("Worker with id "+id+" doesn't exists!")
         );
         return familyMemberRepository.findAllByWorker(result).stream()
@@ -343,11 +350,11 @@ public class WorkerService
      */
     public void addEducation(UUID id, Education education) throws BadIdException
     {
-        if(!repository.existsById(id))
+        if(!workerRepository.existsById(id))
         {
             throw new BadIdException("Worker with id "+id+" doesn't exists!");
         }
-        repository.findById(id).ifPresent(
+        workerRepository.findById(id).ifPresent(
                 worker ->
                 {
                     education.setWorker(worker);
@@ -362,11 +369,11 @@ public class WorkerService
      */
     public void addEmployment(UUID id, Employment employment) throws BadIdException
     {
-        if(!repository.existsById(id))
+        if(!workerRepository.existsById(id))
         {
             throw new BadIdException("Worker with id "+id+" doesn't exists!");
         }
-        repository.findById(id).ifPresent(
+        workerRepository.findById(id).ifPresent(
                 worker ->
                 {
                     employment.setWorker(worker);
@@ -383,11 +390,11 @@ public class WorkerService
      */
     public void addAddress(UUID id, Address address) throws BadIdException
     {
-        if(!repository.existsById(id))
+        if(!workerRepository.existsById(id))
         {
             throw new BadIdException("Worker with id "+id+" doesn't exists!");
         }
-        repository.findById(id).ifPresent(
+        workerRepository.findById(id).ifPresent(
                 worker ->
                 {
                     address.setWorker(worker);
@@ -402,11 +409,11 @@ public class WorkerService
      */
     public void addFamilyMember(UUID id, FamilyMember familyMember) throws BadIdException
     {
-        if(!repository.existsById(id))
+        if(!workerRepository.existsById(id))
         {
             throw new BadIdException("Worker with id "+id+" doesn't exists!");
         }
-        repository.findById(id).ifPresent(
+        workerRepository.findById(id).ifPresent(
                 worker ->
                 {
                     familyMember.setWorker(worker);

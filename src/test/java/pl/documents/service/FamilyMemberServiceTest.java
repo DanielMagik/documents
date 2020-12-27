@@ -115,17 +115,6 @@ class FamilyMemberServiceTest
 
 
     }
-    @Test
-    void updateFamilyMemberSuccessfulBadIdException()
-    {
-        var mockFamilyMemberRepo = mock(FamilyMemberRepository.class);
-        when(mockFamilyMemberRepo.existsById(any(UUID.class))).thenReturn(false);
-        FamilyMemberService service = new FamilyMemberService(mockFamilyMemberRepo);
-        UUID id = UUID.randomUUID();
-        var exception = catchThrowable(()->service.updateFamilyMember(id,null));
-        assertThat(exception).isInstanceOf(BadIdException.class).
-                hasFieldOrPropertyWithValue("errorMessage", "Family member with id "+id+" doesn't exists");
-    }
 
     @Test
     void checkDataBadPESEL()
@@ -224,6 +213,20 @@ class FamilyMemberServiceTest
                 hasFieldOrPropertyWithValue("errorMessage", "Enter a correct flat number!");
         assertThat(exception1).isInstanceOf(BadAddressException.class).
                 hasFieldOrPropertyWithValue("errorMessage", "Enter a correct flat number!");
+    }
+    @Test
+    void checkDataNoException()
+    {
+        FamilyMemberService service = new FamilyMemberService(null);
+
+        FamilyMember familyMember = new FamilyMember(Relationship.CHILD, "A", "C", LocalDate.of(2010,10,13), true, true, true, null,
+                null, false, false, "98043025566", "Gliwice","31-123", "a", "b", "c", "1", "a");
+        FamilyMember familyMember1 = new FamilyMember(Relationship.CHILD, "B", "V", LocalDate.of(2010,10,13), true, true, true, null,
+                null, false, false, "70091836668", "Gliwice","31-345", "a", "b", "c", "1", "2a");
+        var exception = catchThrowable(()->service.checkData(familyMember));
+        var exception1 = catchThrowable(()->service.checkData(familyMember1));
+        assertThat(exception).doesNotThrowAnyException();
+        assertThat(exception1).doesNotThrowAnyException();
     }
 
     private FamilyMemberRepository inMemoryRepository = new FamilyMemberRepository()
