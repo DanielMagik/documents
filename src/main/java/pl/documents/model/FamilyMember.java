@@ -265,4 +265,14 @@ public class FamilyMember
         return flatNumber;
     }
 
+    //TYLKO DO TESTÓW
+    public Worker getWorker()
+    {
+        return worker;
+    }
+
+    public void setId(UUID id)
+    {
+        this.id = id;
+    }
 }

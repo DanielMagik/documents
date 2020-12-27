@@ -21,7 +21,7 @@ public class DataChecker
         {
             throw new BadAddressException("Enter a correct postal code!");
         }
-        pattern=Pattern.compile("\\d{1,}\\w{0,1}");
+        pattern=Pattern.compile("\\d{0,1}\\w{0,1}");
         matcher=pattern.matcher(address.getHomeNumber());
         if(!matcher.matches())
         {

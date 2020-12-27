@@ -185,13 +185,13 @@ public class WorkerService
         if(!matcher.matches())
             throw new BadWorkerException("Bad phone number");
         //miejscowość wypełnienia
-        if(isNotWord(worker.getFillLocation()))
+        if(worker.getFillLocation().isBlank())
             throw new BadWorkerException("Enter the place of filling!");
         //imię
-        if(isNotWord(worker.getFirstName()))
+        if(worker.getFirstName().isBlank())
             throw new BadWorkerException("Enter name!");
         //nazwisko
-        if(isNotWord(worker.getSurname()))
+        if(worker.getSurname().isBlank())
             throw new BadWorkerException("Enter surname!");
         //numer PESEL/dokumentu
 
@@ -307,14 +307,7 @@ public class WorkerService
      * @param data przekazane słowo
      * @return informacja, czy data jest słowem
      */
-    private boolean isNotWord(String data)
-    {
-        if(data==null)
-            return true;
-        if(data.isEmpty())
-            return true;
-        return data.isBlank();
-    }
+
 
     /**
      * Sprawdzenie, czy przekazany string jest prawidłowym NIP-em

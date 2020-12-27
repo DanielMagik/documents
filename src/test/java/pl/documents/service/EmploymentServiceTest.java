@@ -37,16 +37,12 @@ class EmploymentServiceTest
     {
 
         EmploymentRepository employmentRepository = inMemoryRepository;
-        Worker w1 = new Worker();
-        Worker w2 = new Worker();
-        w1.setId(new UUID(0,1));
-        w2.setId(new UUID(0,2));
+
         Employment e1 = new Employment(YearMonth.of(2012,5),YearMonth.of(2012,6),"A","b");
         Employment e2 = new Employment(YearMonth.of(2013,6),YearMonth.of(2013,7),"C","d");
         e1.setId(new UUID(0,1));
         e2.setId(new UUID(0,2));
-        e1.setWorker(w1);
-        e2.setWorker(w1);
+
         Employment update = new Employment(YearMonth.of(2014,7),YearMonth.of(2014,8),"AAA","b b");
         Employment update2 = new Employment(YearMonth.of(2015,8),YearMonth.of(2015,9),"BBB","a a");
         employmentRepository.save(e1);
@@ -113,7 +109,7 @@ class EmploymentServiceTest
         assertTrue(employmentRepository.existsById(id3));
     }
 
-    private EmploymentRepository inMemoryRepository = new EmploymentRepository()
+        private EmploymentRepository inMemoryRepository = new EmploymentRepository()
     {
         int counter = 0;
         UUID index = new UUID(0,counter);

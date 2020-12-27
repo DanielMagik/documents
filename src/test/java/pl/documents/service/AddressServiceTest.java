@@ -155,7 +155,7 @@ class AddressServiceTest
     void badFlatNumber1()
     {
         AddressService service = new AddressService(null);
-        Address update = new Address(AddressType.CORRESPONDENCE, "34-777","c","b","c","d","34","a");
+        Address update = new Address(AddressType.CORRESPONDENCE, "34-777","c","b","c","d","34","acv");
         var exception = catchThrowable(()->service.checkTypeExists(update,null));
         assertThat(exception).isInstanceOf(BadAddressException.class).
                 hasFieldOrPropertyWithValue("errorMessage","Enter a correct flat number!");
@@ -210,7 +210,6 @@ class AddressServiceTest
     void updateAddress1()
     {
         AddressRepository addressRepository = inMemoryRepository;
-        Worker worker = new Worker();
         Address address = new Address(AddressType.RESIDENCE, "44-444","a","b","c","d","1","2");
         Address a1 = new Address(AddressType.RESIDENCE, "44-444","b","b","c","d","1","2");
         Address a2 = new Address(AddressType.CHECKIN, "44-444","c","b","c","d","1","2");
@@ -228,6 +227,7 @@ class AddressServiceTest
         for(int i=0;i<result.size();i++)
         {
             assertEquals(result.get(i),expected.get(i));
+            assertEquals(result.get(i).getAddressType(),expected.get(i).getAddressType());
         }
     }
     @Test
@@ -249,6 +249,7 @@ class AddressServiceTest
         for(int i=0;i<result.size();i++)
         {
             assertEquals(result.get(i),expected.get(i));
+            assertEquals(result.get(i).getAddressType(),expected.get(i).getAddressType());
         }
     }
     @Test
@@ -271,6 +272,7 @@ class AddressServiceTest
         for(int i=0;i<result.size();i++)
         {
             assertEquals(result.get(i),expected.get(i));
+            assertEquals(result.get(i).getAddressType(),expected.get(i).getAddressType());
         }
     }
     @Test
@@ -293,6 +295,7 @@ class AddressServiceTest
         for(int i=0;i<result.size();i++)
         {
             assertEquals(result.get(i),expected.get(i));
+            assertEquals(result.get(i).getAddressType(),expected.get(i).getAddressType());
         }
     }
     @Test
@@ -317,6 +320,7 @@ class AddressServiceTest
         for(int i=0;i<result.size();i++)
         {
             assertEquals(result.get(i),expected.get(i));
+            assertEquals(result.get(i).getAddressType(),expected.get(i).getAddressType());
         }
     }
     @Test

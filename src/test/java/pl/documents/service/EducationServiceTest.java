@@ -38,16 +38,10 @@ class EducationServiceTest
     {
 
         EducationRepository educationRepository = inMemoryRepository;
-        Worker w1 = new Worker();
-        Worker w2 = new Worker();
-        w1.setId(new UUID(0,1));
-        w2.setId(new UUID(0,2));
         Education e1 = new Education("POLSL","2010");
         Education e2 = new Education("POLCZ", "2012");
         e1.setId(new UUID(0,1));
         e2.setId(new UUID(0,2));
-        e1.setWorker(w1);
-        e2.setWorker(w1);
         Education update = new Education("US", "2013");
         Education update2 = new Education("PPP", "1990");
         educationRepository.save(e1);
