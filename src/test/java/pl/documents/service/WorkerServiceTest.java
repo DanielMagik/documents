@@ -1,5 +1,6 @@
 package pl.documents.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,13 +18,20 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 class WorkerServiceTest
 {
-
+    private Worker worker;
+    private WorkerService service;
+    private WorkerRepository repository;
+    @BeforeEach
+    void init()
+    {
+        worker = new Worker();
+        repository=inMemoryRepository;
+        service=new WorkerService(repository,null,null,null,null);
+    }
     @Test
     void createWorkerBadEmail1()
     {
-        Worker worker = new Worker();
         worker.setEmail("a@");
-        WorkerService service = new WorkerService(null,null,null,null,null);
         var exception = catchThrowable(()->service.createWorker(worker));
         assertThat(exception).isInstanceOf(RegisterException.class).
                 hasFieldOrPropertyWithValue("errorMessage", "Bad e-mail!");
@@ -31,9 +39,7 @@ class WorkerServiceTest
     @Test
     void createWorkerBadEmail2()
     {
-        Worker worker = new Worker();
         worker.setEmail("@a");
-        WorkerService service = new WorkerService(null,null,null,null,null);
         var exception = catchThrowable(()->service.createWorker(worker));
         assertThat(exception).isInstanceOf(RegisterException.class).
                 hasFieldOrPropertyWithValue("errorMessage", "Bad e-mail!");
@@ -41,14 +47,11 @@ class WorkerServiceTest
     @Test
     void createWorkerEmailExists()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker = new Worker();
         worker.setEmail("a@a.pl");
         worker.setId(UUID.randomUUID());
         repository.save(worker);
         Worker worker1 = new Worker();
         worker1.setEmail("a@a.pl");
-        WorkerService service = new WorkerService(repository,null,null,null,null);
         var exception = catchThrowable(()->service.createWorker(worker1));
         assertThat(exception).isInstanceOf(RegisterException.class).
                 hasFieldOrPropertyWithValue("errorMessage", "In database already exists worker with e-mail: "+worker1.getEmail()+" !");
@@ -56,83 +59,62 @@ class WorkerServiceTest
     @Test
     void createWorkerTooShortPassword()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
-        worker1.setEmail("a@a.pl");
-        worker1.setPassword("a");
-        WorkerService service = new WorkerService(repository,null,null,null,null);
-        var exception = catchThrowable(()->service.createWorker(worker1));
+        worker.setEmail("a@a.pl");
+        worker.setPassword("a");
+        var exception = catchThrowable(()->service.createWorker(worker));
         assertThat(exception).isInstanceOf(RegisterException.class).
                 hasFieldOrPropertyWithValue("errorMessage", "Too short password. It must contain at least 8 characters!");
     }
     @Test
     void createWorkerPasswordAnyDigit()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
-        worker1.setEmail("a@a.pl");
-        worker1.setPassword("aaaaaaaa");
-        WorkerService service = new WorkerService(repository,null,null,null,null);
-        var exception = catchThrowable(()->service.createWorker(worker1));
+        worker.setEmail("a@a.pl");
+        worker.setPassword("aaaaaaaa");
+        var exception = catchThrowable(()->service.createWorker(worker));
         assertThat(exception).isInstanceOf(RegisterException.class).
                 hasFieldOrPropertyWithValue("errorMessage", "Password doesn't contains any digit!");
     }
     @Test
     void createWorkerPasswordAnyBigLetter()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
-        worker1.setEmail("a@a.pl");
-        worker1.setPassword("aaaaaaaa1");
-        WorkerService service = new WorkerService(repository,null,null,null,null);
-        var exception = catchThrowable(()->service.createWorker(worker1));
+        worker.setEmail("a@a.pl");
+        worker.setPassword("aaaaaaaa1");
+        var exception = catchThrowable(()->service.createWorker(worker));
         assertThat(exception).isInstanceOf(RegisterException.class).
                 hasFieldOrPropertyWithValue("errorMessage", "Password doesn't contains any big letter!");
     }
     @Test
     void createWorkerPasswordAnySmallLetter()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
-        worker1.setEmail("a@a.pl");
-        worker1.setPassword("AAAAAAAA1");
-        WorkerService service = new WorkerService(repository,null,null,null,null);
-        var exception = catchThrowable(()->service.createWorker(worker1));
+        worker.setEmail("a@a.pl");
+        worker.setPassword("AAAAAAAA1");
+        var exception = catchThrowable(()->service.createWorker(worker));
         assertThat(exception).isInstanceOf(RegisterException.class).
                 hasFieldOrPropertyWithValue("errorMessage", "Password doesn't contains any small letter!");
     }
     @Test
     void createWorkerPasswordAnySpecialCharacter()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
-        worker1.setEmail("a@a.pl");
-        worker1.setPassword("AAAAAAAAa1");
-        WorkerService service = new WorkerService(repository,null,null,null,null);
-        var exception = catchThrowable(()->service.createWorker(worker1));
+        worker.setEmail("a@a.pl");
+        worker.setPassword("AAAAAAAAa1");
+        var exception = catchThrowable(()->service.createWorker(worker));
         assertThat(exception).isInstanceOf(RegisterException.class).
                 hasFieldOrPropertyWithValue("errorMessage", "Password doesn't contains any special character!");
     }
     @Test
     void createWorkerPasswordCorrect()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
-        worker1.setEmail("a@a.pl");
-        worker1.setPassword("AAAAAAAAa1\"");
-        worker1.setId(UUID.randomUUID());
-        WorkerService service = new WorkerService(repository,null,null,null,null);
-        var exception = catchThrowable(()->service.createWorker(worker1));
+        worker.setEmail("a@a.pl");
+        worker.setPassword("AAAAAAAAa1\"");
+        worker.setId(UUID.randomUUID());
+        var exception = catchThrowable(()->service.createWorker(worker));
         assertThat(exception).doesNotThrowAnyException();
     }
     @Test
     void checkDataBadID()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
         UUID id = UUID.randomUUID();
-        worker1.setId(id);
-        WorkerService service = new WorkerService(repository,null,null,null,null);
+        worker.setId(id);
         var exception = catchThrowable(()->service.checkData(id, null));
         assertThat(exception).isInstanceOf(BadIdException.class).
             hasFieldOrPropertyWithValue("errorMessage", "Worker with id "+id+" doesn't exists");
@@ -140,12 +122,9 @@ class WorkerServiceTest
     @Test
     void checkDataBadPhoneNumber()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
         UUID id = UUID.randomUUID();
-        worker1.setId(id);
-        repository.save(worker1);
-        WorkerService service = new WorkerService(repository,null,null,null,null);
+        worker.setId(id);
+        repository.save(worker);
         Worker update = new Worker();
         update.setPhoneNumber("12345");
 
@@ -156,12 +135,9 @@ class WorkerServiceTest
     @Test
     void checkDataNoPlaceOfFilling()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
         UUID id = UUID.randomUUID();
-        worker1.setId(id);
-        repository.save(worker1);
-        WorkerService service = new WorkerService(repository,null,null,null,null);
+        worker.setId(id);
+        repository.save(worker);
         Worker update = new Worker();
         update.setPhoneNumber("123456778");
         update.setFillLocation(" ");
@@ -172,12 +148,9 @@ class WorkerServiceTest
     @Test
     void checkDataNoName()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
         UUID id = UUID.randomUUID();
-        worker1.setId(id);
-        repository.save(worker1);
-        WorkerService service = new WorkerService(repository,null,null,null,null);
+        worker.setId(id);
+        repository.save(worker);
         Worker update = new Worker();
         update.setPhoneNumber("123456778");
         update.setFillLocation("a");
@@ -189,12 +162,9 @@ class WorkerServiceTest
     @Test
     void checkDataNoSurname()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
         UUID id = UUID.randomUUID();
-        worker1.setId(id);
-        repository.save(worker1);
-        WorkerService service = new WorkerService(repository,null,null,null,null);
+        worker.setId(id);
+        repository.save(worker);
         Worker update = new Worker();
         update.setPhoneNumber("123456778");
         update.setFillLocation("a");
@@ -207,20 +177,17 @@ class WorkerServiceTest
     @Test
     void checkDataThatSamePESEL()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
         UUID id = new UUID(0,1);
         UUID id2 = new UUID(0,2);
-        worker1.setId(id);
-        worker1.setDocumentType(null);
-        worker1.setDocumentNumber("96120526159");
-        repository.save(worker1);
+        worker.setId(id);
+        worker.setDocumentType(null);
+        worker.setDocumentNumber("96120526159");
+        repository.save(worker);
         Worker worker2 = new Worker();
         worker2.setDocumentNumber("53080343741");
         worker2.setDocumentType(null);
         worker2.setId(id2);
         repository.save(worker2);
-        WorkerService service = new WorkerService(repository,null,null,null,null);
         Worker update = new Worker();
         update.setPhoneNumber("123456778");
         update.setFillLocation("a");
@@ -235,20 +202,18 @@ class WorkerServiceTest
     @Test
     void checkDataThatSameDocumentNumber()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
+        Worker worker = new Worker();
         UUID id = new UUID(0,1);
         UUID id2 = new UUID(0,2);
-        worker1.setId(id);
-        worker1.setDocumentType("P");
-        worker1.setDocumentNumber("96120526159");
-        repository.save(worker1);
+        worker.setId(id);
+        worker.setDocumentType("P");
+        worker.setDocumentNumber("96120526159");
+        repository.save(worker);
         Worker worker2 = new Worker();
         worker2.setDocumentNumber("53080343741");
         worker2.setDocumentType("P");
         worker2.setId(id2);
         repository.save(worker2);
-        WorkerService service = new WorkerService(repository,null,null,null,null);
         Worker update = new Worker();
         update.setPhoneNumber("123456778");
         update.setFillLocation("a");
@@ -263,14 +228,11 @@ class WorkerServiceTest
     @Test
     void checkDataBadPESEL()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
         UUID id = UUID.randomUUID();
-        worker1.setId(id);
-        worker1.setDocumentType(null);
-        worker1.setDocumentNumber("96120526159");
-        repository.save(worker1);
-        WorkerService service = new WorkerService(repository,null,null,null,null);
+        worker.setId(id);
+        worker.setDocumentType(null);
+        worker.setDocumentNumber("96120526159");
+        repository.save(worker);
         Worker update = new Worker();
         update.setPhoneNumber("123456778");
         update.setFillLocation("a");
@@ -285,14 +247,11 @@ class WorkerServiceTest
     @Test
     void checkDataBadNIP()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
         UUID id = UUID.randomUUID();
-        worker1.setId(id);
-        worker1.setDocumentType(null);
-        worker1.setDocumentNumber("96120526159");
-        repository.save(worker1);
-        WorkerService service = new WorkerService(repository,null,null,null,null);
+        worker.setId(id);
+        worker.setDocumentType(null);
+        worker.setDocumentNumber("96120526159");
+        repository.save(worker);
         Worker update = new Worker();
         update.setPhoneNumber("123456778");
         update.setFillLocation("a");
@@ -308,14 +267,11 @@ class WorkerServiceTest
     @Test
     void checkDataBadAccountNumberFormat()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
         UUID id = UUID.randomUUID();
-        worker1.setId(id);
-        worker1.setDocumentType(null);
-        worker1.setDocumentNumber("96120526159");
-        repository.save(worker1);
-        WorkerService service = new WorkerService(repository,null,null,null,null);
+        worker.setId(id);
+        worker.setDocumentType(null);
+        worker.setDocumentNumber("96120526159");
+        repository.save(worker);
         Worker update = new Worker();
         update.setPhoneNumber("123456778");
         update.setFillLocation("a");
@@ -331,14 +287,11 @@ class WorkerServiceTest
     @Test
     void checkDataBadAccountNumber()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
         UUID id = UUID.randomUUID();
-        worker1.setId(id);
-        worker1.setDocumentType(null);
-        worker1.setDocumentNumber("96120526159");
-        repository.save(worker1);
-        WorkerService service = new WorkerService(repository,null,null,null,null);
+        worker.setId(id);
+        worker.setDocumentType(null);
+        worker.setDocumentNumber("96120526159");
+        repository.save(worker);
         Worker update = new Worker();
         update.setPhoneNumber("123456778");
         update.setFillLocation("a");
@@ -354,14 +307,11 @@ class WorkerServiceTest
     @Test
     void checkDataNoException()
     {
-        WorkerRepository repository = inMemoryRepository;
-        Worker worker1 = new Worker();
         UUID id = UUID.randomUUID();
-        worker1.setId(id);
-        worker1.setDocumentType(null);
-        worker1.setDocumentNumber("96120526159");
-        repository.save(worker1);
-        WorkerService service = new WorkerService(repository,null,null,null,null);
+        worker.setId(id);
+        worker.setDocumentType(null);
+        worker.setDocumentNumber("96120526159");
+        repository.save(worker);
         Worker update = new Worker();
         update.setPhoneNumber("123456778");
         update.setFillLocation("a");

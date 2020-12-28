@@ -1,5 +1,6 @@
 package pl.documents.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.documents.exception.BadEducationException;
 import pl.documents.exception.BadIdException;
@@ -20,7 +21,13 @@ import static org.mockito.Mockito.when;
 
 class EducationServiceTest
 {
-
+    private EducationService service;
+    @BeforeEach
+    void init()
+    {
+        service=new EducationService(null);
+    }
+    /*
     @Test
     void updateEducationBadIdException()
     {
@@ -65,14 +72,12 @@ class EducationServiceTest
         assertEquals(education.getGraduationYear(),"2013");
         assertEquals(education2.getSchoolName(),"PPP");
         assertEquals(education2.getGraduationYear(),"1990");
-
     }
+    */
 
     @Test
     void checkEducationBadYear()
     {
-
-        EducationService service = new EducationService(null);
 
         Education education = new Education("Asdf","aaa");
         Education education1 = new Education("1000","1000");
@@ -80,27 +85,28 @@ class EducationServiceTest
         var exception = catchThrowable(()->service.checkData(education));
         var exception1 = catchThrowable(()->service.checkData(education1));
         var exception2 = catchThrowable(()->service.checkData(education2));
-        assertThat(exception).isInstanceOf(BadEducationException.class).
-                hasFieldOrPropertyWithValue("errorMessage", "Enter correct year!");
-        assertThat(exception1).isInstanceOf(BadEducationException.class).
-                hasFieldOrPropertyWithValue("errorMessage", "Enter correct year!");
-        assertThat(exception2).isInstanceOf(BadEducationException.class).
-                hasFieldOrPropertyWithValue("errorMessage", "Enter correct year!");
+
+        assertAll(
+
+                ()->assertThat(exception).isInstanceOf(BadEducationException.class).
+                hasFieldOrPropertyWithValue("errorMessage", "Enter correct year!"),
+                ()->assertThat(exception1).isInstanceOf(BadEducationException.class).
+                hasFieldOrPropertyWithValue("errorMessage", "Enter correct year!"),
+                ()->assertThat(exception2).isInstanceOf(BadEducationException.class).
+                hasFieldOrPropertyWithValue("errorMessage", "Enter correct year!")
+        );
 
     }
     @Test
     void checkEducationNoException()
     {
-
-        EducationService service = new EducationService(null);
-
         Education education = new Education("Asdf","2010");
         var exception = catchThrowable(()->service.checkData(education));
-
         assertThat(exception).doesNotThrowAnyException();
 
     }
 
+    /*
     private EducationRepository inMemoryRepository = new EducationRepository()
     {
         int counter = 0;
@@ -147,4 +153,5 @@ class EducationServiceTest
         }
 
     };
+     */
 }

@@ -1,5 +1,6 @@
 package pl.documents.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.documents.exception.BadAddressException;
 import pl.documents.exception.BadFamilyMemberException;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.when;
 
 class FamilyMemberServiceTest
 {
+    /*
     @Test
     void updateFamilyMemberBadIdException()
     {
@@ -112,123 +114,128 @@ class FamilyMemberServiceTest
 
         assertEquals(familyMember.getSurname(), update.getSurname());
         assertEquals(familyMember1.getSurname(), update2.getSurname());
-
-
     }
-
+     */
+    private FamilyMemberService service;
+    @BeforeEach
+    void init()
+    {
+        service=new FamilyMemberService(null);
+    }
     @Test
     void checkDataBadPESEL()
     {
-        FamilyMemberService service = new FamilyMemberService(null);
-
         FamilyMember familyMember = new FamilyMember(Relationship.CHILD, "Agata", "Nowak", LocalDate.of(2010,10,13), true, true, true, null,
             null, false, false, "98043025565", "Gliwice","31-123", "a", "b", "c", "1", "2");
         FamilyMember familyMember1 = new FamilyMember(Relationship.CHILD, "Agata", "Nowak", LocalDate.of(2010,10,13), true, true, true, null,
                 null, false, false, "70091836669", "Gliwice","31-123", "a", "b", "c", "1", "2");
         var exception = catchThrowable(()->service.checkData(familyMember));
         var exception1 = catchThrowable(()->service.checkData(familyMember1));
-        assertThat(exception).isInstanceOf(BadFamilyMemberException.class).
-                hasFieldOrPropertyWithValue("errorMessage", "Bad PESEL of family member!");
-        assertThat(exception1).isInstanceOf(BadFamilyMemberException.class).
-                hasFieldOrPropertyWithValue("errorMessage", "Bad PESEL of family member!");
+        assertAll(
+                ()->assertThat(exception).isInstanceOf(BadFamilyMemberException.class).
+                hasFieldOrPropertyWithValue("errorMessage", "Bad PESEL of family member!"),
+                ()->assertThat(exception1).isInstanceOf(BadFamilyMemberException.class).
+                hasFieldOrPropertyWithValue("errorMessage", "Bad PESEL of family member!")
+        );
     }
     @Test
     void checkDataBadName()
     {
-        FamilyMemberService service = new FamilyMemberService(null);
-
         FamilyMember familyMember = new FamilyMember(Relationship.CHILD, "", "Nowak", LocalDate.of(2010,10,13), true, true, true, null,
                 null, false, false, "98043025566", "Gliwice","31-123", "a", "b", "c", "1", "2");
         FamilyMember familyMember1 = new FamilyMember(Relationship.CHILD, "      ", "Nowak", LocalDate.of(2010,10,13), true, true, true, null,
                 null, false, false, "70091836668", "Gliwice","31-123", "a", "b", "c", "1", "2");
         var exception = catchThrowable(()->service.checkData(familyMember));
         var exception1 = catchThrowable(()->service.checkData(familyMember1));
-        assertThat(exception).isInstanceOf(BadFamilyMemberException.class).
-                hasFieldOrPropertyWithValue("errorMessage", "Bad name of family member!");
-        assertThat(exception1).isInstanceOf(BadFamilyMemberException.class).
-                hasFieldOrPropertyWithValue("errorMessage", "Bad name of family member!");
+        assertAll(
+                ()->assertThat(exception).isInstanceOf(BadFamilyMemberException.class).
+                hasFieldOrPropertyWithValue("errorMessage", "Bad name of family member!"),
+                ()->assertThat(exception1).isInstanceOf(BadFamilyMemberException.class).
+                hasFieldOrPropertyWithValue("errorMessage", "Bad name of family member!")
+        );
     }
 
     @Test
     void checkDataBadSurname()
     {
-        FamilyMemberService service = new FamilyMemberService(null);
-
         FamilyMember familyMember = new FamilyMember(Relationship.CHILD, "A", " ", LocalDate.of(2010,10,13), true, true, true, null,
                 null, false, false, "98043025566", "Gliwice","31-123", "a", "b", "c", "1", "2");
         FamilyMember familyMember1 = new FamilyMember(Relationship.CHILD, "B", "", LocalDate.of(2010,10,13), true, true, true, null,
                 null, false, false, "70091836668", "Gliwice","31-123", "a", "b", "c", "1", "2");
         var exception = catchThrowable(()->service.checkData(familyMember));
         var exception1 = catchThrowable(()->service.checkData(familyMember1));
-        assertThat(exception).isInstanceOf(BadFamilyMemberException.class).
-                hasFieldOrPropertyWithValue("errorMessage", "Bad surname of family member!");
-        assertThat(exception1).isInstanceOf(BadFamilyMemberException.class).
-                hasFieldOrPropertyWithValue("errorMessage", "Bad surname of family member!");
+        assertAll(
+                ()->assertThat(exception).isInstanceOf(BadFamilyMemberException.class).
+                hasFieldOrPropertyWithValue("errorMessage", "Bad surname of family member!"),
+                ()->assertThat(exception1).isInstanceOf(BadFamilyMemberException.class).
+                hasFieldOrPropertyWithValue("errorMessage", "Bad surname of family member!")
+        );
     }
 
     @Test
     void checkDataBadAddressPostalCode()
     {
-        FamilyMemberService service = new FamilyMemberService(null);
-
         FamilyMember familyMember = new FamilyMember(Relationship.CHILD, "A", "C", LocalDate.of(2010,10,13), true, true, true, null,
                 null, false, false, "98043025566", "Gliwice","31-asd", "a", "b", "c", "1", "2");
         FamilyMember familyMember1 = new FamilyMember(Relationship.CHILD, "B", "V", LocalDate.of(2010,10,13), true, true, true, null,
                 null, false, false, "70091836668", "Gliwice","31345", "a", "b", "c", "1", "2");
         var exception = catchThrowable(()->service.checkData(familyMember));
         var exception1 = catchThrowable(()->service.checkData(familyMember1));
-        assertThat(exception).isInstanceOf(BadAddressException.class).
-                hasFieldOrPropertyWithValue("errorMessage", "Enter a correct postal code!");
-        assertThat(exception1).isInstanceOf(BadAddressException.class).
-                hasFieldOrPropertyWithValue("errorMessage", "Enter a correct postal code!");
+        assertAll(
+                ()->assertThat(exception).isInstanceOf(BadAddressException.class).
+                hasFieldOrPropertyWithValue("errorMessage", "Enter a correct postal code!"),
+                ()->assertThat(exception1).isInstanceOf(BadAddressException.class).
+                hasFieldOrPropertyWithValue("errorMessage", "Enter a correct postal code!")
+        );
     }
     @Test
     void checkDataBadAddressHomeNumber()
     {
-        FamilyMemberService service = new FamilyMemberService(null);
-
         FamilyMember familyMember = new FamilyMember(Relationship.CHILD, "A", "C", LocalDate.of(2010,10,13), true, true, true, null,
                 null, false, false, "98043025566", "Gliwice","31-123", "a", "b", "c", "1aa", "2");
         FamilyMember familyMember1 = new FamilyMember(Relationship.CHILD, "B", "V", LocalDate.of(2010,10,13), true, true, true, null,
                 null, false, false, "70091836668", "Gliwice","31-345", "a", "b", "c", "a10", "2");
         var exception = catchThrowable(()->service.checkData(familyMember));
         var exception1 = catchThrowable(()->service.checkData(familyMember1));
-        assertThat(exception).isInstanceOf(BadAddressException.class).
-                hasFieldOrPropertyWithValue("errorMessage", "Enter a correct home number!");
-        assertThat(exception1).isInstanceOf(BadAddressException.class).
-                hasFieldOrPropertyWithValue("errorMessage", "Enter a correct home number!");
+        assertAll(
+                ()->assertThat(exception).isInstanceOf(BadAddressException.class).
+                hasFieldOrPropertyWithValue("errorMessage", "Enter a correct home number!"),
+                ()->assertThat(exception1).isInstanceOf(BadAddressException.class).
+                hasFieldOrPropertyWithValue("errorMessage", "Enter a correct home number!")
+        );
     }
     @Test
     void checkDataBadAddressFlatNumber()
     {
-        FamilyMemberService service = new FamilyMemberService(null);
-
         FamilyMember familyMember = new FamilyMember(Relationship.CHILD, "A", "C", LocalDate.of(2010,10,13), true, true, true, null,
                 null, false, false, "98043025566", "Gliwice","31-123", "a", "b", "c", "1", "aaa");
         FamilyMember familyMember1 = new FamilyMember(Relationship.CHILD, "B", "V", LocalDate.of(2010,10,13), true, true, true, null,
                 null, false, false, "70091836668", "Gliwice","31-345", "a", "b", "c", "1", "2aa");
         var exception = catchThrowable(()->service.checkData(familyMember));
         var exception1 = catchThrowable(()->service.checkData(familyMember1));
-        assertThat(exception).isInstanceOf(BadAddressException.class).
-                hasFieldOrPropertyWithValue("errorMessage", "Enter a correct flat number!");
-        assertThat(exception1).isInstanceOf(BadAddressException.class).
-                hasFieldOrPropertyWithValue("errorMessage", "Enter a correct flat number!");
+        assertAll(
+                ()->assertThat(exception).isInstanceOf(BadAddressException.class).
+                hasFieldOrPropertyWithValue("errorMessage", "Enter a correct flat number!"),
+                ()->assertThat(exception1).isInstanceOf(BadAddressException.class).
+                hasFieldOrPropertyWithValue("errorMessage", "Enter a correct flat number!")
+        );
     }
     @Test
     void checkDataNoException()
     {
-        FamilyMemberService service = new FamilyMemberService(null);
-
         FamilyMember familyMember = new FamilyMember(Relationship.CHILD, "A", "C", LocalDate.of(2010,10,13), true, true, true, null,
                 null, false, false, "98043025566", "Gliwice","31-123", "a", "b", "c", "1", "a");
         FamilyMember familyMember1 = new FamilyMember(Relationship.CHILD, "B", "V", LocalDate.of(2010,10,13), true, true, true, null,
                 null, false, false, "70091836668", "Gliwice","31-345", "a", "b", "c", "1", "2a");
         var exception = catchThrowable(()->service.checkData(familyMember));
         var exception1 = catchThrowable(()->service.checkData(familyMember1));
-        assertThat(exception).doesNotThrowAnyException();
-        assertThat(exception1).doesNotThrowAnyException();
+        assertAll(
+                ()->assertThat(exception).doesNotThrowAnyException(),
+                ()->assertThat(exception1).doesNotThrowAnyException()
+        );
     }
 
+    /*
     private FamilyMemberRepository inMemoryRepository = new FamilyMemberRepository()
     {
         int counter = 0;
@@ -272,4 +279,5 @@ class FamilyMemberServiceTest
             map.remove(id);
         }
     };
+     */
 }

@@ -1,5 +1,6 @@
 package pl.documents.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.documents.exception.AddressTypeExistsException;
 import pl.documents.exception.BadAddressException;
@@ -14,15 +15,22 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AddressServiceTest
 {
+    private AddressService service;
+    @BeforeEach
+            void init()
+    {
+        service = new AddressService(inMemoryRepository);
+    }
 
     @Test
     void checkTypeExists1()
     {
-        AddressService service = new AddressService(null);
+
         Address a1 = new Address(AddressType.RESIDENCE, "44-444","a","b","c","d","1","2");
         Address a2 = new Address(AddressType.CHECKIN, "44-444","b","b","c","d","1","2");
         Address a3 = new Address(AddressType.CORRESPONDENCE, "44-444","c","b","c","d","1","2");
@@ -40,7 +48,7 @@ class AddressServiceTest
     @Test
     void checkTypeExists2()
     {
-        AddressService service = new AddressService(null);
+
         Address a1 = new Address(AddressType.RESIDENCE, "44-444","a","b","c","d","1","2");
         Address a2 = new Address(AddressType.CHECKIN, "44-444","b","b","c","d","1","2");
         Address a3 = new Address(AddressType.CORRESPONDENCE, "44-444","c","b","c","d","1","2");
@@ -58,7 +66,7 @@ class AddressServiceTest
     @Test
     void checkTypeExists3()
     {
-        AddressService service = new AddressService(null);
+
         Address a1 = new Address(AddressType.ALL, "44-444","a","b","c","d","1","2");
         AddressReadModel ar1 = new AddressReadModel(a1);
         List<AddressReadModel> list = new ArrayList<>();
@@ -70,7 +78,7 @@ class AddressServiceTest
     @Test
     void checkTypeExists4()
     {
-        AddressService service = new AddressService(null);
+
         Address a1 = new Address(AddressType.RESIDENCE, "44-444","a","b","c","d","1","2");
         Address a2 = new Address(AddressType.CHECKIN_CORRESPONDENCE, "44-444","b","b","c","d","1","2");
         AddressReadModel ar1 = new AddressReadModel(a1);
@@ -85,7 +93,7 @@ class AddressServiceTest
     @Test
     void checkTypeExists5()
     {
-        AddressService service = new AddressService(null);
+
         Address a1 = new Address(AddressType.RESIDENCE_CHECKIN, "44-444","a","b","c","d","1","2");
         Address a3 = new Address(AddressType.CORRESPONDENCE, "44-444","c","b","c","d","1","2");
         AddressReadModel ar1 = new AddressReadModel(a1);
@@ -100,7 +108,7 @@ class AddressServiceTest
     @Test
     void checkTypeExists6()
     {
-        AddressService service = new AddressService(null);
+
         Address a1 = new Address(AddressType.RESIDENCE, "44-444","a","b","c","d","1","2");
         Address a2 = new Address(AddressType.CHECKIN, "44-444","b","b","c","d","1","2");
         Address a3 = new Address(AddressType.CORRESPONDENCE, "44-444","c","b","c","d","1","2");
@@ -118,7 +126,7 @@ class AddressServiceTest
     @Test
     void badPostalCode1()
     {
-        AddressService service = new AddressService(null);
+
         Address update = new Address(AddressType.CORRESPONDENCE, "ass","c","b","c","d","1","2");
         var exception = catchThrowable(()->service.checkTypeExists(update,null));
         assertThat(exception).isInstanceOf(BadAddressException.class).
@@ -127,7 +135,7 @@ class AddressServiceTest
     @Test
     void badPostalCode2()
     {
-        AddressService service = new AddressService(null);
+
         Address update = new Address(AddressType.CORRESPONDENCE, "34-7777","c","b","c","d","1","2");
         var exception = catchThrowable(()->service.checkTypeExists(update,null));
         assertThat(exception).isInstanceOf(BadAddressException.class).
@@ -136,7 +144,7 @@ class AddressServiceTest
     @Test
     void badHomeNumber1()
     {
-        AddressService service = new AddressService(null);
+
         Address update = new Address(AddressType.CORRESPONDENCE, "34-777","c","b","c","d","aaa","2");
         var exception = catchThrowable(()->service.checkTypeExists(update,null));
         assertThat(exception).isInstanceOf(BadAddressException.class).
@@ -145,7 +153,7 @@ class AddressServiceTest
     @Test
     void badHomeNumber2()
     {
-        AddressService service = new AddressService(null);
+
         Address update = new Address(AddressType.CORRESPONDENCE, "34-777","c","b","c","d","34xx","2");
         var exception = catchThrowable(()->service.checkTypeExists(update,null));
         assertThat(exception).isInstanceOf(BadAddressException.class).
@@ -154,7 +162,7 @@ class AddressServiceTest
     @Test
     void badFlatNumber1()
     {
-        AddressService service = new AddressService(null);
+
         Address update = new Address(AddressType.CORRESPONDENCE, "34-777","c","b","c","d","34","acv");
         var exception = catchThrowable(()->service.checkTypeExists(update,null));
         assertThat(exception).isInstanceOf(BadAddressException.class).
@@ -163,7 +171,7 @@ class AddressServiceTest
     @Test
     void badFlatNumber2()
     {
-        AddressService service = new AddressService(null);
+
         Address update = new Address(AddressType.CORRESPONDENCE, "34-777","c","b","c","d","34","3aa");
         var exception = catchThrowable(()->service.checkTypeExists(update,null));
         assertThat(exception).isInstanceOf(BadAddressException.class).
@@ -172,7 +180,7 @@ class AddressServiceTest
     @Test
     void checkTypeExistsNoException1()
     {
-        AddressService service = new AddressService(null);
+
         Address a1 = new Address(AddressType.RESIDENCE, "44-444","a","b","c","d","1","2");
         Address a2 = new Address(AddressType.CHECKIN, "44-444","b","b","c","d","1","2");
         AddressReadModel ar1 = new AddressReadModel(a1);
@@ -187,7 +195,7 @@ class AddressServiceTest
     @Test
     void checkTypeExistsNoException2()
     {
-        AddressService service = new AddressService(null);
+
         List<AddressReadModel> list = new ArrayList<>();
         Address update = new Address(AddressType.ALL, "44-444","c","b","c","d","1","2");
         var exception = catchThrowable(()->service.checkTypeExists(update,list));
@@ -196,7 +204,7 @@ class AddressServiceTest
     @Test
     void checkTypeExistsNoException3()
     {
-        AddressService service = new AddressService(null);
+
         Address a1 = new Address(AddressType.RESIDENCE_CORRESPONDENCE, "44-444","a","b","c","d","1","2");
         AddressReadModel ar1 = new AddressReadModel(a1);
         List<AddressReadModel> list = new ArrayList<>();
@@ -218,7 +226,7 @@ class AddressServiceTest
         addresses.add(a1);
         addresses.add(a2);
         addresses.add(a3);
-        AddressService service = new AddressService(addressRepository);
+
         List<Address> result = service.updateAddress(address,addresses);
         List<Address> expected = new ArrayList<>();
         expected.add(address);
@@ -226,8 +234,11 @@ class AddressServiceTest
         expected.add(a3);
         for(int i=0;i<result.size();i++)
         {
-            assertEquals(result.get(i),expected.get(i));
-            assertEquals(result.get(i).getAddressType(),expected.get(i).getAddressType());
+            int ii = i;
+            assertAll(
+                    ()->assertEquals(result.get(ii),expected.get(ii)),
+                    ()->assertEquals(result.get(ii).getAddressType(),expected.get(ii).getAddressType())
+            );
         }
     }
     @Test
@@ -242,14 +253,17 @@ class AddressServiceTest
         addresses.add(a1);
         addresses.add(a2);
         addresses.add(a3);
-        AddressService service = new AddressService(addressRepository);
+
         List<Address> result = service.updateAddress(address,addresses);
         List<Address> expected = new ArrayList<>();
         expected.add(address);
         for(int i=0;i<result.size();i++)
         {
-            assertEquals(result.get(i),expected.get(i));
-            assertEquals(result.get(i).getAddressType(),expected.get(i).getAddressType());
+            int ii = i;
+            assertAll(
+                    ()->assertEquals(result.get(ii),expected.get(ii)),
+                    ()->assertEquals(result.get(ii).getAddressType(),expected.get(ii).getAddressType())
+            );
         }
     }
     @Test
@@ -264,15 +278,18 @@ class AddressServiceTest
         addresses.add(a1);
         addresses.add(a2);
         addresses.add(a3);
-        AddressService service = new AddressService(addressRepository);
+
         List<Address> result = service.updateAddress(address,addresses);
         List<Address> expected = new ArrayList<>();
         address.setAddressType(AddressType.ALL);
         expected.add(address);
         for(int i=0;i<result.size();i++)
         {
-            assertEquals(result.get(i),expected.get(i));
-            assertEquals(result.get(i).getAddressType(),expected.get(i).getAddressType());
+            int ii = i;
+            assertAll(
+                    ()->assertEquals(result.get(ii),expected.get(ii)),
+                    ()->assertEquals(result.get(ii).getAddressType(),expected.get(ii).getAddressType())
+            );
         }
     }
     @Test
@@ -287,15 +304,18 @@ class AddressServiceTest
         addresses.add(a1);
         addresses.add(a2);
         addresses.add(a3);
-        AddressService service = new AddressService(addressRepository);
+
         List<Address> result = service.updateAddress(address,addresses);
         List<Address> expected = new ArrayList<>();
         expected.add(address);
         expected.add(a3);
         for(int i=0;i<result.size();i++)
         {
-            assertEquals(result.get(i),expected.get(i));
-            assertEquals(result.get(i).getAddressType(),expected.get(i).getAddressType());
+            int ii = i;
+            assertAll(
+                    ()->assertEquals(result.get(ii),expected.get(ii)),
+                    ()->assertEquals(result.get(ii).getAddressType(),expected.get(ii).getAddressType())
+            );
         }
     }
     @Test
@@ -311,7 +331,7 @@ class AddressServiceTest
         addresses.add(a1);
         addresses.add(a2);
         addresses.add(a3);
-        AddressService service = new AddressService(addressRepository);
+
         List<Address> result = service.updateAddress(address,addresses);
         List<Address> expected = new ArrayList<>();
         address.setAddressType(AddressType.CHECKIN_CORRESPONDENCE);
@@ -319,8 +339,11 @@ class AddressServiceTest
         expected.add(a1);
         for(int i=0;i<result.size();i++)
         {
-            assertEquals(result.get(i),expected.get(i));
-            assertEquals(result.get(i).getAddressType(),expected.get(i).getAddressType());
+            int ii = i;
+            assertAll(
+                    ()->assertEquals(result.get(ii),expected.get(ii)),
+                    ()->assertEquals(result.get(ii).getAddressType(),expected.get(ii).getAddressType())
+            );
         }
     }
     @Test
@@ -349,7 +372,7 @@ class AddressServiceTest
         addresses.add(a3);
         List<Address> actual = inMemoryRepository.findAllByWorker(worker);
         assertEquals(3,actual.size());
-        AddressService service = new AddressService(addressRepository);
+
         service.updateAddress(address,addresses);
         actual = inMemoryRepository.findAllByWorker(worker);
         assertEquals(0,actual.size());
