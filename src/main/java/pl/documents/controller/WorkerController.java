@@ -11,6 +11,7 @@ import pl.documents.exception.LoginException;
 import pl.documents.exception.RegisterException;
 import pl.documents.model.Worker;
 import pl.documents.model.projection.WorkerReadModel;
+import pl.documents.model.projection.WorkerReadModelForEmployee;
 import pl.documents.model.projection.WorkerWriteModel;
 import pl.documents.model.projection.WorkerWriteModelRegister;
 import pl.documents.service.WorkerService;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/workers")
 public class WorkerController
 {
     private static final Logger logger = LoggerFactory.getLogger(WorkerController.class);
@@ -33,8 +35,8 @@ public class WorkerController
      * Odczyt listy pracowników
      * @return lista pracowników
      */
-    @GetMapping(value = "/workers")
-    ResponseEntity<List<WorkerReadModel>> readAllWorkers()
+    @GetMapping
+    ResponseEntity<List<WorkerReadModelForEmployee>> readAllWorkers()
     {
         logger.info("Read all workers!");
         return ResponseEntity.ok(workerService.readAllWorkers());
@@ -55,7 +57,7 @@ public class WorkerController
      * @param id id szukanego pracwonika
      * @return szukany pracownik lub informacja o jego braku
      */
-    @GetMapping("/workers/{id}")
+    @GetMapping("/{id}")
     ResponseEntity<WorkerReadModel> readWorker(@PathVariable UUID id)
     {
         WorkerReadModel result;
@@ -115,7 +117,6 @@ public class WorkerController
     @PostMapping("/register")
     ResponseEntity<?> registerWorker(@RequestBody WorkerWriteModelRegister workerWriteModel)
     {
-        Worker newWorker = workerWriteModel.toWorker();
         logger.info("Register new worker!");
         Worker worker = workerWriteModel.toWorker();
         WorkerReadModel result = null;
@@ -129,8 +130,29 @@ public class WorkerController
             logger.info("Register fail!");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
         }
-        return ResponseEntity.created(URI.create("")).body(result);
+        return ResponseEntity.created(URI.create("/"+result.getId())).body(result);
     }
+    /**
+     * Zmiana hasła lub adresu e-mail użytkownika
+     * @return informacja o zmianie danych
+     */
+    @PutMapping("/change/{id}")
+    ResponseEntity<?> changeImportantData(@PathVariable UUID id, @RequestBody WorkerWriteModelRegister workerWriteModel)
+    {
+        logger.info("Try to change important data!");
+        try
+        {
+            workerService.changeImportantData(id,workerWriteModel);
+        }
+        catch (BadIdException | BadWorkerException e)
+        {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+        }
+        logger.info("Register success!");
+
+        return ResponseEntity.noContent().build();
+    }
+
 
 
     /**
@@ -139,7 +161,7 @@ public class WorkerController
      * @param workerWriteModel nowe dane pracownika
      * @return informacja o pomyślnej bądź nieudanej aktualizacji
      */
-    @PutMapping("/workers/{id}")
+    @PutMapping("/{id}")
     ResponseEntity<?> updateWorker(@PathVariable UUID id, @RequestBody WorkerWriteModel workerWriteModel)
     {
         try
@@ -166,7 +188,7 @@ public class WorkerController
      * @param id id usuwanego pracownika
      * @return informacja o pomyślnym bądź nieudanym usunięciu
      */
-    @DeleteMapping("/workers/{id}")
+    @DeleteMapping("/{id}")
     ResponseEntity<?> deleteCandidate(@PathVariable UUID id)
     {
         if(workerService.deleteById(id))

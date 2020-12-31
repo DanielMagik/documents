@@ -10,13 +10,11 @@ import pl.documents.exception.LoginException;
 import pl.documents.exception.RegisterException;
 import pl.documents.logic.DataChecker;
 import pl.documents.model.*;
-import pl.documents.model.projection.EducationReadModel;
-import pl.documents.model.projection.EmploymentReadModel;
-import pl.documents.model.projection.FamilyMemberReadModel;
-import pl.documents.model.projection.WorkerReadModel;
+import pl.documents.model.projection.*;
 import pl.documents.repository.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,10 +45,10 @@ public class WorkerService
      * Odczyt wszystkich pracowników
      * @return lista pracowników
      */
-    public List<WorkerReadModel> readAllWorkers()
+    public List<WorkerReadModelForEmployee> readAllWorkers()
     {
         return workerRepository.findAll().stream()
-                .map(WorkerReadModel::new).collect(Collectors.toList());
+                .map(WorkerReadModelForEmployee::new).collect(Collectors.toList());
     }
 
     /**
@@ -108,45 +106,84 @@ public class WorkerService
 
         if(workerRepository.existsByEmail(source.getEmail()))
             throw new RegisterException("In database already exists worker with e-mail: " + source.getEmail()+ " !");
-        String password = source.getPassword();
-        if(password.length()<8)
-        {
-            throw new RegisterException("Too short password. It must contain at least 8 characters!");
-        }
-        Pattern digit = Pattern.compile("^(?=.*[0-9]).{8,}$");
-        Pattern smallLetter = Pattern.compile("^(?=.*[a-z]).{8,}$");
-        Pattern bigLetter = Pattern.compile("^(?=.*[A-Z]).{8,}$");
-        Pattern blank = Pattern.compile("^(?=\\S+$).{8,}$");
-        Pattern special = Pattern.compile("^(?=.*[~`!@#$%^&*()_+=\\-|\\\\/?:;'\"{}\\[\\]]).{8,}$");
-        matcher = digit.matcher(password);
-        if(!matcher.matches())
-        {
-            throw new RegisterException("Password doesn't contains any digit!");
-        }
-        matcher = smallLetter.matcher(password);
-        if(!matcher.matches())
-        {
-            throw new RegisterException("Password doesn't contains any small letter!");
-        }
-        matcher = bigLetter.matcher(password);
-        if(!matcher.matches())
-        {
-            throw new RegisterException("Password doesn't contains any big letter!");
-        }
-        matcher = blank.matcher(password);
-        if(!matcher.matches())
-        {
-            throw new RegisterException("Password contains whitespace characters!");
-        }
-        matcher = special.matcher(password);
-        if(!matcher.matches())
-        {
-            throw new RegisterException("Password doesn't contains any special character!");
-        }
 
+        //might throw RegisterException
+        checkPassword(source.getPassword());
 
         workerRepository.save(source);
-        return new WorkerReadModel(source);
+        Worker result = workerRepository.findByEmailAndPassword(source.getEmail(),source.getPassword())
+        .orElseThrow(()->new RegisterException("Register fail!"));
+        return new WorkerReadModel(result);
+    }
+
+
+    public void changeImportantData(UUID id, WorkerWriteModelRegister workerWriteModelRegister) throws  BadIdException, BadWorkerException
+    {
+        boolean willChangeEmail = workerWriteModelRegister.isWillChangeEmail();
+        boolean willChangePassword = workerWriteModelRegister.isWillChangePassword();
+        Worker source = workerWriteModelRegister.toWorker();
+
+        Worker worker = workerRepository.findById(id).
+                orElseThrow(() -> new BadIdException("Bad id!"));
+        if(!willChangeEmail && !willChangePassword)
+        {
+            throw new BadWorkerException("Nothing to change!");
+        }
+        if(willChangeEmail)
+        {
+            if(worker.getEmail().equals(source.getEmail()))
+            {
+                throw new BadWorkerException("The new email is the same as the old one!");
+            }
+            Pattern email = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)");
+            Matcher matcher = email.matcher(source.getEmail());
+            if (!matcher.matches())
+            {
+                throw new BadWorkerException("Bad e-mail!");
+            }
+
+            if (workerRepository.existsByEmail(source.getEmail()))
+                throw new BadWorkerException("In database already exists worker with e-mail: " + source.getEmail() + " !");
+        }
+
+
+        if(!worker.getPassword().equals(source.getPassword()))
+        {
+            throw new BadWorkerException("Bad old password!");
+        }
+
+        //might throw RegisterException
+        if(willChangePassword)
+        {
+            try
+            {
+                checkPassword(workerWriteModelRegister.getNewPassword());
+            }
+            catch (RegisterException e)
+            {
+                BadWorkerException exception = new BadWorkerException(e.getErrorMessage());
+                throw exception;
+            }
+        }
+        //reset ewentualnego maila
+        if(!willChangeEmail)
+        {
+            source.setEmail(worker.getEmail());
+        }
+
+        if(willChangePassword)
+        {
+            if(worker.getPassword().equals(workerWriteModelRegister.getNewPassword()))
+            {
+                throw new BadWorkerException("The new password is the same as the old one!");
+            }
+            source.setPassword(workerWriteModelRegister.getNewPassword());
+        }
+        workerRepository.findById(id).
+                ifPresent(w ->{
+                    w.updateImportantData(source);
+                    workerRepository.save(w);
+                });
     }
 
     /**
@@ -421,7 +458,48 @@ public class WorkerService
                 }
         );
     }
+    private void checkPassword(String password) throws RegisterException
+    {
+        if(password.length()<8)
+        {
+            throw new RegisterException("Too short password. It must contain at least 8 characters!");
+        }
 
+        Pattern digit = Pattern.compile("^(?=.*[0-9]).{8,}$");
+        Pattern smallLetter = Pattern.compile("^(?=.*[a-z]).{8,}$");
+        Pattern bigLetter = Pattern.compile("^(?=.*[A-Z]).{8,}$");
+        Pattern blank = Pattern.compile("^(?=\\S+$).{8,}$");
+        Pattern special = Pattern.compile("^(?=.*[~`!@#$%^&*()_+=\\-|\\\\/?:;'\"{}\\[\\]]).{8,}$");
+        Matcher matcher = digit.matcher(password);
+        if(!matcher.matches())
+        {
+            throw new RegisterException("Password doesn't contains any digit!");
+        }
+        matcher = smallLetter.matcher(password);
+        if(!matcher.matches())
+        {
+            throw new RegisterException("Password doesn't contains any small letter!");
+        }
+        matcher = bigLetter.matcher(password);
+        if(!matcher.matches())
+        {
+            throw new RegisterException("Password doesn't contains any big letter!");
+        }
+        matcher = blank.matcher(password);
+        if(!matcher.matches())
+        {
+            throw new RegisterException("Password contains whitespace characters!");
+        }
+        matcher = special.matcher(password);
+        if(!matcher.matches())
+        {
+            throw new RegisterException("Password doesn't contains any special character!");
+        }
+    }
+    private void checkEmail(String email)
+    {
+
+    }
 
 
 }

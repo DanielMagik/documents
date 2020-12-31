@@ -78,6 +78,10 @@ public class WorkerReadModel
     private Set<FamilyMemberReadModel> familyMembers;
 
 
+    public WorkerReadModel()
+    {
+    }
+
     public WorkerReadModel(Worker source)
     {
         this.id=source.getId();

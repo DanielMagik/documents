@@ -829,6 +829,11 @@ public class Worker
         this.createDate = source.createDate;
         this.updateDate = source.updateDate;
     }
+    public void updateImportantData(final Worker source)
+    {
+        this.email=source.getEmail();
+        this.password=source.getPassword();
+    }
 
     @PrePersist
     void prePersist()

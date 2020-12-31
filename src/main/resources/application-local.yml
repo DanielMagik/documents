@@ -2,9 +2,6 @@ appconfiguration:
   accessBefore: 1
   deleteAfter: 7
 spring:
-  flyway:
-    baseline-on-migrate: true
-    check-location: false
   h2.console:
     enabled: true
     path: '/console'
