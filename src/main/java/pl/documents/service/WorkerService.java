@@ -14,7 +14,6 @@ import pl.documents.model.projection.*;
 import pl.documents.repository.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -117,11 +116,11 @@ public class WorkerService
     }
 
 
-    public void changeImportantData(UUID id, WorkerWriteModelRegister workerWriteModelRegister) throws  BadIdException, BadWorkerException
+    public void changeImportantData(UUID id, WorkerWriteModelChangePassword workerWriteModelChangePassword) throws  BadIdException, BadWorkerException
     {
-        boolean willChangeEmail = workerWriteModelRegister.isWillChangeEmail();
-        boolean willChangePassword = workerWriteModelRegister.isWillChangePassword();
-        Worker source = workerWriteModelRegister.toWorker();
+        boolean willChangeEmail = workerWriteModelChangePassword.isWillChangeEmail();
+        boolean willChangePassword = workerWriteModelChangePassword.isWillChangePassword();
+        Worker source = workerWriteModelChangePassword.toWorker();
 
         Worker worker = workerRepository.findById(id).
                 orElseThrow(() -> new BadIdException("Bad id!"));
@@ -157,7 +156,7 @@ public class WorkerService
         {
             try
             {
-                checkPassword(workerWriteModelRegister.getNewPassword());
+                checkPassword(workerWriteModelChangePassword.getNewPassword());
             }
             catch (RegisterException e)
             {
@@ -173,11 +172,11 @@ public class WorkerService
 
         if(willChangePassword)
         {
-            if(worker.getPassword().equals(workerWriteModelRegister.getNewPassword()))
+            if(worker.getPassword().equals(workerWriteModelChangePassword.getNewPassword()))
             {
                 throw new BadWorkerException("The new password is the same as the old one!");
             }
-            source.setPassword(workerWriteModelRegister.getNewPassword());
+            source.setPassword(workerWriteModelChangePassword.getNewPassword());
         }
         workerRepository.findById(id).
                 ifPresent(w ->{
@@ -496,10 +495,5 @@ public class WorkerService
             throw new RegisterException("Password doesn't contains any special character!");
         }
     }
-    private void checkEmail(String email)
-    {
-
-    }
-
-
+    
 }

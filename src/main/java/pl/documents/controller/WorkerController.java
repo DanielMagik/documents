@@ -10,10 +10,7 @@ import pl.documents.exception.BadWorkerException;
 import pl.documents.exception.LoginException;
 import pl.documents.exception.RegisterException;
 import pl.documents.model.Worker;
-import pl.documents.model.projection.WorkerReadModel;
-import pl.documents.model.projection.WorkerReadModelForEmployee;
-import pl.documents.model.projection.WorkerWriteModel;
-import pl.documents.model.projection.WorkerWriteModelRegister;
+import pl.documents.model.projection.*;
 import pl.documents.service.WorkerService;
 
 import java.net.URI;
@@ -79,7 +76,7 @@ public class WorkerController
      * @return szukany pracownik lub informacja o jego braku
      */
     @GetMapping("/login")
-    ResponseEntity<WorkerReadModel> login(@RequestBody WorkerWriteModelRegister workerWriteModel)
+    ResponseEntity<WorkerReadModel> login(@RequestBody WorkerWriteModelChangePassword workerWriteModel)
     {
         WorkerReadModel result;
         try
@@ -137,7 +134,7 @@ public class WorkerController
      * @return informacja o zmianie danych
      */
     @PutMapping("/change/{id}")
-    ResponseEntity<?> changeImportantData(@PathVariable UUID id, @RequestBody WorkerWriteModelRegister workerWriteModel)
+    ResponseEntity<?> changeImportantData(@PathVariable UUID id, @RequestBody WorkerWriteModelChangePassword workerWriteModel)
     {
         logger.info("Try to change important data!");
         try
@@ -148,7 +145,7 @@ public class WorkerController
         {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
         }
-        logger.info("Register success!");
+        logger.info("Change success!");
 
         return ResponseEntity.noContent().build();
     }
@@ -161,7 +158,7 @@ public class WorkerController
      * @param workerWriteModel nowe dane pracownika
      * @return informacja o pomyślnej bądź nieudanej aktualizacji
      */
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     ResponseEntity<?> updateWorker(@PathVariable UUID id, @RequestBody WorkerWriteModel workerWriteModel)
     {
         try
