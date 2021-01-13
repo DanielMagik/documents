@@ -11,4 +11,5 @@ spring:
       file-size-threshold: 0KB
       max-file-size: 2MB
       max-request-size: 200MB
+appconfiguration.encrypt: 'aaa'
 

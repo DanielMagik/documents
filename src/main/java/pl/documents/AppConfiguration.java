@@ -9,6 +9,7 @@ public class AppConfiguration
 {
     private int accessBefore;
     private int deleteAfter;
+    private String encrypt;
 
     public int getAccessBefore()
     {
@@ -28,5 +29,15 @@ public class AppConfiguration
     public void setDeleteAfter(int deleteAfter)
     {
         this.deleteAfter = deleteAfter;
+    }
+
+    public String getEncrypt()
+    {
+        return encrypt;
+    }
+
+    public void setEncrypt(String encrypt)
+    {
+        this.encrypt = encrypt;
     }
 }

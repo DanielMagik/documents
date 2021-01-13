@@ -102,7 +102,7 @@ public class WorkerService
         {
             throw new RegisterException("Bad e-mail!");
         }
-
+        
         if(workerRepository.existsByEmail(source.getEmail()))
             throw new RegisterException("In database already exists worker with e-mail: " + source.getEmail()+ " !");
 

@@ -1,6 +1,4 @@
-appconfiguration:
-  accessBefore: 1
-  deleteAfter: 7
+
 spring:
   h2.console:
     enabled: true
@@ -8,4 +6,5 @@ spring:
   datasource.url: 'jdbc:h2:file:C:\\Users\\user\\Desktop\\Inzynierka\\documents\\db'
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
+

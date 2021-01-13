@@ -70,28 +70,7 @@ public class WorkerController
             return ResponseEntity.notFound().build();
         }
     }
-    /**
-     * Odczyt pracownika o danym loginie i haśle
-     * @param workerWriteModel dane logowania pracownika
-     * @return szukany pracownik lub informacja o jego braku
-     */
-    @GetMapping("/login")
-    ResponseEntity<WorkerReadModel> login(@RequestBody WorkerWriteModelChangePassword workerWriteModel)
-    {
-        WorkerReadModel result;
-        try
-        {
-            Worker login = workerWriteModel.toWorker();
-            result = workerService.readByEmailAndPassword(login);
-            logger.info("Login worker with e-mail "+login.getEmail()+" !");
-            return ResponseEntity.ok(result);
-        }
-        catch (LoginException e)
-        {
-            logger.info("Bad login or password!");
-            return ResponseEntity.notFound().build();
-        }
-    }
+
 
     /*
      * Stworzenie nowego pracownika o pustych polach
@@ -108,9 +87,35 @@ public class WorkerController
     */
 
     /**
+     * Odczyt pracownika o danym loginie i haśle
+     * @param workerWriteModel dane logowania pracownika
+     * @return szukany pracownik lub informacja o jego braku
+     */
+    /*
+    @GetMapping("/login")
+    ResponseEntity<WorkerReadModel> login(@RequestBody WorkerWriteModelChangePassword workerWriteModel)
+    {
+        WorkerReadModel result;
+        try
+        {
+            Worker login = workerWriteModel.toWorker();
+            result = workerService.readByEmailAndPassword(login);
+
+            return ResponseEntity.ok(result);
+        }
+        catch (LoginException e)
+        {
+            return ResponseEntity.notFound().build();
+        }
+    }
+     */
+
+
+    /**
      * Stworzenie nowego pracownika o pustych polach w czasie rejestracji
      * @return stworzony pracownik
      */
+    /*
     @PostMapping("/register")
     ResponseEntity<?> registerWorker(@RequestBody WorkerWriteModelRegister workerWriteModel)
     {
@@ -129,6 +134,7 @@ public class WorkerController
         }
         return ResponseEntity.created(URI.create("/"+result.getId())).body(result);
     }
+     */
     /**
      * Zmiana hasła lub adresu e-mail użytkownika
      * @return informacja o zmianie danych

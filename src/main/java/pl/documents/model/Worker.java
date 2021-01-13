@@ -20,7 +20,7 @@ public class Worker
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
-            name = "UUID",
+           name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     private UUID id;
@@ -336,10 +336,15 @@ public class Worker
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "worker")
     private Set<FamilyMember> familyMembers = null;
 
+    @OneToOne(mappedBy = "worker")
+    private User user;
     public Worker()
     {
 
     }
+
+
+
     public Worker(String email, String password)
     {
         this.email = email;
@@ -849,12 +854,12 @@ public class Worker
 
 
 
-    //TYLKO DO TESTÓW
+
     public void setId(UUID id)
     {
         this.id = id;
     }
-
+    //TYLKO DO TESTÓW
     public void setPassword(String password)
     {
         this.password = password;
