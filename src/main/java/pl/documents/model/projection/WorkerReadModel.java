@@ -85,7 +85,7 @@ public class WorkerReadModel
     public WorkerReadModel(Worker source)
     {
         this.id=source.getId();
-        this.email = source.getEmail();
+        //this.email = source.getEmail();
         this.phoneNumber = source.getPhoneNumber();
         this.fillLocation = source.getFillLocation();
         this.sex = source.getSex();

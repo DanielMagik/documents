@@ -23,22 +23,39 @@ public class User
     private String email;
     private String password;
     private UserType userType;
+    private boolean active;
+
+
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "worker_id", referencedColumnName = "id")
     private Worker worker;
 
+    public User()
+    {
+    }
 
+    public User(String email, String password)
+    {
+        this.email = email;
+        this.password = password;
+        this.active = false;
+    }
 
-    //public UUID getId()
-  //  {
-    //    return id;
-   // }
+    public UUID getId()
+    {
+        return id;
+    }
 
    // public void setId(UUID id)
    // {
    //     this.id = id;
   //  }
+
+    public void setWorker(Worker worker)
+    {
+        this.worker = worker;
+    }
 
     public String getEmail()
     {
@@ -68,5 +85,20 @@ public class User
     public void setUserType(UserType userType)
     {
         this.userType = userType;
+    }
+
+    public Worker getWorker()
+    {
+        return worker;
+    }
+
+    public boolean isActive()
+    {
+        return active;
+    }
+
+    public void setActive(boolean active)
+    {
+        this.active = active;
     }
 }

@@ -7,8 +7,9 @@ import pl.documents.model.Worker;
 
 import java.util.*;
 
-public class TestWorkerRepository implements WorkerRepository
+public class TestWorkerRepository// implements WorkerRepository
 {
+    /*
 
     Map<UUID, Worker> map  = new HashMap<>();
     @Override
@@ -71,4 +72,6 @@ public class TestWorkerRepository implements WorkerRepository
         return map.values().stream().anyMatch(worker -> worker.getEmail().equals(email));
     }
 
+
+     */
 }

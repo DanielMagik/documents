@@ -65,10 +65,10 @@ public class WorkerService
     }
     public WorkerReadModel readByEmailAndPassword(Worker worker) throws LoginException
     {
-        Worker result;
-        result= workerRepository.findByEmailAndPassword(worker.getEmail(),worker.getPassword()).orElseThrow(
-                () -> new LoginException("Bad login or password!")
-        );
+        Worker result = null;
+       // result= workerRepository.findByEmailAndPassword(worker.getEmail(),worker.getPassword()).orElseThrow(
+       //         () -> new LoginException("Bad login or password!")
+      //  );
         return new WorkerReadModel(result);
     }
 
@@ -97,27 +97,29 @@ public class WorkerService
     {
 
         Pattern email = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)");
-        Matcher matcher = email.matcher(source.getEmail());
-        if(!matcher.matches())
-        {
-            throw new RegisterException("Bad e-mail!");
-        }
+       // Matcher matcher = email.matcher(source.getEmail());
+       // if(!matcher.matches())
+        //{
+       //     throw new RegisterException("Bad e-mail!");
+       // }
         
-        if(workerRepository.existsByEmail(source.getEmail()))
-            throw new RegisterException("In database already exists worker with e-mail: " + source.getEmail()+ " !");
+        //if(workerRepository.existsByEmail(source.getEmail()))
+        //    throw new RegisterException("In database already exists worker with e-mail: " + source.getEmail()+ " !");
 
         //might throw RegisterException
-        checkPassword(source.getPassword());
+       // checkPassword(source.getPassword());
 
         workerRepository.save(source);
-        Worker result = workerRepository.findByEmailAndPassword(source.getEmail(),source.getPassword())
-        .orElseThrow(()->new RegisterException("Register fail!"));
-        return new WorkerReadModel(result);
+       // Worker result = workerRepository.findByEmailAndPassword(source.getEmail(),source.getPassword())
+       // .orElseThrow(()->new RegisterException("Register fail!"));
+        //return new WorkerReadModel(result);
+        return null;
     }
 
 
     public void changeImportantData(UUID id, WorkerWriteModelChangePassword workerWriteModelChangePassword) throws  BadIdException, BadWorkerException
     {
+        /*
         boolean willChangeEmail = workerWriteModelChangePassword.isWillChangeEmail();
         boolean willChangePassword = workerWriteModelChangePassword.isWillChangePassword();
         Worker source = workerWriteModelChangePassword.toWorker();
@@ -183,6 +185,8 @@ public class WorkerService
                     w.updateImportantData(source);
                     workerRepository.save(w);
                 });
+
+         */
     }
 
     /**

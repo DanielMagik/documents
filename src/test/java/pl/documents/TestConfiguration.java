@@ -36,7 +36,8 @@ public class TestConfiguration
     @Profile("integration")
     WorkerRepository testRepo()
     {
-        return new TestWorkerRepository();
+        //return new TestWorkerRepository();
+        return null;
     }
 
 }

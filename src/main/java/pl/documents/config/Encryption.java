@@ -12,10 +12,10 @@ public class Encryption
 {
     public Encryption()
     {
-        byte[] array = new byte[20];
+        byte[] array = new byte[30];
         new Random().nextBytes(array);
         String generatedString = new String(array, Charset.forName("UTF-8"));
-        this.sequence = "1234567sgadsadsaem347mwo43wbm4eot4yaeb68be";
+        this.sequence = generatedString;
     }
 
     private final String sequence;

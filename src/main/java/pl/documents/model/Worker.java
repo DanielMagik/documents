@@ -27,7 +27,8 @@ public class Worker
     /**
      * Dane kontaktowe (e-mail)
      */
-    private String email = null;
+
+    //private String email = null;
     /**
      * Dane kontaktowe (numer telefonu)
      */
@@ -35,7 +36,7 @@ public class Worker
     /**
      * Hasło do logowania się
      */
-    private String password = null;
+    //private String password = null;
     /**
      * Miejsce wypełnienia dokumentów
      */
@@ -347,24 +348,24 @@ public class Worker
 
     public Worker(String email, String password)
     {
-        this.email = email;
-        this.password = password;
+        //this.email = email;
+        //this.password = password;
     }
 
-    public String getPassword()
-    {
-        return password;
-    }
+    //public String getPassword()
+   //{
+    //    return password;
+   // }
 
     public UUID getId()
     {
         return id;
     }
 
-    public String getEmail()
-    {
-        return email;
-    }
+    //public String getEmail()
+   // {
+   //    return email;
+   // }
 
     public String getPhoneNumber()
     {
@@ -703,7 +704,7 @@ public class Worker
 
     public Worker(String email, String phoneNumber, String fillLocation, Sex sex, String firstName, String secondName, String surname, LocalDate birthDate, String profession, String specialty, String title, String qualifications, String optionalData, boolean isPolishCitizen, String citizenship, String documentNumber, String documentType, String taxOffice, String authorizedName, String authorizedSurname, String authorizedContact, boolean willSpecialPowersForFamily, String NIP, boolean willPIT2, String workplace, String department, Pension pension, LocalDate employmentDate, String bank, String accountNumber, SecurityClearance securityClearance, String NFZ, String pensionZUSNumber, boolean isDisabled, String disabledZUSNumber, LocalDate disabledFrom, LocalDate disabledTo, Medicover medicover, ContractType contractType, IncomePerPerson incomePerPerson, boolean ZFSS1, boolean ZFSS2, boolean ZFSS3, boolean ZFSS4, boolean ZFSS5, boolean ZFSS6, boolean ZFSS7, boolean hasChildren, boolean willParent, ChildUnderFourPermissions childUnderFourPermissions, ChildUnderFourteenPermissions childUnderFourteenPermissions, boolean willReducedTask, boolean methodOfTaxation, String annualEarningsFamily, boolean willTaxReducingAmount, boolean willHigherTask, Month higherTaskMonth, boolean willIncreasedCosts, boolean willZUS, String annualEarningsZUS)
     {
-        this.email = email;
+       // this.email = email;
         this.phoneNumber = phoneNumber;
         this.fillLocation = fillLocation;
         this.sex = sex;
@@ -836,8 +837,8 @@ public class Worker
     }
     public void updateImportantData(final Worker source)
     {
-        this.email=source.getEmail();
-        this.password=source.getPassword();
+        //this.email=source.getEmail();
+        //this.password=source.getPassword();
     }
 
     @PrePersist
@@ -860,15 +861,15 @@ public class Worker
         this.id = id;
     }
     //TYLKO DO TESTÓW
-    public void setPassword(String password)
-    {
-        this.password = password;
-    }
+    //public void setPassword(String password)
+   // {
+    //    this.password = password;
+   // }
 
-    public void setEmail(String email)
-    {
-        this.email = email;
-    }
+   // public void setEmail(String email)
+   // {
+   //    this.email = email;
+    //}
 
     public void setPhoneNumber(String phoneNumber)
     {

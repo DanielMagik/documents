@@ -17,6 +17,6 @@ public interface WorkerRepository
     Worker save(Worker entity);
     void deleteById(UUID id);
     boolean existsByDocumentNumberAndDocumentType(String documentNumber, String documentType);
-    Optional<Worker> findByEmailAndPassword(String email, String password);
-    boolean existsByEmail(String email);
+   ///\ Optional<Worker> findByEmailAndPassword(String email, String password);
+    //boolean existsByEmail(String email);
 }
