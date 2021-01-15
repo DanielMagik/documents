@@ -22,7 +22,7 @@ public class WorkerWriteModel
     private String specialty;
     private String title;
     private String qualifications;
-    private String optionalData;
+    private String additionalPersonalData;
     private boolean isPolishCitizen;
     private String citizenship;
     private String documentNumber;
@@ -70,16 +70,15 @@ public class WorkerWriteModel
     private boolean willIncreasedCosts;
     private boolean willZUS;
     private String annualEarningsZUS;
-
+    private String prevEmployment = null;
     private Set<AddressWriteModel> addresses = null;
     private Set<EducationWriteModel> education = null;
-    private Set<EmploymentWriteModel> employments = null;
     private Set<FamilyMemberWriteModel> familyMembers = null;
 
 
     public Worker toWorker()
     {
-        Worker worker = new Worker(email, phoneNumber,fillLocation,sex, firstName, secondName, surname, birthDate, profession, specialty, title, qualifications,  optionalData, isPolishCitizen, citizenship, documentNumber, documentType, taxOffice, authorizedName, authorizedSurname, authorizedContact, willSpecialPowersForFamily, NIP, willPIT2, workplace, department,pension,  employmentDate,bank, accountNumber, securityClearance,  NFZ, pensionZUSNumber, isDisabled, disabledZUSNumber, disabledFrom, disabledTo, medicover, contractType, incomePerPerson, ZFSS1, ZFSS2, ZFSS3,ZFSS4,ZFSS5,ZFSS6, ZFSS7, hasChildren, willParent, childUnderFourPermissions, childUnderFourteenPermissions, willReducedTask, methodOfTaxation, annualEarningsFamily, willTaxReducingAmount, willHigherTask, higherTaskMonth,willIncreasedCosts,willZUS, annualEarningsZUS);
+        Worker worker = new Worker(email, phoneNumber,fillLocation,sex, firstName, secondName, surname, birthDate, profession, specialty, title, qualifications, additionalPersonalData, isPolishCitizen, citizenship, documentNumber, documentType, taxOffice, authorizedName, authorizedSurname, authorizedContact, willSpecialPowersForFamily, NIP, willPIT2, workplace, department,pension,  employmentDate,bank, accountNumber, securityClearance,  NFZ, pensionZUSNumber, isDisabled, disabledZUSNumber, disabledFrom, disabledTo, medicover, contractType, incomePerPerson, ZFSS1, ZFSS2, ZFSS3,ZFSS4,ZFSS5,ZFSS6, ZFSS7, hasChildren, willParent, childUnderFourPermissions, childUnderFourteenPermissions, willReducedTask, methodOfTaxation, annualEarningsFamily, willTaxReducingAmount, willHigherTask, higherTaskMonth,willIncreasedCosts,willZUS, annualEarningsZUS);
         if(addresses!=null)
         {
             worker.setAddresses(addresses.stream()
@@ -89,11 +88,6 @@ public class WorkerWriteModel
         {
             worker.setEducation(education.stream()
                     .map(EducationWriteModel::toEducation).collect(Collectors.toSet()));
-        }
-        if(employments!=null)
-        {
-            worker.setEmployments(employments.stream()
-                    .map(EmploymentWriteModel::toEmployment).collect(Collectors.toSet()));
         }
         if(familyMembers!=null)
         {
@@ -163,9 +157,9 @@ public class WorkerWriteModel
         this.qualifications = qualifications;
     }
 
-    public void setOptionalData(String optionalData)
+    public void setAdditionalPersonalData(String additionalPersonalData)
     {
-        this.optionalData = optionalData;
+        this.additionalPersonalData = additionalPersonalData;
     }
 
     public void setPolishCitizen(boolean polishCitizen)
@@ -413,9 +407,9 @@ public class WorkerWriteModel
         this.education = education;
     }
 
-    public void setEmployments(Set<EmploymentWriteModel> employments)
+    public void setPrevEmployment(String prevEmployment)
     {
-        this.employments = employments;
+        this.prevEmployment = prevEmployment;
     }
 
     public void setFamilyMembers(Set<FamilyMemberWriteModel> familyMembers)

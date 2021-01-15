@@ -6,20 +6,36 @@ import java.util.UUID;
 
 public class EducationReadModel
 {
-    private UUID id;
     private String schoolName;
     private String graduationYear;
+    private String profession;
+    private String speciality;
+    private String title;
+
 
     public EducationReadModel(Education source)
     {
-        this.id=source.getId();
         this.schoolName = source.getSchoolName();
         this.graduationYear=source.getGraduationYear();
+        this.profession=source.getProfession();
+        this.speciality=source.getSpeciality();
+        this.title=source.getTitle();
+
     }
 
-    public UUID getId()
+    public String getProfession()
     {
-        return id;
+        return profession;
+    }
+
+    public String getSpeciality()
+    {
+        return speciality;
+    }
+
+    public String getTitle()
+    {
+        return title;
     }
 
     public String getSchoolName()

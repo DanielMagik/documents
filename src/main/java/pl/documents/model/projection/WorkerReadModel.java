@@ -7,7 +7,6 @@ import pl.documents.model.enums.*;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class WorkerReadModel
@@ -20,12 +19,10 @@ public class WorkerReadModel
     private String firstName;
     private String secondName;
     private String surname;
+    private String prevEmployment;
     private LocalDate birthDate;
-    private String profession;
-    private String specialty;
-    private String title;
     private String qualifications;
-    private String optionalData;
+    private String additionalPersonalData;
     private boolean isPolishCitizen;
     private String citizenship;
     private String documentNumber;
@@ -75,7 +72,6 @@ public class WorkerReadModel
     private String annualEarningsZUS;
     private Set<AddressReadModel> addresses;
     private Set<EducationReadModel> education;
-    private Set<EmploymentReadModel> employments;
     private Set<FamilyMemberReadModel> familyMembers;
 
 
@@ -94,11 +90,8 @@ public class WorkerReadModel
         this.secondName = source.getSecondName();
         this.surname = source.getSurname();
         this.birthDate = source.getBirthDate();
-        this.profession = source.getProfession();
-        this.specialty = source.getSpecialty();
-        this.title = source.getTitle();
         this.qualifications = source.getQualifications();
-        this.optionalData = source.getOptionalData();
+        this.additionalPersonalData = source.getAdditionalPersonalData();
         this.isPolishCitizen = source.isPolishCitizen();
         this.citizenship = source.getCitizenship();
         this.documentNumber = source.getDocumentNumber();
@@ -152,9 +145,7 @@ public class WorkerReadModel
         if(source.getEducation()!=null)
         this.education = source.getEducation().stream()
                 .map(EducationReadModel::new).collect(Collectors.toSet());
-        if(source.getEmployments()!=null)
-        this.employments = source.getEmployments().stream()
-                .map(EmploymentReadModel::new).collect(Collectors.toSet());
+        this.prevEmployment = source.getPrevEmployment();
         if(source.getFamilyMembers()!=null)
         this.familyMembers = source.getFamilyMembers().stream()
                 .map(FamilyMemberReadModel::new).collect(Collectors.toSet());
@@ -206,29 +197,14 @@ public class WorkerReadModel
         return birthDate;
     }
 
-    public String getProfession()
-    {
-        return profession;
-    }
-
-    public String getSpecialty()
-    {
-        return specialty;
-    }
-
-    public String getTitle()
-    {
-        return title;
-    }
-
     public String getQualifications()
     {
         return qualifications;
     }
 
-    public String getOptionalData()
+    public String getAdditionalPersonalData()
     {
-        return optionalData;
+        return additionalPersonalData;
     }
 
     public boolean isPolishCitizen()
@@ -476,9 +452,9 @@ public class WorkerReadModel
         return education;
     }
 
-    public Set<EmploymentReadModel> getEmployments()
+    public String getPrevEmployment()
     {
-        return employments;
+        return prevEmployment;
     }
 
     public Set<FamilyMemberReadModel> getFamilyMembers()

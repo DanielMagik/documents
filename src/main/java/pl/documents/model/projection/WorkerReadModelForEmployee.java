@@ -37,9 +37,6 @@ public class WorkerReadModelForEmployee
         this.secondName = source.getSecondName();
         this.surname = source.getSurname();
         this.birthDate = source.getBirthDate();
-        this.profession = source.getProfession();
-        this.specialty = source.getSpecialty();
-        this.title = source.getTitle();
         this.qualifications = source.getQualifications();
         this.isPolishCitizen = source.isPolishCitizen();
         this.citizenship = source.getCitizenship();

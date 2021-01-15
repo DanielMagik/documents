@@ -2,6 +2,7 @@ package pl.documents.model;
 
 import org.hibernate.annotations.GenericGenerator;
 import pl.documents.model.enums.*;
+import pl.documents.model.projection.CandidateWriteModel;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -54,30 +55,19 @@ public class Worker
      */
     private LocalDate birthDate = null;
     /**
-     *  Zawód
-     */
-    private String profession = null;
-    /**
-     * Specjalność
-     */
-    private String specialty = null;
-    /**
-     * Tytuł zawodowy/naukowy
-     */
-    private String title = null;
-    /**
      * Kwalifikacje zawodowe
      */
     private String qualifications = null;
     /**
      * Dodatkowe dane osobowe
      */
-    private String optionalData = null;
+    private String additionalPersonalData = null;
     /**
      * Czy pracownik jest obywatelem Polski: TRUE-TAK, FALSE-NIE
      */
 
     private boolean isPolishCitizen = false;
+    private String prevEmployment;
     /**
      * Obywatelstwo. Pole wypełniane, gdy pracownik nie posiada Polskiego obywatelstwa
      */
@@ -303,6 +293,9 @@ public class Worker
     /**
      * Data i czas utworzenia encji
      */
+    /**
+     * Przebieg dotychczasowego zatrudnienia
+     */
     private LocalDateTime createDate = null;
     /**
      * Data i czas ostatniej aktualizacji encji
@@ -313,11 +306,7 @@ public class Worker
      */
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "worker")
     private Set<Education> education = null;
-    /**
-     * Przebieg dotychczasowego zatrudnienia
-     */
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "worker")
-    private Set<Employment> employments = null;
+
     /**
      * Adresy pracownika (zamieszkania, zameldowania, do korespondencji)
      */
@@ -394,29 +383,14 @@ public class Worker
         return birthDate;
     }
 
-    public String getProfession()
-    {
-        return profession;
-    }
-
-    public String getSpecialty()
-    {
-        return specialty;
-    }
-
-    public String getTitle()
-    {
-        return title;
-    }
-
     public String getQualifications()
     {
         return qualifications;
     }
 
-    public String getOptionalData()
+    public String getAdditionalPersonalData()
     {
-        return optionalData;
+        return additionalPersonalData;
     }
 
     public boolean isPolishCitizen()
@@ -654,6 +628,7 @@ public class Worker
         return annualEarningsZUS;
     }
 
+
     public Set<Education> getEducation()
     {
         return education;
@@ -662,16 +637,6 @@ public class Worker
     public void setEducation(Set<Education> education)
     {
         this.education = education;
-    }
-
-    public Set<Employment> getEmployments()
-    {
-        return employments;
-    }
-
-    public void setEmployments(Set<Employment> employments)
-    {
-        this.employments = employments;
     }
 
     public Set<Address> getAddresses()
@@ -694,7 +659,10 @@ public class Worker
         this.familyMembers = familyMembers;
     }
 
-    public Worker(String email, String phoneNumber, String fillLocation, Sex sex, String firstName, String secondName, String surname, LocalDate birthDate, String profession, String specialty, String title, String qualifications, String optionalData, boolean isPolishCitizen, String citizenship, String documentNumber, String documentType, String taxOffice, String authorizedName, String authorizedSurname, String authorizedContact, boolean willSpecialPowersForFamily, String NIP, boolean willPIT2, String workplace, String department, Pension pension, LocalDate employmentDate, String bank, String accountNumber, SecurityClearance securityClearance, String NFZ, String pensionZUSNumber, boolean isDisabled, String disabledZUSNumber, LocalDate disabledFrom, LocalDate disabledTo, Medicover medicover, ContractType contractType, IncomePerPerson incomePerPerson, boolean ZFSS1, boolean ZFSS2, boolean ZFSS3, boolean ZFSS4, boolean ZFSS5, boolean ZFSS6, boolean ZFSS7, boolean hasChildren, boolean willParent, ChildUnderFourPermissions childUnderFourPermissions, ChildUnderFourteenPermissions childUnderFourteenPermissions, boolean willReducedTask, boolean methodOfTaxation, String annualEarningsFamily, boolean willTaxReducingAmount, boolean willHigherTask, Month higherTaskMonth, boolean willIncreasedCosts, boolean willZUS, String annualEarningsZUS)
+
+
+
+    public Worker(String email, String phoneNumber, String fillLocation, Sex sex, String firstName, String secondName, String surname, LocalDate birthDate, String profession, String specialty, String title, String qualifications, String additionalPersonalData, boolean isPolishCitizen, String citizenship, String documentNumber, String documentType, String taxOffice, String authorizedName, String authorizedSurname, String authorizedContact, boolean willSpecialPowersForFamily, String NIP, boolean willPIT2, String workplace, String department, Pension pension, LocalDate employmentDate, String bank, String accountNumber, SecurityClearance securityClearance, String NFZ, String pensionZUSNumber, boolean isDisabled, String disabledZUSNumber, LocalDate disabledFrom, LocalDate disabledTo, Medicover medicover, ContractType contractType, IncomePerPerson incomePerPerson, boolean ZFSS1, boolean ZFSS2, boolean ZFSS3, boolean ZFSS4, boolean ZFSS5, boolean ZFSS6, boolean ZFSS7, boolean hasChildren, boolean willParent, ChildUnderFourPermissions childUnderFourPermissions, ChildUnderFourteenPermissions childUnderFourteenPermissions, boolean willReducedTask, boolean methodOfTaxation, String annualEarningsFamily, boolean willTaxReducingAmount, boolean willHigherTask, Month higherTaskMonth, boolean willIncreasedCosts, boolean willZUS, String annualEarningsZUS)
     {
         this.phoneNumber = phoneNumber;
         this.fillLocation = fillLocation;
@@ -703,11 +671,8 @@ public class Worker
         this.secondName = secondName;
         this.surname = surname;
         this.birthDate = birthDate;
-        this.profession = profession;
-        this.specialty = specialty;
-        this.title = title;
         this.qualifications = qualifications;
-        this.optionalData = optionalData;
+        this.additionalPersonalData = additionalPersonalData;
         this.isPolishCitizen = isPolishCitizen;
         this.citizenship = citizenship;
         this.documentNumber = documentNumber;
@@ -770,11 +735,8 @@ public class Worker
         this.secondName = source.secondName;
         this.surname = source.surname;//
         this.birthDate = source.birthDate;
-        this.profession = source.profession;
-        this.specialty = source.specialty;
-        this.title = source.title;
         this.qualifications = source.qualifications;
-        this.optionalData = source.optionalData;
+        this.additionalPersonalData = source.additionalPersonalData;
         this.isPolishCitizen = source.isPolishCitizen;
         this.citizenship = source.citizenship;
         this.documentNumber = source.documentNumber;//
@@ -824,6 +786,19 @@ public class Worker
         this.annualEarningsZUS = source.annualEarningsZUS;
         this.createDate = source.createDate;
         this.updateDate = source.updateDate;
+    }
+    public void updateCandidate(CandidateWriteModel candidate)
+    {
+        this.firstName=candidate.getFirstName();
+        this.secondName=candidate.getSecondName();
+        this.surname=candidate.getSurname();
+        this.birthDate=candidate.getDateOfBirth();
+        this.sex=candidate.getSex();
+        this.phoneNumber=candidate.getPhoneNumber();
+        this.fillLocation=candidate.getFillLocation();
+        this.qualifications=candidate.getQualifications();
+        this.prevEmployment=candidate.getPrevEmployment();
+        this.additionalPersonalData=candidate.getAdditionalPersonalData();
     }
     public void updateImportantData(final Worker source)
     {
@@ -899,5 +874,10 @@ public class Worker
     public void setAccountNumber(String accountNumber)
     {
         this.accountNumber = accountNumber;
+    }
+
+    public String getPrevEmployment()
+    {
+        return prevEmployment;
     }
 }

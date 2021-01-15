@@ -30,6 +30,9 @@ public class Education
     /**
      * Kandydat powiązany z danym wykształceniem
      */
+    private String profession;
+    private String speciality;
+    private String title;
     @ManyToOne
     @JoinColumn(name = "ID_WORKER",referencedColumnName = "id")
     private Worker worker;
@@ -38,10 +41,13 @@ public class Education
     {
     }
 
-    public Education(String schoolName, String graduationYear)
+    public Education(String schoolName, String graduationYear, String profession, String speciality, String title)
     {
         this.schoolName = schoolName;
         this.graduationYear = graduationYear;
+        this.profession=profession;
+        this.speciality=speciality;
+        this.title=title;
     }
     /**
      * Update podstawowych danych o edukacji
@@ -73,7 +79,20 @@ public class Education
         this.worker = worker;
     }
 
+    public String getProfession()
+    {
+        return profession;
+    }
 
+    public String getSpeciality()
+    {
+        return speciality;
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
 
     //TYLKO DO TESTÓW
     public void setId(UUID id)

@@ -51,12 +51,14 @@ public class EducationController
         return ResponseEntity.ok(result);
     }
 
+
     /**
      * Dodanie edukacji do pracownika o zadanym id
      * @param id id pracownika
      * @param educationWriteModel edukacja
      * @return informacja o pomyślnym bądź nieudanym dodaniu
      */
+    /*
     @PostMapping("/workers/education/{id}")
     ResponseEntity<?> addWorkerEducation(@PathVariable UUID id, @RequestBody EducationWriteModel educationWriteModel)
     {
@@ -79,6 +81,8 @@ public class EducationController
         }
         return ResponseEntity.noContent().build();
     }
+
+     */
 
     /**
      * Aktualizacja encji z edukacją

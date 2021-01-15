@@ -6,8 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.documents.config.Encryption;
+import pl.documents.exception.BadEducationException;
 import pl.documents.exception.BadIdException;
 import pl.documents.exception.BadWorkerException;
+import pl.documents.model.User;
 import pl.documents.model.Worker;
 import pl.documents.model.projection.*;
 import pl.documents.service.WorkerService;
@@ -45,8 +47,8 @@ public class WorkerController
         WorkerReadModel workerReadModel;
         try
         {
-
-            workerReadModel = workerService.getByToken(token);
+            User user = workerService.getByToken(token);
+            workerReadModel = new WorkerReadModel(user.getWorker(), user);
         }
         catch (AccessException | IllegalArgumentException e)
         {
@@ -57,12 +59,30 @@ public class WorkerController
 
     /**
      * Akutalizacja danych pracownika o zadanym id
-     * @param workerWriteModel nowe dane pracownika
      * @return informacja o pomyślnej bądź nieudanej aktualizacji
      */
-    @PutMapping("/update")
-    ResponseEntity<?> updateWorker(@RequestHeader("Authorization") String token, @RequestBody WorkerWriteModel workerWriteModel)
+    @PutMapping("/updatecandidate")
+    ResponseEntity<?> updateWorker(@RequestHeader("Authorization") String token, @RequestBody CandidateWriteModel candidateWriteModel)
     {
+        User user;
+        try
+        {
+            user = workerService.getByToken(token);
+        }
+        catch (AccessException | IllegalArgumentException e)
+        {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("No access!");
+        }
+        try
+        {
+            workerService.checkCandidate(candidateWriteModel);
+        }
+        catch (BadWorkerException | BadEducationException e)
+        {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+        }
+        workerService.updateCandidate(user.getWorker().getId(), candidateWriteModel);
+        return ResponseEntity.noContent().build();
         /*
         try
         {
@@ -84,7 +104,6 @@ public class WorkerController
         return ResponseEntity.noContent().build();
 
          */
-        return null;
     }
 
     /*

@@ -9,16 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.documents.config.Encryption;
 import pl.documents.config.TokenInstance;
-import pl.documents.exception.BadIdException;
-import pl.documents.exception.BadWorkerException;
-import pl.documents.exception.LoginException;
-import pl.documents.exception.RegisterException;
+import pl.documents.exception.*;
 import pl.documents.logic.DataChecker;
 import pl.documents.model.*;
 import pl.documents.model.projection.*;
 import pl.documents.repository.*;
 
 import java.rmi.AccessException;
+import java.time.Year;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -33,19 +31,17 @@ public class WorkerService
     private final WorkerRepository workerRepository;
     private final EducationRepository educationRepository;
     private final AddressRepository addressRepository;
-    private final EmploymentRepository employmentRepository;
     private final FamilyMemberRepository familyMemberRepository;
     private final Encryption encryption;
 
     public WorkerService(final UserRepository userRepository, final WorkerRepository workerRepository, final EducationRepository educationRepository,
-                         final AddressRepository addressRepository, final EmploymentRepository employmentRepository,
+                         final AddressRepository addressRepository,
                          final FamilyMemberRepository familyMemberRepository, Encryption encryption)
     {
         this.userRepository = userRepository;
         this.workerRepository = workerRepository;
         this.educationRepository = educationRepository;
         this.addressRepository = addressRepository;
-        this.employmentRepository = employmentRepository;
         this.familyMemberRepository = familyMemberRepository;
         this.encryption = encryption;
     }
@@ -208,12 +204,6 @@ public class WorkerService
         );
         Pattern pattern;
         Matcher matcher;
-        //E-MAIL NIE MUSI BYĆ SPRAWDZANY, ZMIANA MAILA NASTĄPI W INNEJ FUNKCJI!
-        //email
-        //pattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)");
-        //matcher = pattern.matcher(worker.getEmail());
-        //if(!matcher.matches())
-        //    throw new BadWorkerException("Bad e-mail!");
         //numer telefonu
         pattern = Pattern.compile("\\d{9,11}");
         matcher = pattern.matcher(worker.getPhoneNumber());
@@ -295,19 +285,6 @@ public class WorkerService
             return educationRepository.findAllByWorker(result).stream()
                     .map(EducationReadModel::new).collect(Collectors.toList());
     }
-    /**
-     * Odczyt przebiegu zatrudnienia pracownika o zadanym id
-     * @param id id pracownika
-     * @return lista zatrudnień
-     */
-    public List<EmploymentReadModel> readWorkerEmployment(UUID id) throws BadIdException
-    {
-        Worker result = workerRepository.findById(id).orElseThrow(
-                () -> new BadIdException("Worker with id "+id+" doesn't exists!")
-        );
-        return employmentRepository.findAllByWorker(result).stream()
-                .map(EmploymentReadModel::new).collect(Collectors.toList());
-    }
 
 
     /**
@@ -376,12 +353,8 @@ public class WorkerService
      * @param id id pracownika, dla którego zostanie dodana szkoła
      * @param education nowa szkoła
      */
-    public void addEducation(UUID id, Education education) throws BadIdException
+    private void addEducation(UUID id, Education education)
     {
-        if(!workerRepository.existsById(id))
-        {
-            throw new BadIdException("Worker with id "+id+" doesn't exists!");
-        }
         workerRepository.findById(id).ifPresent(
                 worker ->
                 {
@@ -390,27 +363,6 @@ public class WorkerService
                 }
         );
     }
-    /**
-     * Dodanie zatrudnienia dla pracownika o danym id
-     * @param id id pracownika, dla którego zostanie dodane zatrudnienie
-     * @param employment nowe zatrudnienie
-     */
-    public void addEmployment(UUID id, Employment employment) throws BadIdException
-    {
-        if(!workerRepository.existsById(id))
-        {
-            throw new BadIdException("Worker with id "+id+" doesn't exists!");
-        }
-        workerRepository.findById(id).ifPresent(
-                worker ->
-                {
-                    employment.setWorker(worker);
-                    employmentRepository.save(employment);
-                }
-        );
-    }
-
-
     /**
      * Dodanie adresu dla pracownika o danym id
      * @param id id pracownika, dla którego zostanie dodany adres
@@ -449,47 +401,9 @@ public class WorkerService
                 }
         );
     }
-    private void checkPassword(String password) throws RegisterException
-    {
-        if(password.length()<8)
-        {
-            throw new RegisterException("Too short password. It must contain at least 8 characters!");
-        }
-
-        Pattern digit = Pattern.compile("^(?=.*[0-9]).{8,}$");
-        Pattern smallLetter = Pattern.compile("^(?=.*[a-z]).{8,}$");
-        Pattern bigLetter = Pattern.compile("^(?=.*[A-Z]).{8,}$");
-        Pattern blank = Pattern.compile("^(?=\\S+$).{8,}$");
-        Pattern special = Pattern.compile("^(?=.*[~`!@#$%^&*()_+=\\-|\\\\/?:;'\"{}\\[\\]]).{8,}$");
-        Matcher matcher = digit.matcher(password);
-        if(!matcher.matches())
-        {
-            throw new RegisterException("Password doesn't contains any digit!");
-        }
-        matcher = smallLetter.matcher(password);
-        if(!matcher.matches())
-        {
-            throw new RegisterException("Password doesn't contains any small letter!");
-        }
-        matcher = bigLetter.matcher(password);
-        if(!matcher.matches())
-        {
-            throw new RegisterException("Password doesn't contains any big letter!");
-        }
-        matcher = blank.matcher(password);
-        if(!matcher.matches())
-        {
-            throw new RegisterException("Password contains whitespace characters!");
-        }
-        matcher = special.matcher(password);
-        if(!matcher.matches())
-        {
-            throw new RegisterException("Password doesn't contains any special character!");
-        }
-    }
 
 
-    public WorkerReadModel getByToken(String token) throws AccessException, IllegalArgumentException
+    public User getByToken(String token) throws AccessException, IllegalArgumentException
     {
 
 
@@ -504,8 +418,65 @@ public class WorkerService
                 .orElseThrow(
                         ()->new AccessException("No access!")
                 );
+      return user;
+    }
 
-        WorkerReadModel workerReadModel = new WorkerReadModel(user.getWorker(), user);
-        return workerReadModel;
+
+    public void checkCandidate(CandidateWriteModel candidate) throws BadWorkerException, BadEducationException
+    {
+        Pattern pattern;
+        Matcher matcher;
+        //numer telefonu
+        pattern = Pattern.compile("\\d{9,11}");
+        matcher = pattern.matcher(candidate.getPhoneNumber());
+        if(!matcher.matches())
+            throw new BadWorkerException("Bad phone number!");
+        //miejscowość wypełnienia
+        if(candidate.getFillLocation().isBlank())
+            throw new BadWorkerException("Enter the place of filling!");
+        //imię
+        if(candidate.getFirstName().isBlank())
+            throw new BadWorkerException("Enter name!");
+        //nazwisko
+        if(candidate.getSurname().isBlank())
+            throw new BadWorkerException("Enter surname!");
+
+        for (EducationWriteModel e : candidate.getEducation())
+        {
+            checkEducationData(e.toEducation());
+        }
+    }
+
+    public void checkEducationData(Education education) throws BadEducationException
+    {
+        if(education!=null)
+        {
+            Pattern yearPattern = Pattern.compile("[12]\\d{3}");
+            Matcher matcher = yearPattern.matcher(education.getGraduationYear());
+            if (matcher.matches())
+            {
+                int year = Integer.parseInt(education.getGraduationYear());
+                if (year > Year.now().getValue() || year < 1900)
+                {
+                    throw new BadEducationException("Enter correct year!");
+                }
+            }
+            else
+            {
+                throw new BadEducationException("Enter correct year!");
+            }
+        }
+    }
+    public void updateCandidate(UUID id, CandidateWriteModel candidateWriteModel)
+    {
+        workerRepository.findById(id).
+                ifPresent(worker ->{
+                    worker.updateCandidate(candidateWriteModel);
+                    workerRepository.save(worker);
+                });
+        for(EducationWriteModel e : candidateWriteModel.getEducation())
+        {
+            addEducation(id,e.toEducation());
+        }
     }
 }
