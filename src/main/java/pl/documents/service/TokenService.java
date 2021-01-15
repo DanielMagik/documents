@@ -52,6 +52,7 @@ public class TokenService
         String link = "http://localhost:8080/register/" + result.getId();
         return link;
     }
+
     public String generateLinkAndTokenAccountConfirm(User user) throws TokenException
     {
         Token token = new Token(user.getUserType(), TokenType.CONFIRM_EMAIL, user.getEmail());

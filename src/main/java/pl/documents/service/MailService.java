@@ -28,6 +28,7 @@ public class MailService implements EmailService
         message.setText(text);
         emailSender.send(message);
 
+
     }
 
 }

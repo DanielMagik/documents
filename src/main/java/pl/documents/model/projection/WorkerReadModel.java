@@ -1,5 +1,6 @@
 package pl.documents.model.projection;
 
+import pl.documents.model.User;
 import pl.documents.model.Worker;
 import pl.documents.model.enums.*;
 
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class WorkerReadModel
 {
-    private UUID id;
+    //private UUID id;
     private String email;
     private String phoneNumber;
     private String fillLocation;
@@ -82,10 +83,10 @@ public class WorkerReadModel
     {
     }
 
-    public WorkerReadModel(Worker source)
+    public WorkerReadModel(Worker source, User user)
     {
-        this.id=source.getId();
-        //this.email = source.getEmail();
+        //this.id=source.getId();
+        this.email = user.getEmail();
         this.phoneNumber = source.getPhoneNumber();
         this.fillLocation = source.getFillLocation();
         this.sex = source.getSex();
@@ -160,10 +161,10 @@ public class WorkerReadModel
 
     }
 
-    public UUID getId()
-    {
-        return id;
-    }
+   // public UUID getId()
+  //  {
+  //      return id;
+  //  }
 
     public String getEmail()
     {

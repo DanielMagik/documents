@@ -10,18 +10,18 @@ import java.util.Random;
 @Scope("singleton")
 public class Encryption
 {
+    private String sequence;
     public Encryption()
     {
         byte[] array = new byte[30];
         new Random().nextBytes(array);
         String generatedString = new String(array, Charset.forName("UTF-8"));
-        this.sequence = generatedString;
+        this.sequence=generatedString;
     }
-
-    private final String sequence;
 
     public String getSequence()
     {
+
         return sequence;
     }
 }

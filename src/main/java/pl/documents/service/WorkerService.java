@@ -1,9 +1,14 @@
 package pl.documents.service;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import io.lsn.spring.pesel.validator.domain.PeselValidator;
 import nl.garvelink.iban.Modulo97;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.documents.config.Encryption;
+import pl.documents.config.TokenInstance;
 import pl.documents.exception.BadIdException;
 import pl.documents.exception.BadWorkerException;
 import pl.documents.exception.LoginException;
@@ -13,6 +18,7 @@ import pl.documents.model.*;
 import pl.documents.model.projection.*;
 import pl.documents.repository.*;
 
+import java.rmi.AccessException;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -23,21 +29,25 @@ import java.util.stream.Collectors;
 @Service
 public class WorkerService
 {
-
+    private final UserRepository userRepository;
     private final WorkerRepository workerRepository;
     private final EducationRepository educationRepository;
     private final AddressRepository addressRepository;
     private final EmploymentRepository employmentRepository;
     private final FamilyMemberRepository familyMemberRepository;
+    private final Encryption encryption;
 
-    public WorkerService(final WorkerRepository workerRepository, final EducationRepository educationRepository,
-                         final AddressRepository addressRepository, final EmploymentRepository employmentRepository, final FamilyMemberRepository familyMemberRepository)
+    public WorkerService(final UserRepository userRepository, final WorkerRepository workerRepository, final EducationRepository educationRepository,
+                         final AddressRepository addressRepository, final EmploymentRepository employmentRepository,
+                         final FamilyMemberRepository familyMemberRepository, Encryption encryption)
     {
+        this.userRepository = userRepository;
         this.workerRepository = workerRepository;
         this.educationRepository = educationRepository;
         this.addressRepository = addressRepository;
         this.employmentRepository = employmentRepository;
         this.familyMemberRepository = familyMemberRepository;
+        this.encryption = encryption;
     }
 
     /**
@@ -48,28 +58,6 @@ public class WorkerService
     {
         return workerRepository.findAll().stream()
                 .map(WorkerReadModelForEmployee::new).collect(Collectors.toList());
-    }
-
-    /**
-     * Odczyt pracownika o zadanym id
-     * @param id zadane id
-     * @return odczytany pracownik
-     */
-    public WorkerReadModel readById(UUID id) throws BadIdException
-    {
-        Worker result;
-            result = workerRepository.findById(id).orElseThrow(
-                    () -> new BadIdException("Worker with id "+id+" doesn't exists!")
-            );
-            return new WorkerReadModel(result);
-    }
-    public WorkerReadModel readByEmailAndPassword(Worker worker) throws LoginException
-    {
-        Worker result = null;
-       // result= workerRepository.findByEmailAndPassword(worker.getEmail(),worker.getPassword()).orElseThrow(
-       //         () -> new LoginException("Bad login or password!")
-      //  );
-        return new WorkerReadModel(result);
     }
 
     /**
@@ -499,5 +487,25 @@ public class WorkerService
             throw new RegisterException("Password doesn't contains any special character!");
         }
     }
-    
+
+
+    public WorkerReadModel getByToken(String token) throws AccessException, IllegalArgumentException
+    {
+
+
+        TokenInstance tokenInstance = new TokenInstance(token, encryption.getSequence());
+        tokenInstance.readToken();
+        String role = tokenInstance.getRole();
+        String id = tokenInstance.getId();
+        if(!role.equals("ROLE_WORKER"))
+            throw new AccessException("No access!");
+
+        User user = userRepository.findById(UUID.fromString(id))
+                .orElseThrow(
+                        ()->new AccessException("No access!")
+                );
+
+        WorkerReadModel workerReadModel = new WorkerReadModel(user.getWorker(), user);
+        return workerReadModel;
+    }
 }

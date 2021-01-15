@@ -41,7 +41,6 @@ public class TokenController
     {
         try
         {
-
             String link = tokenService.generateTokenToAdmin();
             return ResponseEntity.ok(link);
         }

@@ -22,11 +22,11 @@ import java.util.Set;
 public class JwtFilter extends BasicAuthenticationFilter
 {
 
-    final Encryption encryption;
+    private String actualKey;
 
-    public JwtFilter(AuthenticationManager authenticationManager, Encryption encryption) {
+    public JwtFilter(AuthenticationManager authenticationManager, String actualKey) {
         super(authenticationManager);
-        this.encryption = encryption;
+        this.actualKey=actualKey;
     }
 
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -36,13 +36,13 @@ public class JwtFilter extends BasicAuthenticationFilter
         chain.doFilter(request, response);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthenticationByToken(String header) {
-
+    private UsernamePasswordAuthenticationToken getAuthenticationByToken(String header)
+    {
 
             Jws<Claims> claimsJws;
             try
             {
-                claimsJws = Jwts.parser().setSigningKey(encryption.getSequence().getBytes())
+                claimsJws = Jwts.parser().setSigningKey(actualKey.getBytes())
                         .parseClaimsJws(header.replace("Bearer ", ""));
             }
             catch (Exception e)

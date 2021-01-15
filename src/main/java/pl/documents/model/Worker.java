@@ -24,19 +24,11 @@ public class Worker
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     private UUID id;
-    /**
-     * Dane kontaktowe (e-mail)
-     */
 
-    //private String email = null;
     /**
      * Dane kontaktowe (numer telefonu)
      */
     private String phoneNumber = null;
-    /**
-     * Hasło do logowania się
-     */
-    //private String password = null;
     /**
      * Miejsce wypełnienia dokumentów
      */
@@ -704,7 +696,6 @@ public class Worker
 
     public Worker(String email, String phoneNumber, String fillLocation, Sex sex, String firstName, String secondName, String surname, LocalDate birthDate, String profession, String specialty, String title, String qualifications, String optionalData, boolean isPolishCitizen, String citizenship, String documentNumber, String documentType, String taxOffice, String authorizedName, String authorizedSurname, String authorizedContact, boolean willSpecialPowersForFamily, String NIP, boolean willPIT2, String workplace, String department, Pension pension, LocalDate employmentDate, String bank, String accountNumber, SecurityClearance securityClearance, String NFZ, String pensionZUSNumber, boolean isDisabled, String disabledZUSNumber, LocalDate disabledFrom, LocalDate disabledTo, Medicover medicover, ContractType contractType, IncomePerPerson incomePerPerson, boolean ZFSS1, boolean ZFSS2, boolean ZFSS3, boolean ZFSS4, boolean ZFSS5, boolean ZFSS6, boolean ZFSS7, boolean hasChildren, boolean willParent, ChildUnderFourPermissions childUnderFourPermissions, ChildUnderFourteenPermissions childUnderFourteenPermissions, boolean willReducedTask, boolean methodOfTaxation, String annualEarningsFamily, boolean willTaxReducingAmount, boolean willHigherTask, Month higherTaskMonth, boolean willIncreasedCosts, boolean willZUS, String annualEarningsZUS)
     {
-       // this.email = email;
         this.phoneNumber = phoneNumber;
         this.fillLocation = fillLocation;
         this.sex = sex;
@@ -772,7 +763,6 @@ public class Worker
      */
     public void updateFrom(final Worker source)
     {
-        //this.email = source.email;//
         this.phoneNumber = source.phoneNumber;//
         this.fillLocation = source.fillLocation;//
         this.sex = source.sex;

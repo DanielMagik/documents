@@ -26,14 +26,8 @@ public class WriteModelRegister
         this.password = password;
     }
 
-
-
-
-
-
-
-
-
-
-
+    public String getPassword()
+    {
+        return password;
+    }
 }

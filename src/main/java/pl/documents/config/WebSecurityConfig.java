@@ -14,6 +14,12 @@ import java.util.Arrays;
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 {
+    private final Encryption encryption;
+
+    public WebSecurityConfig(final Encryption encryption)
+    {
+        this.encryption = encryption;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception
@@ -24,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/register").permitAll()
                 .antMatchers("/test3/").hasRole("ADMIN")
                 .and()
-                .addFilter(new JwtFilter(authenticationManager(), new Encryption()));
+                .addFilter(new JwtFilter(authenticationManager(),encryption.getSequence()));
     }
     @Bean
     CorsConfigurationSource corsConfigurationSource()
@@ -38,4 +44,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 }
