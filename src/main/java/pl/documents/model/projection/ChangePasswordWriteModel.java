@@ -1,6 +1,6 @@
 package pl.documents.model.projection;
 
-public class WorkerWriteModelChangePassword
+public class ChangePasswordWriteModel
 {
     private String password;
     private String newPassword;

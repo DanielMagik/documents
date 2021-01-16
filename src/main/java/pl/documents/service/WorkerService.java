@@ -89,7 +89,7 @@ public class WorkerService
     }
 
 
-    public void changeImportantData(UUID id, WorkerWriteModelChangePassword workerWriteModelChangePassword) throws  BadIdException, BadWorkerException
+    public void changeImportantData(UUID id, ChangePasswordWriteModel changePasswordWriteModel) throws  BadIdException, BadWorkerException
     {
         /*
         boolean willChangeEmail = workerWriteModelChangePassword.isWillChangeEmail();
@@ -369,23 +369,7 @@ public class WorkerService
     }
 
 
-    public User getByToken(String token) throws AccessException, IllegalArgumentException
-    {
 
-
-        TokenInstance tokenInstance = new TokenInstance(token, encryption.getSequence());
-        tokenInstance.readToken();
-        String role = tokenInstance.getRole();
-        String id = tokenInstance.getId();
-        if(!role.equals("ROLE_WORKER"))
-            throw new AccessException("No access!");
-
-        User user = userRepository.findById(UUID.fromString(id))
-                .orElseThrow(
-                        ()->new AccessException("No access!")
-                );
-      return user;
-    }
 
 
     public void checkCandidate(CandidateWriteModel candidate) throws BadWorkerException, BadEducationException

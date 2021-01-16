@@ -30,4 +30,9 @@ public class WriteModelRegister
     {
         return password;
     }
+
+    public String getEmail()
+    {
+        return email;
+    }
 }

@@ -5,6 +5,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.documents.config.Encryption;
+import pl.documents.config.TokenInstance;
 import pl.documents.exception.LoginException;
 import pl.documents.exception.RegisterException;
 import pl.documents.model.Token;
@@ -17,6 +18,8 @@ import pl.documents.repository.TokenRepository;
 import pl.documents.repository.UserRepository;
 import pl.documents.repository.WorkerRepository;
 
+import java.lang.module.ResolutionException;
+import java.rmi.AccessException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -71,7 +74,7 @@ public class UserService
         User user = userRepository.findByEmailAndPassword(email,password).orElseThrow(
                 ()->new LoginException("Bad email or password!")
         );
-        if(user.isActive()==false)
+        if(!user.isActive())
             throw new LoginException("Account is not active. Please, confirm the mail.");
         return user;
     }
@@ -82,19 +85,12 @@ public class UserService
         return false;
     }
 
-    public void checkData(String email, String password) throws RegisterException
+    private void checkPassword(String password) throws RegisterException
     {
-        Pattern emailPattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)");
-        Matcher matcherEmail = emailPattern.matcher(email);
-        if(!matcherEmail.matches())
-        {
-             throw new RegisterException("Bad e-mail!");
-        }
         if(password.length()<8)
         {
             throw new RegisterException("Too short password. It must contain at least 8 characters!");
         }
-
         Pattern digit = Pattern.compile("^(?=.*[0-9]).{8,}$");
         Pattern smallLetter = Pattern.compile("^(?=.*[a-z]).{8,}$");
         Pattern bigLetter = Pattern.compile("^(?=.*[A-Z]).{8,}$");
@@ -125,6 +121,16 @@ public class UserService
         {
             throw new RegisterException("Password doesn't contains any special character!");
         }
+    }
+    public void checkData(String email, String password) throws RegisterException
+    {
+        Pattern emailPattern = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)");
+        Matcher matcherEmail = emailPattern.matcher(email);
+        if(!matcherEmail.matches())
+        {
+             throw new RegisterException("Bad e-mail!");
+        }
+        checkPassword(password);
     }
     public List<WorkerReadModelForEmployee> findAll()
     {
@@ -205,5 +211,55 @@ public class UserService
 
         return resultToken;
 
+    }
+
+    public void checkNewPassword(String newPassword, String password, UUID id) throws RegisterException
+    {
+        checkPassword(newPassword);
+        User oldInstance = userRepository.findById(id).orElseThrow(
+                ()->new ResolutionException("Bad token")
+        );
+        //złe stare hasło
+        if(!oldInstance.getPassword().equals(password))
+        {
+            throw new RegisterException("The current password entered is incorrect!");
+        }
+        if(oldInstance.getPassword().equals(newPassword))
+            throw new RegisterException("The new password is the same as the current one!");
+
+    }
+    public User getByToken(String token) throws AccessException, IllegalArgumentException
+    {
+        TokenInstance tokenInstance = new TokenInstance(token, encryption.getSequence());
+        tokenInstance.readToken();
+        String id = tokenInstance.getId();
+
+        User user = userRepository.findById(UUID.fromString(id))
+                .orElseThrow(
+                        ()->new AccessException("No access!")
+                );
+        return user;
+    }
+
+    public void changePassword(UUID id, String newPassword)
+    {
+        userRepository.findById(id).ifPresent(
+                user -> {
+                    user.setPassword(newPassword);
+                    userRepository.save(user);
+                }
+
+        );
+    }
+
+
+    public User findByEmail(String email) throws LoginException
+    {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                ()->new LoginException("User with given e-mail doesn't exist!")
+        );
+        if(!user.isActive())
+            throw new LoginException("Account is not active. Please, confirm the mail.");
+        return user;
     }
 }

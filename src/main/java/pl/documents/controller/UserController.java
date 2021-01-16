@@ -11,13 +11,12 @@ import pl.documents.model.Token;
 import pl.documents.model.User;
 import pl.documents.model.Worker;
 import pl.documents.model.enums.UserType;
-import pl.documents.model.projection.LoginResponse;
-import pl.documents.model.projection.WorkerReadModelForEmployee;
-import pl.documents.model.projection.WriteModelRegister;
+import pl.documents.model.projection.*;
 import pl.documents.service.MailService;
 import pl.documents.service.TokenService;
 import pl.documents.service.UserService;
 
+import java.rmi.AccessException;
 import java.util.List;
 import java.util.UUID;
 
@@ -180,6 +179,49 @@ public class UserController
     ResponseEntity<List<WorkerReadModelForEmployee>> readAllWorkers()
     {
         return ResponseEntity.ok(userService.findAll());
+    }
+    @PutMapping("/changepassword")
+    public ResponseEntity<?> changePassword(@RequestHeader("Authorization") String token, @RequestBody ChangePasswordWriteModel writeModel)
+    {
+        User user;
+        try
+        {
+            user = userService.getByToken(token);
+        }
+        catch (AccessException | IllegalArgumentException e)
+        {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("No access!");
+        }
+        try
+        {
+            userService.checkNewPassword(writeModel.getNewPassword(), writeModel.getPassword(),user.getId());
+        }
+        catch (RegisterException e)
+        {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+        }
+        userService.changePassword(user.getId(),writeModel.getNewPassword());
+        return ResponseEntity.ok("Password has been changed.");
+    }
+    @PatchMapping("/forgetpassword")
+    public ResponseEntity<?> forgetPassword(@RequestBody WriteModelRegister modelRegister)
+    {
+        try
+        {
+            User user=userService.findByEmail(modelRegister.getEmail());
+
+            Thread thread = new Thread(() -> {
+                mailService.sendSimpleMessage(modelRegister.getEmail(),"password reminder",
+                        "Your current password is: \""+user.getPassword()+"\"");
+            });
+            thread.start();
+        }
+        catch (LoginException e)
+        {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+        }
+
+        return ResponseEntity.ok("Your password has been sent to the e-mail address provided.");
     }
 
 }

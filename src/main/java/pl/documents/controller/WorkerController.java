@@ -5,15 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.documents.config.Encryption;
 import pl.documents.exception.*;
 import pl.documents.model.User;
-import pl.documents.model.Worker;
 import pl.documents.model.projection.*;
+import pl.documents.service.UserService;
 import pl.documents.service.WorkerService;
 
 import java.rmi.AccessException;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -22,10 +20,12 @@ public class WorkerController
 
     private static final Logger logger = LoggerFactory.getLogger(WorkerController.class);
     private final WorkerService workerService;
+    private final UserService userService;
 
-    public WorkerController(final WorkerService workerService)
+    public WorkerController(final WorkerService workerService, final UserService userService)
     {
         this.workerService = workerService;
+        this.userService = userService;
     }
 
     /**
@@ -39,7 +39,7 @@ public class WorkerController
         WorkerReadModel workerReadModel;
         try
         {
-            User user = workerService.getByToken(token);
+            User user = userService.getByToken(token);
             workerReadModel = new WorkerReadModel(user.getWorker(), user);
         }
         catch (AccessException | IllegalArgumentException e)
@@ -61,7 +61,7 @@ public class WorkerController
         {
             try
             {
-                user = workerService.getByToken(token);
+                user = userService.getByToken(token);
             }
             catch (AccessException | IllegalArgumentException e)
             {
@@ -91,7 +91,7 @@ public class WorkerController
         {
             try
             {
-                user = workerService.getByToken(token);
+                user = userService.getByToken(token);
             }
             catch (AccessException | IllegalArgumentException e)
             {
@@ -130,7 +130,7 @@ public class WorkerController
      * @return informacja o zmianie danych
      */
     @PutMapping("/change/{id}")
-    ResponseEntity<?> changeImportantData(@PathVariable UUID id, @RequestBody WorkerWriteModelChangePassword workerWriteModel)
+    ResponseEntity<?> changeImportantData(@PathVariable UUID id, @RequestBody ChangePasswordWriteModel workerWriteModel)
     {
         logger.info("Try to change important data!");
         try
