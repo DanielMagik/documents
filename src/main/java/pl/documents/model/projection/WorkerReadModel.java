@@ -20,19 +20,15 @@ public class WorkerReadModel
     private String secondName;
     private String surname;
     private String prevEmployment;
-    private LocalDate birthDate;
+    private LocalDate dateOfBirth;
     private String qualifications;
     private String additionalPersonalData;
-    private boolean isPolishCitizen;
     private String citizenship;
     private String documentNumber;
     private String documentType;
     private String taxOffice;
-    private String authorizedName;
-    private String authorizedSurname;
-    private String authorizedContact;
-    private boolean willSpecialPowersForFamily;
     private String NIP;
+    private boolean willSpecialPowersForFamily;
     private boolean willPIT2;
     private String workplace;
     private String department;
@@ -81,7 +77,6 @@ public class WorkerReadModel
 
     public WorkerReadModel(Worker source, User user)
     {
-        //this.id=source.getId();
         this.email = user.getEmail();
         this.phoneNumber = source.getPhoneNumber();
         this.fillLocation = source.getFillLocation();
@@ -89,21 +84,17 @@ public class WorkerReadModel
         this.firstName = source.getFirstName();
         this.secondName = source.getSecondName();
         this.surname = source.getSurname();
-        this.birthDate = source.getBirthDate();
+        this.dateOfBirth = source.getDateOfBirth();
         this.qualifications = source.getQualifications();
         this.additionalPersonalData = source.getAdditionalPersonalData();
-        this.isPolishCitizen = source.isPolishCitizen();
         this.citizenship = source.getCitizenship();
         this.documentNumber = source.getDocumentNumber();
         this.documentType = source.getDocumentType();
         this.taxOffice = source.getTaxOffice();
-        this.authorizedName = source.getAuthorizedName();
-        this.authorizedSurname = source.getAuthorizedSurname();
-        this.authorizedContact = source.getAuthorizedContact();
         this.willSpecialPowersForFamily = source.isWillSpecialPowersForFamily();
         this.NIP = source.getNIP();
         this.willPIT2 = source.isWillPIT2();
-        this.workplace = source.getWorkplace();
+        this.workplace = source.getPosition();
         this.department = source.getDepartment();
         this.pension = source.getPension();
         this.employmentDate = source.getEmploymentDate();
@@ -119,13 +110,13 @@ public class WorkerReadModel
         this.medicover = source.getMedicover();
         this.contractType = source.getContractType();
         this.incomePerPerson = source.getIncomePerPerson();
-        this.ZFSS1 = source.isZFSS1();
-        this.ZFSS2 = source.isZFSS2();
-        this.ZFSS3 = source.isZFSS3();
-        this.ZFSS4 = source.isZFSS4();
-        this.ZFSS5 = source.isZFSS5();
-        this.ZFSS6 = source.isZFSS6();
-        this.ZFSS7 = source.isZFSS7();
+        this.ZFSS1 = source.isZfss1();
+        this.ZFSS2 = source.isZfss2();
+        this.ZFSS3 = source.isZfss3();
+        this.ZFSS4 = source.isZfss4();
+        this.ZFSS5 = source.isZfss5();
+        this.ZFSS6 = source.isZfss6();
+        this.ZFSS7 = source.isZfss7();
         this.hasChildren = source.isHasChildren();
         this.willParent = source.isWillParent();
         this.childUnderFourPermissions = source.getChildUnderFourPermissions();
@@ -192,9 +183,9 @@ public class WorkerReadModel
         return surname;
     }
 
-    public LocalDate getBirthDate()
+    public LocalDate getDateOfBirth()
     {
-        return birthDate;
+        return dateOfBirth;
     }
 
     public String getQualifications()
@@ -205,11 +196,6 @@ public class WorkerReadModel
     public String getAdditionalPersonalData()
     {
         return additionalPersonalData;
-    }
-
-    public boolean isPolishCitizen()
-    {
-        return isPolishCitizen;
     }
 
     public String getCitizenship()
@@ -230,21 +216,6 @@ public class WorkerReadModel
     public String getTaxOffice()
     {
         return taxOffice;
-    }
-
-    public String getAuthorizedName()
-    {
-        return authorizedName;
-    }
-
-    public String getAuthorizedSurname()
-    {
-        return authorizedSurname;
-    }
-
-    public String getAuthorizedContact()
-    {
-        return authorizedContact;
     }
 
     public boolean isWillSpecialPowersForFamily()
@@ -461,4 +432,5 @@ public class WorkerReadModel
     {
         return familyMembers;
     }
+
 }

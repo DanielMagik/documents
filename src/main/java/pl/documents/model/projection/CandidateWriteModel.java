@@ -3,7 +3,6 @@ package pl.documents.model.projection;
 import pl.documents.model.enums.Sex;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Set;
 
 public class CandidateWriteModel

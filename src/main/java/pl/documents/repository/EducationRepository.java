@@ -14,4 +14,5 @@ public interface EducationRepository
     boolean existsById(UUID id);
     Optional<Education> findById(UUID id);
     void deleteById(UUID id);
+    void deleteAllByWorkerId(UUID uuid);
 }

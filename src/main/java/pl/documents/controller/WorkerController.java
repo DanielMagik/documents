@@ -6,9 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.documents.config.Encryption;
-import pl.documents.exception.BadEducationException;
-import pl.documents.exception.BadIdException;
-import pl.documents.exception.BadWorkerException;
+import pl.documents.exception.*;
 import pl.documents.model.User;
 import pl.documents.model.Worker;
 import pl.documents.model.projection.*;
@@ -34,12 +32,6 @@ public class WorkerController
      * Odczyt listy pracowników
      * @return lista pracowników
      */
-    @GetMapping
-    ResponseEntity<List<WorkerReadModelForEmployee>> readAllWorkers()
-    {
-        logger.info("Read all workers!");
-        return ResponseEntity.ok(workerService.readAllWorkers());
-    }
 
     @GetMapping("/worker")
     public ResponseEntity<?> ReadWorker(@RequestHeader("Authorization") String token)
@@ -62,49 +54,66 @@ public class WorkerController
      * @return informacja o pomyślnej bądź nieudanej aktualizacji
      */
     @PutMapping("/updatecandidate")
-    ResponseEntity<?> updateWorker(@RequestHeader("Authorization") String token, @RequestBody CandidateWriteModel candidateWriteModel)
+    ResponseEntity<?> updateWorkerCandidate(@RequestHeader("Authorization") String token, @RequestBody CandidateWriteModel candidateWriteModel)
     {
         User user;
         try
         {
-            user = workerService.getByToken(token);
+            try
+            {
+                user = workerService.getByToken(token);
+            }
+            catch (AccessException | IllegalArgumentException e)
+            {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("No access!");
+            }
+            try
+            {
+                workerService.checkCandidate(candidateWriteModel);
+            }
+            catch (BadWorkerException | BadEducationException e)
+            {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+            }
+            workerService.updateCandidate(user.getWorker().getId(), candidateWriteModel);
         }
-        catch (AccessException | IllegalArgumentException e)
+        catch (NullPointerException e)
         {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("No access!");
-        }
-        try
-        {
-            workerService.checkCandidate(candidateWriteModel);
-        }
-        catch (BadWorkerException | BadEducationException e)
-        {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
-        }
-        workerService.updateCandidate(user.getWorker().getId(), candidateWriteModel);
-        return ResponseEntity.noContent().build();
-        /*
-        try
-        {
-            Worker toUpdate = workerWriteModel.toWorker();
-            workerService.checkData(id, toUpdate);
-            workerService.updateWorker(id, toUpdate);
-            logger.info("Update worker with id " + id+ " successful!");
-        }
-        catch (BadIdException e)
-        {
-            logger.info("Update worker with id "+ id+".Worker not found!");
-            return ResponseEntity.notFound().build();
-        }
-        catch (BadWorkerException e)
-        {
-            logger.info("Update worker with id "+ id+". Bad data!");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Incorrect data!");
         }
         return ResponseEntity.noContent().build();
-
-         */
     }
+    @PutMapping("/updateworker")
+    ResponseEntity<?> updateWorkerRest(@RequestHeader("Authorization") String token, @RequestBody WorkerWriteModelRest workerWriteModelRest)
+    {
+        User user;
+        try
+        {
+            try
+            {
+                user = workerService.getByToken(token);
+            }
+            catch (AccessException | IllegalArgumentException e)
+            {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("No access!");
+            }
+            try
+            {
+                workerService.checkWorkerRest(workerWriteModelRest, user.getWorker().getId());
+            }
+            catch (BadWorkerException | BadAddressException | BadFamilyMemberException e)
+            {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+            }
+            workerService.updateWorkerRest(user.getWorker().getId(), workerWriteModelRest);
+            return ResponseEntity.noContent().build();
+        }
+        catch (NullPointerException e)
+        {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Incorrect data!");
+        }
+    }
+
 
     /*
     @GetMapping(value = "/workers")

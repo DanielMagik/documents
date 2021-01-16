@@ -12,6 +12,7 @@ import pl.documents.model.User;
 import pl.documents.model.Worker;
 import pl.documents.model.enums.UserType;
 import pl.documents.model.projection.LoginResponse;
+import pl.documents.model.projection.WorkerReadModelForEmployee;
 import pl.documents.model.projection.WriteModelRegister;
 import pl.documents.service.MailService;
 import pl.documents.service.TokenService;
@@ -51,35 +52,45 @@ public class UserController
     }
 
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody WriteModelRegister writeModelRegister)
     {
-        User user = writeModelRegister.toUser();
+        User user;
         User result = null;
+        LoginResponse loginResponse;
         try
         {
-            result = userService.findByEmailAndPassword(user.getEmail(),user.getPassword());
+            user = writeModelRegister.toUser();
+            try
+            {
+                result = userService.findByEmailAndPassword(user.getEmail(), user.getPassword());
+            }
+            catch (LoginException e)
+            {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+            }
+
+            String href = "http://localhost:8080/";
+            switch (result.getUserType())
+            {
+                case WORKER:
+                    href = href + "worker";
+                    break;
+                case HR_EMPLOYEE:
+                    href = href + "hr_employee";
+                    break;
+                case ADMIN:
+                    href = href + "admin";
+                    break;
+            }
+            String token = userService.generateToken(result);
+            loginResponse = new LoginResponse(href, token);
         }
-        catch (LoginException e)
+        catch (NullPointerException e)
         {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Incorrect data!");
         }
 
-        String href = "http://localhost:8080/";
-        switch(result.getUserType())
-        {
-            case WORKER:
-                href=href+"worker";
-                break;
-            case HR_EMPLOYEE:
-                href=href+"hr_employee";
-                break;
-            case ADMIN:
-                href=href+"admin";
-                break;
-        }
-        String token = userService.generateToken(result);
-        LoginResponse loginResponse = new LoginResponse(href,token);
         return ResponseEntity.ok(loginResponse);
 
     }
@@ -90,52 +101,59 @@ public class UserController
         UserType userType = null;
         try
         {
-            userType = userService.findTypeById(id);
-        }
-        catch (RegisterException e)
-        {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
-        }
+            try
+            {
+                userType = userService.findTypeById(id);
+            }
+            catch (RegisterException e)
+            {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+            }
 
 
-        User user = writeModelRegister.toUser();
-        if(userService.existsByEmail(user.getEmail()))
-        {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Already exists user with that email!");
-        }
-        try
-        {
-            userService.checkData(user.getEmail(),writeModelRegister.getPassword());
-        }
-        catch (RegisterException e)
-        {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
-        }
+            User user = writeModelRegister.toUser();
+            if (userService.existsByEmail(user.getEmail()))
+            {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Already exists user with that email!");
+            }
+            try
+            {
+                userService.checkData(user.getEmail(), writeModelRegister.getPassword());
+            }
+            catch (RegisterException e)
+            {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+            }
 
-        user.setUserType(userType);
-        Worker worker = null;
-        if(user.getUserType().equals(UserType.WORKER))
-        {
-            worker = new Worker();
-            worker.setId(user.getId());
-            user.setWorker(worker);
-        }
-        userService.createUser(user,worker,id);
-        String link;
-        try
-        {
-            link = tokenService.generateLinkAndTokenAccountConfirm(user);
-            String message = "To confirm your registration, please click the link below.\n"+
-                    link;
+            user.setUserType(userType);
+            Worker worker = null;
+            if (user.getUserType().equals(UserType.WORKER))
+            {
+                worker = new Worker();
+                worker.setId(user.getId());
+                user.setWorker(worker);
+            }
+            userService.createUser(user, worker, id);
+            String link;
+            try
+            {
+                link = tokenService.generateLinkAndTokenAccountConfirm(user);
+                String message = "To confirm your registration, please click the link below.\n" +
+                        link;
 
-            Thread thread = new Thread(() -> {
-                mailService.sendSimpleMessage(user.getEmail(),"Confirm your registration", message);
-            });
-            thread.start();
+                Thread thread = new Thread(() -> {
+                    mailService.sendSimpleMessage(user.getEmail(), "Confirm your registration", message);
+                });
+                thread.start();
+            }
+            catch (TokenException e)
+            {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+            }
         }
-        catch (TokenException e)
+        catch (NullPointerException e)
         {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Incorrect data!");
         }
 
         return ResponseEntity.ok(userType.toString()+" account was created! Active it by confirming the email!");
@@ -158,8 +176,8 @@ public class UserController
         return ResponseEntity.ok("Account was activated!");
 
     }
-    @GetMapping("/all")
-    ResponseEntity<List<User>> readAllWorkers()
+    @GetMapping("/allworkers")
+    ResponseEntity<List<WorkerReadModelForEmployee>> readAllWorkers()
     {
         return ResponseEntity.ok(userService.findAll());
     }

@@ -13,7 +13,7 @@ public class FamilyMemberWriteModel
     private String surname;
     private LocalDate birthDate;
     private boolean insuredAtEmployee;
-    private boolean legalGuardian;//ToDo czy to na pewno jest potrzebne?
+    private boolean legalGuardian;
     private boolean isDisabled;
     private String disabledZUSNumber;
     private DisabilityLevel disabilityLevel;

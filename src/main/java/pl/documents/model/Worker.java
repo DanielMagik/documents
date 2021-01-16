@@ -3,6 +3,7 @@ package pl.documents.model;
 import org.hibernate.annotations.GenericGenerator;
 import pl.documents.model.enums.*;
 import pl.documents.model.projection.CandidateWriteModel;
+import pl.documents.model.projection.WorkerWriteModelRest;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -53,7 +54,7 @@ public class Worker
     /**
      * Data urodzenia(YYYY-MM-DD)
      */
-    private LocalDate birthDate = null;
+    private LocalDate dateOfBirth = null;
     /**
      * Kwalifikacje zawodowe
      */
@@ -62,11 +63,7 @@ public class Worker
      * Dodatkowe dane osobowe
      */
     private String additionalPersonalData = null;
-    /**
-     * Czy pracownik jest obywatelem Polski: TRUE-TAK, FALSE-NIE
-     */
 
-    private boolean isPolishCitizen = false;
     private String prevEmployment;
     /**
      * Obywatelstwo. Pole wypełniane, gdy pracownik nie posiada Polskiego obywatelstwa
@@ -81,7 +78,7 @@ public class Worker
      * Gdy pracownik nie jest obywatelem Polski, to typ dokumentu,
      * z którego wpisany został odpowiedni numer
      */
-    private String documentType = null;//TODO Czy to nie powinien być enum?
+    private String documentType = null;
     /**
      * Urząd skarbowy
      */
@@ -89,15 +86,7 @@ public class Worker
     /**
      * Imię osoby, którą należy zawiadomić w razie wypadku
      */
-    private String authorizedName = null;
-    /**
-     * Nazwisko osoby, którą należy zawiadomić w razie wypadku
-     */
-    private String authorizedSurname = null;
-    /**
-     * Kontakt do osoby, którą należy zawiadomić w razie wypadku
-     */
-    private String authorizedContact = null;
+    private String personToNotify;
     /**
      * Pracownik chce korzystać ze szczególnych uprawnień przewidzianych
      * w kodeksie pracy. Konieczność wpisania członków rodziny (dzieci albo współmałżonka)
@@ -114,7 +103,7 @@ public class Worker
     /**
      * Stanowisko
      */
-    private String workplace = null;
+    private String position = null;
     /**
      * Departament
      */
@@ -150,6 +139,7 @@ public class Worker
     /**
      * Czy pracownik jest niepełnosprawnu: TRUE-TAK, FALSE-NIE
      */
+    private LocalDate pensionFrom;
     private boolean isDisabled = false;
     /**
      * Jeśli pracownik jest niepełnosprawny, numer decyzji ZUS
@@ -182,21 +172,21 @@ public class Worker
      * indywidualnie przez osobę uprawnioną do korzystania z Funduszu
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean ZFSS1 = false;
+    private boolean zfss1 = false;
     /**
      * Pracownik chce korzystać z:
      * pomoc rzeczowa oraz zapomogi pieniężne przyznawane w przypadku
      * indywidualnych zdarzeń losowych, klęsk żywiołowych lub długotrwałej choroby
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean ZFSS2 = false;
+    private boolean zfss2 = false;
     /**
      * Pracownik chce korzystać z:
      * w zakresie działalności kulturalno-oświatowej :
      * dopłaty do imprez o charakterze kulturalno – oświatowym
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean ZFSS3 = false;
+    private boolean zfss3 = false;
     /**
      * Pracownik chce korzystać z:
      * dofinansowanie do imprez o charakterze sportowym i rekreacyjnym oraz w
@@ -204,28 +194,28 @@ public class Worker
      * i fizykoterapii zdrowotnej oraz do innych form rekreacji ruchowej
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean ZFSS4 = false;
+    private boolean zfss4 = false;
     /**
      * Pracownik chce korzystać z:
      * ofinansowanie działalności sportowo-rekreacyjnej,
      * w tym zakup sprzętu rekreacyjno-sportowego , rehabilitacyjnego
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean ZFSS5 = false;
+    private boolean zfss5 = false;
     /**
      * Pracownik chce korzystać z:
      * rzeczowe świadczenia okolicznościowe , takie jak: świąteczne bony towarowe,
      * paczki świąteczne, karty przedpłacone
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean ZFSS6 = false;
+    private boolean zfss6 = false;
     /**
      * Pracownik chce korzystać z:
      * dofinansowanie do opieki nad dziećmi sprawowanej przez dziennego
      * opiekuna lub nianię oraz w klubach dziecięcych
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean ZFSS7 = false;
+    private boolean zfss7 = false;
     /**
      * Pracownik posiada dzieci:
      * TRUE-TAK, FALSE-NIE
@@ -378,9 +368,9 @@ public class Worker
         return surname;
     }
 
-    public LocalDate getBirthDate()
+    public LocalDate getDateOfBirth()
     {
-        return birthDate;
+        return dateOfBirth;
     }
 
     public String getQualifications()
@@ -391,11 +381,6 @@ public class Worker
     public String getAdditionalPersonalData()
     {
         return additionalPersonalData;
-    }
-
-    public boolean isPolishCitizen()
-    {
-        return isPolishCitizen;
     }
 
     public String getCitizenship()
@@ -418,21 +403,6 @@ public class Worker
         return taxOffice;
     }
 
-    public String getAuthorizedName()
-    {
-        return authorizedName;
-    }
-
-    public String getAuthorizedSurname()
-    {
-        return authorizedSurname;
-    }
-
-    public String getAuthorizedContact()
-    {
-        return authorizedContact;
-    }
-
     public boolean isWillSpecialPowersForFamily()
     {
         return willSpecialPowersForFamily;
@@ -448,9 +418,9 @@ public class Worker
         return willPIT2;
     }
 
-    public String getWorkplace()
+    public String getPosition()
     {
-        return workplace;
+        return position;
     }
 
     public String getDepartment()
@@ -528,39 +498,39 @@ public class Worker
         return incomePerPerson;
     }
 
-    public boolean isZFSS1()
+    public boolean isZfss1()
     {
-        return ZFSS1;
+        return zfss1;
     }
 
-    public boolean isZFSS2()
+    public boolean isZfss2()
     {
-        return ZFSS2;
+        return zfss2;
     }
 
-    public boolean isZFSS3()
+    public boolean isZfss3()
     {
-        return ZFSS3;
+        return zfss3;
     }
 
-    public boolean isZFSS4()
+    public boolean isZfss4()
     {
-        return ZFSS4;
+        return zfss4;
     }
 
-    public boolean isZFSS5()
+    public boolean isZfss5()
     {
-        return ZFSS5;
+        return zfss5;
     }
 
-    public boolean isZFSS6()
+    public boolean isZfss6()
     {
-        return ZFSS6;
+        return zfss6;
     }
 
-    public boolean isZFSS7()
+    public boolean isZfss7()
     {
-        return ZFSS7;
+        return zfss7;
     }
 
     public boolean isHasChildren()
@@ -662,7 +632,7 @@ public class Worker
 
 
 
-    public Worker(String email, String phoneNumber, String fillLocation, Sex sex, String firstName, String secondName, String surname, LocalDate birthDate, String profession, String specialty, String title, String qualifications, String additionalPersonalData, boolean isPolishCitizen, String citizenship, String documentNumber, String documentType, String taxOffice, String authorizedName, String authorizedSurname, String authorizedContact, boolean willSpecialPowersForFamily, String NIP, boolean willPIT2, String workplace, String department, Pension pension, LocalDate employmentDate, String bank, String accountNumber, SecurityClearance securityClearance, String NFZ, String pensionZUSNumber, boolean isDisabled, String disabledZUSNumber, LocalDate disabledFrom, LocalDate disabledTo, Medicover medicover, ContractType contractType, IncomePerPerson incomePerPerson, boolean ZFSS1, boolean ZFSS2, boolean ZFSS3, boolean ZFSS4, boolean ZFSS5, boolean ZFSS6, boolean ZFSS7, boolean hasChildren, boolean willParent, ChildUnderFourPermissions childUnderFourPermissions, ChildUnderFourteenPermissions childUnderFourteenPermissions, boolean willReducedTask, boolean methodOfTaxation, String annualEarningsFamily, boolean willTaxReducingAmount, boolean willHigherTask, Month higherTaskMonth, boolean willIncreasedCosts, boolean willZUS, String annualEarningsZUS)
+    public Worker(String email, String phoneNumber, String fillLocation, Sex sex, String firstName, String secondName, String surname, LocalDate dateOfBirth, String profession, String specialty, String title, String qualifications, String additionalPersonalData, boolean polishCitizen, String citizenship, String documentNumber, String documentType, String taxOffice, String authorizedName, String authorizedSurname, String authorizedContact, boolean willSpecialPowersForFamily, String NIP, boolean willPIT2, String position, String department, Pension pension, LocalDate employmentDate, String bank, String accountNumber, SecurityClearance securityClearance, String NFZ, String pensionZUSNumber, boolean isDisabled, String disabledZUSNumber, LocalDate disabledFrom, LocalDate disabledTo, Medicover medicover, ContractType contractType, IncomePerPerson incomePerPerson, boolean zfss1, boolean zfss2, boolean zfss3, boolean zfss4, boolean zfss5, boolean zfss6, boolean zfss7, boolean hasChildren, boolean willParent, ChildUnderFourPermissions childUnderFourPermissions, ChildUnderFourteenPermissions childUnderFourteenPermissions, boolean willReducedTask, boolean methodOfTaxation, String annualEarningsFamily, boolean willTaxReducingAmount, boolean willHigherTask, Month higherTaskMonth, boolean willIncreasedCosts, boolean willZUS, String annualEarningsZUS)
     {
         this.phoneNumber = phoneNumber;
         this.fillLocation = fillLocation;
@@ -670,21 +640,17 @@ public class Worker
         this.firstName = firstName;
         this.secondName = secondName;
         this.surname = surname;
-        this.birthDate = birthDate;
+        this.dateOfBirth = dateOfBirth;
         this.qualifications = qualifications;
         this.additionalPersonalData = additionalPersonalData;
-        this.isPolishCitizen = isPolishCitizen;
         this.citizenship = citizenship;
         this.documentNumber = documentNumber;
         this.documentType = documentType;
         this.taxOffice = taxOffice;
-        this.authorizedName = authorizedName;
-        this.authorizedSurname = authorizedSurname;
-        this.authorizedContact = authorizedContact;
         this.willSpecialPowersForFamily = willSpecialPowersForFamily;
         this.NIP = NIP;
         this.willPIT2 = willPIT2;
-        this.workplace = workplace;
+        this.position = position;
         this.department = department;
         this.pension = pension;
         this.employmentDate = employmentDate;
@@ -700,13 +666,13 @@ public class Worker
         this.medicover = medicover;
         this.contractType = contractType;
         this.incomePerPerson = incomePerPerson;
-        this.ZFSS1 = ZFSS1;
-        this.ZFSS2 = ZFSS2;
-        this.ZFSS3 = ZFSS3;
-        this.ZFSS4 = ZFSS4;
-        this.ZFSS5 = ZFSS5;
-        this.ZFSS6 = ZFSS6;
-        this.ZFSS7 = ZFSS7;
+        this.zfss1 = zfss1;
+        this.zfss2 = zfss2;
+        this.zfss3 = zfss3;
+        this.zfss4 = zfss4;
+        this.zfss5 = zfss5;
+        this.zfss6 = zfss6;
+        this.zfss7 = zfss7;
         this.hasChildren = hasChildren;
         this.willParent = willParent;
         this.childUnderFourPermissions = childUnderFourPermissions;
@@ -734,21 +700,17 @@ public class Worker
         this.firstName = source.firstName;//
         this.secondName = source.secondName;
         this.surname = source.surname;//
-        this.birthDate = source.birthDate;
+        this.dateOfBirth = source.dateOfBirth;
         this.qualifications = source.qualifications;
         this.additionalPersonalData = source.additionalPersonalData;
-        this.isPolishCitizen = source.isPolishCitizen;
         this.citizenship = source.citizenship;
         this.documentNumber = source.documentNumber;//
         this.documentType = source.documentType;//
         this.taxOffice = source.taxOffice;
-        this.authorizedName = source.authorizedName;
-        this.authorizedSurname = source.authorizedSurname;
-        this.authorizedContact = source.authorizedContact;
         this.willSpecialPowersForFamily = source.willSpecialPowersForFamily;
         this.NIP = source.NIP;//
         this.willPIT2 = source.willPIT2;
-        this.workplace = source.workplace;
+        this.position = source.position;
         this.department = source.department;
         this.pension = source.pension;
         this.employmentDate = source.employmentDate;
@@ -764,13 +726,13 @@ public class Worker
         this.medicover = source.medicover;
         this.contractType = source.contractType;
         this.incomePerPerson = source.incomePerPerson;
-        this.ZFSS1 = source.ZFSS1;
-        this.ZFSS2 = source.ZFSS2;
-        this.ZFSS3 = source.ZFSS3;
-        this.ZFSS4 = source.ZFSS4;
-        this.ZFSS5 = source.ZFSS5;
-        this.ZFSS6 = source.ZFSS6;
-        this.ZFSS7 = source.ZFSS7;
+        this.zfss1 = source.zfss1;
+        this.zfss2 = source.zfss2;
+        this.zfss3 = source.zfss3;
+        this.zfss4 = source.zfss4;
+        this.zfss5 = source.zfss5;
+        this.zfss6 = source.zfss6;
+        this.zfss7 = source.zfss7;
         this.hasChildren = source.hasChildren;
         this.willParent = source.willParent;
         this.childUnderFourPermissions = source.childUnderFourPermissions;
@@ -792,7 +754,7 @@ public class Worker
         this.firstName=candidate.getFirstName();
         this.secondName=candidate.getSecondName();
         this.surname=candidate.getSurname();
-        this.birthDate=candidate.getDateOfBirth();
+        this.dateOfBirth =candidate.getDateOfBirth();
         this.sex=candidate.getSex();
         this.phoneNumber=candidate.getPhoneNumber();
         this.fillLocation=candidate.getFillLocation();
@@ -879,5 +841,57 @@ public class Worker
     public String getPrevEmployment()
     {
         return prevEmployment;
+    }
+
+    public void updateWorkerRest(WorkerWriteModelRest worker)
+    {
+        this.documentNumber=worker.getDocumentNumber();
+        this.documentType=worker.getDocumentType();
+        this.NIP=worker.getNip();
+        this.taxOffice=worker.getTaxOffice();
+        this.citizenship=worker.getCitizenship();
+        this.personToNotify= worker.getPersonToNotify();
+        this.position =worker.getPosition();
+        this.department = worker.getDepartment();
+        this.NFZ = worker.getNfz();
+        this.bank= worker.getBank();
+        this.accountNumber = worker.getAccountNumber();
+        this.pension = worker.getPension();
+        this.pensionZUSNumber = worker.getPensionZUSNumber();
+        this.pensionFrom = worker.getPensionFrom();
+        this.isDisabled = worker.isDisabled();
+        this.disabledZUSNumber = worker.getDisabledZUSNumber();
+        this.disabledFrom = worker.getDisabledFrom();
+        this.disabledTo= worker.getDisabledTo();
+
+        this.willSpecialPowersForFamily=worker.isWillSpecialPowersForFamily();
+        this.willPIT2=worker.isWillPIT2();
+        this.employmentDate=worker.getEmploymentDate();
+        this.securityClearance=worker.getSecurityClearance();
+        this.medicover=worker.getMedicover();
+        this.contractType=worker.getContractType();
+        this.incomePerPerson=worker.getIncomePerPerson();
+        this.zfss1=worker.isZfss1();
+        this.zfss2=worker.isZfss2();
+        this.zfss3=worker.isZfss3();
+        this.zfss4=worker.isZfss4();
+        this.zfss5=worker.isZfss5();
+        this.zfss6=worker.isZfss6();
+        this.zfss7=worker.isZfss7();
+        this.hasChildren=worker.isHasChildren();
+        this.willParent=worker.isWillParent();
+        this.childUnderFourPermissions=worker.getChildUnderFourPermissions();
+        this.childUnderFourteenPermissions=worker.getChildUnderFourteenPermissions();
+        this.willReducedTask = worker.isWillReducedTask();
+        this.methodOfTaxation=worker.isMethodOfTaxation();
+        this.annualEarningsFamily= worker.getAnnualEarningsFamily();;
+        this.willTaxReducingAmount=worker.isWillTaxReducingAmount();
+        this.willHigherTask=worker.isWillHigherTask();
+        this.higherTaskMonth=worker.getHigherTaskMonth();
+        this.willIncreasedCosts=worker.isWillIncreasedCosts();
+        this.willZUS=worker.isWillZUS();
+        this.annualEarningsZUS=worker.getAnnualEarningsZUS();
+
+
     }
 }

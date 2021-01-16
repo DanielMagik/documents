@@ -14,4 +14,6 @@ public interface AddressRepository
     boolean existsById(UUID id);
     Optional<Address> findById(UUID id);
     void deleteById(UUID id);
+
+    void deleteAllByWorkerId(UUID id);
 }

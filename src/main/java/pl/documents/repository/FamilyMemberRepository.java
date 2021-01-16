@@ -14,4 +14,6 @@ public interface FamilyMemberRepository
     boolean existsById(UUID id);
     Optional<FamilyMember> findById(UUID id);
     void deleteById(UUID id);
+
+    void deleteAllByWorkerId(UUID id);
 }

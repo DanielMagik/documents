@@ -72,11 +72,7 @@ public class FamilyMemberController
             logger.info("Add family member to worker with id " + id+ ".Bad data");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
         }
-        catch (BadIdException e)
-        {
-            logger.info("Add family member to worker with id "+id+"!Worker not Found!");
-            return ResponseEntity.notFound().build();
-        }
+
         return ResponseEntity.noContent().build();
     }
     /**

@@ -12,16 +12,14 @@ import pl.documents.model.User;
 import pl.documents.model.Worker;
 import pl.documents.model.enums.TokenType;
 import pl.documents.model.enums.UserType;
+import pl.documents.model.projection.WorkerReadModelForEmployee;
 import pl.documents.repository.TokenRepository;
 import pl.documents.repository.UserRepository;
 import pl.documents.repository.WorkerRepository;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -128,9 +126,17 @@ public class UserService
             throw new RegisterException("Password doesn't contains any special character!");
         }
     }
-    public List<User> findAll()
+    public List<WorkerReadModelForEmployee> findAll()
     {
-        return userRepository.findAll();
+       List<User> userList = userRepository.findAll();
+       List<WorkerReadModelForEmployee> result = new ArrayList<>();
+       for(User user:userList)
+       {
+           if(user.getUserType().equals(UserType.WORKER))
+               result.add(new WorkerReadModelForEmployee(user,user.getWorker()));
+       }
+       return result;
+
     }
 
 

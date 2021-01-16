@@ -133,6 +133,13 @@ public class FamilyMember
         this.flatNumber = flatNumber;
     }
 
+    public FamilyMember(String name, String surname, LocalDate birthDate)
+    {
+        this.name=name;
+        this.surname=surname;
+        this.birthDate=birthDate;
+    }
+
     /**
      * Update podstawowych danych członka rodziny
      * @param source źródło danych, z którego pobrane zostaną nowe wartości

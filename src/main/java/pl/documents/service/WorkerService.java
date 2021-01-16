@@ -1,8 +1,5 @@
 package pl.documents.service;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
 import io.lsn.spring.pesel.validator.domain.PeselValidator;
 import nl.garvelink.iban.Modulo97;
 import org.springframework.stereotype.Service;
@@ -46,15 +43,6 @@ public class WorkerService
         this.encryption = encryption;
     }
 
-    /**
-     * Odczyt wszystkich pracowników
-     * @return lista pracowników
-     */
-    public List<WorkerReadModelForEmployee> readAllWorkers()
-    {
-        return workerRepository.findAll().stream()
-                .map(WorkerReadModelForEmployee::new).collect(Collectors.toList());
-    }
 
     /**
      * Usunięcie pracownika o zadanym id
@@ -204,20 +192,6 @@ public class WorkerService
         );
         Pattern pattern;
         Matcher matcher;
-        //numer telefonu
-        pattern = Pattern.compile("\\d{9,11}");
-        matcher = pattern.matcher(worker.getPhoneNumber());
-        if(!matcher.matches())
-            throw new BadWorkerException("Bad phone number!");
-        //miejscowość wypełnienia
-        if(worker.getFillLocation().isBlank())
-            throw new BadWorkerException("Enter the place of filling!");
-        //imię
-        if(worker.getFirstName().isBlank())
-            throw new BadWorkerException("Enter name!");
-        //nazwisko
-        if(worker.getSurname().isBlank())
-            throw new BadWorkerException("Enter surname!");
         //numer PESEL/dokumentu
 
         //numer dokumentu będzie zmieniany
@@ -368,12 +342,8 @@ public class WorkerService
      * @param id id pracownika, dla którego zostanie dodany adres
      * @param address nowy adres
      */
-    public void addAddress(UUID id, Address address) throws BadIdException
+    public void addAddress(UUID id, Address address)
     {
-        if(!workerRepository.existsById(id))
-        {
-            throw new BadIdException("Worker with id "+id+" doesn't exists!");
-        }
         workerRepository.findById(id).ifPresent(
                 worker ->
                 {
@@ -387,12 +357,8 @@ public class WorkerService
      * @param id id pracownika, dla którego zostanie dodany członek rodziny
      * @param familyMember nowy członek rodziny
      */
-    public void addFamilyMember(UUID id, FamilyMember familyMember) throws BadIdException
+    public void addFamilyMember(UUID id, FamilyMember familyMember)
     {
-        if(!workerRepository.existsById(id))
-        {
-            throw new BadIdException("Worker with id "+id+" doesn't exists!");
-        }
         workerRepository.findById(id).ifPresent(
                 worker ->
                 {
@@ -467,6 +433,7 @@ public class WorkerService
             }
         }
     }
+    @Transactional
     public void updateCandidate(UUID id, CandidateWriteModel candidateWriteModel)
     {
         workerRepository.findById(id).
@@ -474,9 +441,147 @@ public class WorkerService
                     worker.updateCandidate(candidateWriteModel);
                     workerRepository.save(worker);
                 });
+        educationRepository.deleteAllByWorkerId(id);
         for(EducationWriteModel e : candidateWriteModel.getEducation())
         {
             addEducation(id,e.toEducation());
         }
     }
+    @Transactional
+    public void updateWorkerRest(UUID id, WorkerWriteModelRest workerWriteModelRest)
+    {
+        workerRepository.findById(id).
+                ifPresent(worker ->{
+                    worker.updateWorkerRest(workerWriteModelRest);
+                    workerRepository.save(worker);
+                });
+        familyMemberRepository.deleteAllByWorkerId(id);
+        addressRepository.deleteAllByWorkerId(id);
+        for(AddressWriteModel a : workerWriteModelRest.getAddresses())
+        {
+            addAddress(id,a.toAddress());
+        }
+        for(FamilyMemberWriteModel f : workerWriteModelRest.getFamilyMembers())
+        {
+            addFamilyMember(id,f.toFamilyMember());
+        }
+    }
+
+    public void checkWorkerRest(WorkerWriteModelRest newWorker, UUID id) throws BadWorkerException, BadAddressException, BadFamilyMemberException
+    {
+        Worker oldWorker = workerRepository.findById(id).orElseThrow(
+                ()->new BadWorkerException("Cannot update worker!")
+        );
+        Pattern pattern;
+        Matcher matcher;
+        //numer PESEL/dokumentu
+        //numer dokumentu będzie zmieniany
+        //różne numery dokumentów lub typy dokumentów
+        if(!DataChecker.compareStrings(oldWorker.getDocumentNumber(),newWorker.getDocumentNumber()) || !DataChecker.compareStrings(oldWorker.getDocumentType(),newWorker.getDocumentType()))
+        {
+            // w bazie istnieje pracownik, który podał ten sam numer dokumentu i typ dokumentu
+            if(workerRepository.existsByDocumentNumberAndDocumentType(newWorker.getDocumentNumber(),newWorker.getDocumentType()))
+            {
+                if(newWorker.getDocumentType()==null)//PESEL
+                    throw new BadWorkerException("There is a person in the database with the same PESEL number!");
+                else
+                    throw new BadWorkerException("There is a person in the database with the same document number!");
+            }
+            //wprowadzono numer PESEL
+            if(newWorker.getDocumentType()==null || newWorker.getDocumentType().isBlank()
+                    || newWorker.getDocumentType().toUpperCase().equals("PESEL"))
+            {
+                //PESEL jest niepoprawny
+                if(!PeselValidator.isValid(newWorker.getDocumentNumber()))
+                {
+                    throw new BadWorkerException("Bad PESEL!");
+                }
+            }
+        }
+        //NIP
+        //wprowadzono nowy nip
+        if(!DataChecker.compareStrings(newWorker.getNip(), oldWorker.getNIP()) &&
+                newWorker.getNip()!=null && !newWorker.getNip().isBlank())
+        {
+            //NIP jest niepoprawny
+            if(!checkNIP(newWorker.getNip()))
+            {
+                throw new BadWorkerException("Bad NIP!");
+            }
+        }
+        //numer konta
+        //wprowadzono nowy numer konta
+        if(!DataChecker.compareStrings(newWorker.getAccountNumber(),oldWorker.getAccountNumber()))
+        {
+            try
+            {
+                boolean accountValid = Modulo97.verifyCheckDigits(newWorker.getAccountNumber());
+                if(!accountValid)
+                {
+                    throw new BadWorkerException("Bad account number!");
+                }
+            }
+            catch (IllegalArgumentException e)
+            {
+                throw new BadWorkerException("Bad account number format!");
+            }
+
+        }
+        for (AddressWriteModel a : newWorker.getAddresses())
+        {
+            checkAddress(a.toAddress());
+        }
+        for(FamilyMemberWriteModel f : newWorker.getFamilyMembers())
+        {
+            checkFamilyMember(f.toFamilyMember());
+        }
+    }
+
+    private void checkFamilyMember(FamilyMember familyMember) throws BadFamilyMemberException
+    {
+        if(familyMember.getName().isBlank())
+        {
+            throw new BadFamilyMemberException("Bad name of family member!");
+        }
+        else if(familyMember.getSurname().isBlank())
+        {
+            throw new BadFamilyMemberException("Bad surname of family member!");
+        }
+        if(familyMember.getPESEL()!=null && !familyMember.getPESEL().isBlank())
+        {
+            if(!PeselValidator.isValid(familyMember.getPESEL()))
+            {
+                throw new BadFamilyMemberException("Bad PESEL for a family member "+
+                        familyMember.getName()+" "+familyMember.getSurname()+"!");
+            }
+        }
+    }
+
+    private void checkAddress(Address address) throws BadAddressException
+    {
+        Pattern pattern;
+        Matcher matcher;
+        pattern = Pattern.compile("\\d{2}-\\d{3}");
+        matcher = pattern.matcher(address.getPostalCode());
+        if(!matcher.matches())
+        {
+            throw new BadAddressException("Enter a correct postal code!");
+        }
+        pattern=Pattern.compile("\\d*\\w{0,1}");
+        matcher=pattern.matcher(address.getHomeNumber());
+        if(!matcher.matches())
+        {
+            throw  new BadAddressException("Enter a correct home number!");
+        }
+        if(!address.getFlatNumber().isBlank())
+        {
+            matcher = pattern.matcher(address.getFlatNumber());
+            if(!matcher.matches())
+            {
+                throw new BadAddressException("Enter a correct flat number!");
+            }
+        }
+    }
+
+
 }

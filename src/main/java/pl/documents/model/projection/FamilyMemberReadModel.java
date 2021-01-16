@@ -1,5 +1,6 @@
 package pl.documents.model.projection;
 
+import pl.documents.model.Address;
 import pl.documents.model.FamilyMember;
 import pl.documents.model.enums.DisabilityLevel;
 import pl.documents.model.enums.Relationship;
@@ -9,13 +10,12 @@ import java.util.UUID;
 
 public class FamilyMemberReadModel
 {
-    private UUID id;
     private Relationship relationship;
     private String name;
     private String surname;
     private LocalDate birthDate;
     private boolean insuredAtEmployee;
-    private boolean legalGuardian;//ToDo czy to na pewno jest potrzebne?
+    private boolean legalGuardian;
     private boolean isDisabled;
     private String disabledZUSNumber;
     private DisabilityLevel disabilityLevel;
@@ -32,7 +32,6 @@ public class FamilyMemberReadModel
 
     public FamilyMemberReadModel(FamilyMember source)
     {
-        this.id=source.getId();
         this.relationship=source.getRelationship();
         this.name = source.getName();
         this.surname=source.getSurname();
@@ -52,11 +51,6 @@ public class FamilyMemberReadModel
         this.street=source.getStreet();
         this.homeNumber=source.getHomeNumber();
         this.flatNumber=source.getFlatNumber();
-    }
-
-    public UUID getId()
-    {
-        return id;
     }
 
     public Relationship getRelationship()
@@ -152,5 +146,11 @@ public class FamilyMemberReadModel
     public String getFlatNumber()
     {
         return flatNumber;
+    }
+
+    public FamilyMember toFamilyMember()
+    {
+        FamilyMember familyMember = new FamilyMember(this.name,this.surname,this.birthDate);
+        return familyMember;
     }
 }
