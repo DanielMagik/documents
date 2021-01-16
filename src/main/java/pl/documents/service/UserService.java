@@ -262,4 +262,12 @@ public class UserService
             throw new LoginException("Account is not active. Please, confirm the mail.");
         return user;
     }
+
+    @Transactional
+    public void deleteAccount(User user, String password) throws RegisterException
+    {
+        if(!user.getPassword().equals(password))
+            throw new RegisterException("The password provided is incorrect!");
+        userRepository.deleteById(user.getId());
+    }
 }

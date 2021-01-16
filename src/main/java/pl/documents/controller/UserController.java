@@ -144,6 +144,7 @@ public class UserController
                     mailService.sendSimpleMessage(user.getEmail(), "Confirm your registration", message);
                 });
                 thread.start();
+                thread.interrupt();
             }
             catch (TokenException e)
             {
@@ -215,6 +216,7 @@ public class UserController
                         "Your current password is: \""+user.getPassword()+"\"");
             });
             thread.start();
+            thread.interrupt();
         }
         catch (LoginException e)
         {
@@ -222,6 +224,29 @@ public class UserController
         }
 
         return ResponseEntity.ok("Your password has been sent to the e-mail address provided.");
+    }
+    @DeleteMapping("/deleteaccount")
+    public ResponseEntity<?> deleteMyAccount(@RequestHeader("Authorization") String token, @RequestBody WriteModelRegister modelRegister)
+    {
+        User user;
+        try
+        {
+            user = userService.getByToken(token);
+        }
+        catch (AccessException | IllegalArgumentException e)
+        {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("No access!");
+        }
+
+        try
+        {
+            userService.deleteAccount(user,modelRegister.getPassword());
+        }
+        catch (RegisterException e)
+        {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+        }
+        return ResponseEntity.ok("Your account has been deleted!");
     }
 
 }
