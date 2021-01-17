@@ -26,9 +26,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
     {
         http.cors().and().csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/test2").authenticated()
                 .antMatchers("/register").permitAll()
-                .antMatchers("/test3/").hasRole("ADMIN")
+                .antMatchers("/deleteworker").hasAnyRole("ADMIN","HR_EMPLOYEE")
+                .antMatchers("/allusers").hasAnyRole("ADMIN","HR_EMPLOYEE")
+                .antMatchers("/deletehr").hasRole("ADMIN")
+                .antMatchers("/generatelink").hasAnyRole("ADMIN","HR_EMPLOYEE")
+                .antMatchers("/generatelinkadmin").hasRole("ADMIN")
+                .antMatchers("/alltokens").hasAnyRole("ADMIN","HR_EMPLOYEE")
+                .antMatchers("/uploadfiles/*").hasRole("ADMIN")
+                .antMatchers("/deletefile/*").hasRole("ADMIN")
+                .antMatchers("/downloadfilenames").hasAnyRole("WORKER","ADMIN","HR_EMPLOYEE")
+                .antMatchers("/getobligatorynames/*").hasAnyRole("WORKER","ADMIN","HR_EMPLOYEE")
+                .antMatchers("/downloadfile/*").hasAnyRole("WORKER","ADMIN","HR_EMPLOYEE")
                 .and()
                 .addFilter(new JwtFilter(authenticationManager(),encryption.getSequence()));
     }

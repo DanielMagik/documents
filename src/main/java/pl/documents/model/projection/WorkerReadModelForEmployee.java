@@ -5,31 +5,23 @@ import pl.documents.model.Worker;
 import pl.documents.model.enums.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class WorkerReadModelForEmployee
 {
+    private UserType userType;
     private String email;
-    private String phoneNumber;
-    private String fillLocation;
-    private Sex sex;
-    private String firstName;
-    private String secondName;
-    private String surname;
-    private String qualifications;
-    private String citizenship;
+    private boolean active;
+    private LocalDateTime createDate;
 
-    public WorkerReadModelForEmployee(User user, Worker source)
+    public WorkerReadModelForEmployee(User user)
     {
+        this.userType=user.getUserType();
         this.email = user.getEmail();
-        this.phoneNumber = source.getPhoneNumber();
-        this.fillLocation = source.getFillLocation();
-        this.sex = source.getSex();
-        this.firstName = source.getFirstName();
-        this.secondName = source.getSecondName();
-        this.surname = source.getSurname();
-        this.qualifications = source.getQualifications();
-        this.citizenship = source.getCitizenship();
+        this.active = user.isActive();
+        this.createDate = user.getCreateDate();
+
     }
 
     public String getEmail()
@@ -37,43 +29,18 @@ public class WorkerReadModelForEmployee
         return email;
     }
 
-    public String getPhoneNumber()
+    public UserType getUserType()
     {
-        return phoneNumber;
+        return userType;
     }
 
-    public String getFillLocation()
+    public boolean isActive()
     {
-        return fillLocation;
+        return active;
     }
 
-    public Sex getSex()
+    public LocalDateTime getCreateDate()
     {
-        return sex;
-    }
-
-    public String getFirstName()
-    {
-        return firstName;
-    }
-
-    public String getSecondName()
-    {
-        return secondName;
-    }
-
-    public String getSurname()
-    {
-        return surname;
-    }
-
-    public String getQualifications()
-    {
-        return qualifications;
-    }
-
-    public String getCitizenship()
-    {
-        return citizenship;
+        return createDate;
     }
 }

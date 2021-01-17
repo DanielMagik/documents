@@ -4,7 +4,7 @@ import pl.documents.model.User;
 import pl.documents.model.Worker;
 import pl.documents.model.enums.UserType;
 
-public class WriteModelRegister
+public class EmailAndPasswordWriteModel
 {
     private String email;
     private String password;

@@ -138,8 +138,7 @@ public class UserService
        List<WorkerReadModelForEmployee> result = new ArrayList<>();
        for(User user:userList)
        {
-           if(user.getUserType().equals(UserType.WORKER))
-               result.add(new WorkerReadModelForEmployee(user,user.getWorker()));
+               result.add(new WorkerReadModelForEmployee(user));
        }
        return result;
 

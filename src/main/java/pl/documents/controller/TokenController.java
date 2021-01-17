@@ -6,11 +6,9 @@ import org.springframework.web.bind.annotation.*;
 import pl.documents.exception.TokenException;
 import pl.documents.model.Token;
 import pl.documents.model.projection.TokenWriteModel;
-import pl.documents.model.projection.WriteModelRegister;
 import pl.documents.service.TokenService;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 public class TokenController
@@ -23,7 +21,7 @@ public class TokenController
     }
 
     @PostMapping("/generatelink")
-    ResponseEntity<?> generateLinkToRegister(@RequestBody TokenWriteModel tokenWriteModel)
+    ResponseEntity<?> generateLinkToRegister(@RequestHeader("Authorization") String token, @RequestBody TokenWriteModel tokenWriteModel)
     {
         try
         {
@@ -37,7 +35,7 @@ public class TokenController
         }
     }
     @PostMapping("/generatelinkadmin")
-    ResponseEntity<?> generateLinkToRegisterAdmin()
+    ResponseEntity<?> generateLinkToRegisterAdmin(@RequestHeader("Authorization") String token)
     {
         try
         {
@@ -50,9 +48,8 @@ public class TokenController
         }
     }
 
-    //todo to jest do testów
     @GetMapping("/alltokens")
-    ResponseEntity<List<Token>> readAllTokens()
+    ResponseEntity<List<Token>> readAllTokens(@RequestHeader("Authorization") String token)
     {
         return ResponseEntity.ok(tokenService.readAll());
     }

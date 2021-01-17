@@ -14,6 +14,7 @@ import javax.persistence.*;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -34,7 +35,7 @@ public class User
     private String password;
     private UserType userType;
     private boolean active;
-
+    private LocalDateTime createDate = null;
 
 
 
@@ -112,6 +113,17 @@ public class User
     public void setActive(boolean active)
     {
         this.active = active;
+    }
+
+    public LocalDateTime getCreateDate()
+    {
+        return createDate;
+    }
+
+    @PrePersist
+    private void prePersist()
+    {
+        this.createDate=LocalDateTime.now();
     }
 
     /*

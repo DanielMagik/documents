@@ -3,7 +3,6 @@ package pl.documents.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.documents.config.Encryption;
 import pl.documents.exception.LoginException;
 import pl.documents.exception.RegisterException;
 import pl.documents.exception.TokenException;
@@ -34,32 +33,15 @@ public class UserController
         this.tokenService = tokenService;
     }
 
-
-    @PostMapping("/test1")
-    public String test1() {
-        return "test1";
-    }
-
-    @GetMapping("/test2")
-    public String test2() {
-        return "test2";
-    }
-
-    @GetMapping("/test3")
-    public String test3() {
-        return "test3";
-    }
-
-
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody WriteModelRegister writeModelRegister)
+    public ResponseEntity<?> login(@RequestBody EmailAndPasswordWriteModel emailAndPasswordWriteModel)
     {
         User user;
         User result = null;
         LoginResponse loginResponse;
         try
         {
-            user = writeModelRegister.toUser();
+            user = emailAndPasswordWriteModel.toUser();
             try
             {
                 result = userService.findByEmailAndPassword(user.getEmail(), user.getPassword());
@@ -95,7 +77,7 @@ public class UserController
     }
 
     @PostMapping("/register/{id}")
-    ResponseEntity<?> registerWorker(@RequestBody WriteModelRegister writeModelRegister, @PathVariable UUID id)
+    ResponseEntity<?> registerWorker(@RequestBody EmailAndPasswordWriteModel emailAndPasswordWriteModel, @PathVariable UUID id)
     {
         UserType userType = null;
         try
@@ -110,14 +92,14 @@ public class UserController
             }
 
 
-            User user = writeModelRegister.toUser();
+            User user = emailAndPasswordWriteModel.toUser();
             if (userService.existsByEmail(user.getEmail()))
             {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Already exists user with that email!");
             }
             try
             {
-                userService.checkData(user.getEmail(), writeModelRegister.getPassword());
+                userService.checkData(user.getEmail(), emailAndPasswordWriteModel.getPassword());
             }
             catch (RegisterException e)
             {
@@ -176,8 +158,8 @@ public class UserController
         return ResponseEntity.ok("Account was activated!");
 
     }
-    @GetMapping("/allworkers")
-    ResponseEntity<List<WorkerReadModelForEmployee>> readAllWorkers()
+    @GetMapping("/allusers")
+    ResponseEntity<List<WorkerReadModelForEmployee>> readAllWorkers(@RequestHeader("Authorization") String token)
     {
         return ResponseEntity.ok(userService.findAll());
     }
@@ -205,7 +187,7 @@ public class UserController
         return ResponseEntity.ok("Password has been changed.");
     }
     @PatchMapping("/forgetpassword")
-    public ResponseEntity<?> forgetPassword(@RequestBody WriteModelRegister modelRegister)
+    public ResponseEntity<?> forgetPassword(@RequestBody EmailAndPasswordWriteModel modelRegister)
     {
         try
         {
@@ -226,7 +208,7 @@ public class UserController
         return ResponseEntity.ok("Your password has been sent to the e-mail address provided.");
     }
     @DeleteMapping("/deleteaccount")
-    public ResponseEntity<?> deleteMyAccount(@RequestHeader("Authorization") String token, @RequestBody WriteModelRegister modelRegister)
+    public ResponseEntity<?> deleteMyAccount(@RequestHeader("Authorization") String token, @RequestBody EmailAndPasswordWriteModel modelRegister)
     {
         User user;
         try

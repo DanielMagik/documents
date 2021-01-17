@@ -1,5 +1,6 @@
 package pl.documents.controller;
 
+import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,11 @@ import java.util.UUID;
 @RestController
 public class TemplateController
 {
+    public class ObligatoryReadModel
+    {
+        boolean obligatory;
+
+    }
     private final TemplateService service;
 
     public TemplateController(final TemplateService service)
@@ -28,53 +34,28 @@ public class TemplateController
         this.service = service;
     }
 
-    @GetMapping("/model")
-    String get(Model model)
-    {
-        List<Template> templates = service.readAllFiles();
-        model.addAttribute("templates",templates);
-        return "templates";
-    }
-    @PostMapping("/uploadfiles")
-    ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
-                                           @RequestParam("obligatory") boolean obligatory)
+
+    @PostMapping("/uploadfiles/{obligatory}")
+    ResponseEntity<?> uploadFile(@RequestHeader("Authorization") String token, @RequestBody MultipartFile[] files, @PathVariable boolean obligatory)
     {
         Template template = null;
             try
             {
-                template = service.saveFile(file,obligatory);
+                for (MultipartFile f : files)
+                {
+                    template = service.saveFile(f, obligatory);
+                }
             }
             catch (TemplateException e)
-            {
-                service.deleteByNameInTemplate(template);
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
-            }
-            catch (TemplateExistsException e)
             {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
             }
 
-        return ResponseEntity.ok(template);
+        return ResponseEntity.ok().body("Upload successful.");
     }
-    @GetMapping("/downloadfile/{id}")
-    ResponseEntity<ByteArrayResource> downloadById(@PathVariable UUID id)
-    {
-        Template result = null;
-        try
-        {
-            result = service.readById(id);
-        }
-        catch (BadIdException e)
-        {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(result.getDocumentType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment:filename=\""+result.getDocumentName()+"\"")
-                .body(new ByteArrayResource(result.getData()));
-    }
+
     @GetMapping("/downloadfile/{name}")
-    ResponseEntity<ByteArrayResource> downloadByName(@PathVariable String name)
+    ResponseEntity<ByteArrayResource> downloadByName(@RequestHeader("Authorization") String token, @PathVariable String name)
     {
         Template result = null;
         try
@@ -90,8 +71,8 @@ public class TemplateController
                 .header(HttpHeaders.CONTENT_DISPOSITION,"attachment:filename=\""+result.getDocumentName()+"\"")
                 .body(new ByteArrayResource(result.getData()));
     }
-    @DeleteMapping("/delete/{name}")
-    ResponseEntity<?> deleteDocumentByName(@PathVariable String name)
+    @DeleteMapping("/deletefile/{name}")
+    ResponseEntity<?> deleteDocumentByName(@RequestHeader("Authorization") String token, @PathVariable String name)
     {
         if(service.deleteByName(name))
         {
@@ -102,6 +83,19 @@ public class TemplateController
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/downloadfilenames")
+    public ResponseEntity<?> downloadNames(@RequestHeader("Authorization") String token)
+    {
+        List<String> result = service.getNames();
+        return ResponseEntity.ok(result);
+    }
+    @GetMapping("/getobligatorynames/{obligatory}")
+    public ResponseEntity<?> downloadAllFiles(@RequestHeader("Authorization") String token, @PathVariable boolean obligatory)
+    {
+        List<String> result = service.readAllObligatory(obligatory);
+        return ResponseEntity.ok().body(result);
+    }
+
 }
 
 

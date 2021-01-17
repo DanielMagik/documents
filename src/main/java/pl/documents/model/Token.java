@@ -4,10 +4,8 @@ import org.hibernate.annotations.GenericGenerator;
 import pl.documents.model.enums.TokenType;
 import pl.documents.model.enums.UserType;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -24,6 +22,7 @@ public class Token
     private UserType userType;
     private TokenType tokenType;
     private String email;
+    private LocalDateTime createDate;
 
     public Token()
     {
@@ -60,6 +59,17 @@ public class Token
     public String getEmail()
     {
         return email;
+    }
+
+    public LocalDateTime getCreateDate()
+    {
+        return createDate;
+    }
+
+    @PrePersist
+    private void prePersist()
+    {
+        this.createDate=LocalDateTime.now();
     }
 
 }

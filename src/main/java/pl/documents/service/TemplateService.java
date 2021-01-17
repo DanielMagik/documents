@@ -8,6 +8,8 @@ import pl.documents.exception.TemplateException;
 import pl.documents.exception.TemplateExistsException;
 import pl.documents.model.Template;
 import pl.documents.repository.TemplateRepository;
+
+import java.util.LinkedList;
 import java.util.List;
 
 import java.io.IOException;
@@ -23,11 +25,14 @@ public class TemplateService
         this.repository = repository;
     }
 
-    public Template saveFile(MultipartFile file, boolean obligatory) throws TemplateException, TemplateExistsException
+    @Transactional
+    public Template saveFile(MultipartFile file, boolean obligatory) throws TemplateException
     {
         String docName = file.getOriginalFilename();
-        if(repository.existsByDocumentName(docName))
-            throw new TemplateExistsException("Template with name " +docName+" exists in database!");
+        if(docName.isBlank())
+            throw new TemplateException("Choose file!");
+        if(repository.existsByDocumentName(docName))//usuwanie starego pliku o tej samej nazwie
+           repository.deleteByDocumentName(docName);
         Template template = null;
         try
         {
@@ -59,10 +64,16 @@ public class TemplateService
     {
         return repository.findAll();
     }
-    @Transactional
-    public void deleteByNameInTemplate(Template result)
+
+    public List<String> getNames()
     {
-        repository.deleteByDocumentName(result.getDocumentName());
+        List<Template> list = repository.findAll();
+        List<String> result = new LinkedList<>();
+        for(Template t : list)
+        {
+            result.add(t.getDocumentName());
+        }
+        return result;
     }
     @Transactional
     public boolean deleteByName(String name)
@@ -72,4 +83,18 @@ public class TemplateService
         repository.deleteByDocumentName(name);
         return true;
     }
+
+    public List<String> readAllObligatory(boolean obligatory)
+    {
+        List<Template> list = repository.findAll();
+        List<String> result = new LinkedList<>();
+        for(Template t : list)
+        {
+            if(t.isObligatory()==obligatory)
+                result.add(t.getDocumentName());
+        }
+        return result;
+    }
+
+
 }

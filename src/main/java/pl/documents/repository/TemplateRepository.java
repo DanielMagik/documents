@@ -11,9 +11,11 @@ public interface TemplateRepository
     List<Template> findAll();
     Template save(Template entity);
     boolean existsById(UUID id);
-    Optional<Template> findById(UUID id);
-    void deleteById(UUID id);
     boolean existsByDocumentName(String documentName);
-    void deleteByDocumentName(String documentName);
+    Optional<Template> findById(UUID id);
     Optional<Template> findByDocumentName(String documentName);
+    void deleteById(UUID id);
+    void deleteByDocumentName(String documentName);
+
+
 }

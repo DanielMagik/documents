@@ -3,6 +3,7 @@ package pl.documents.repository;
 import pl.documents.model.Token;
 import pl.documents.model.enums.TokenType;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,4 +16,5 @@ public interface TokenRepository
     void deleteById(UUID id);
     List<Token> findAll();
     boolean existsByIdAndTokenTypeIs(UUID id, TokenType tokenType);
+    void deleteAllByCreateDateLessThan(LocalDateTime cutOffDate);
 }

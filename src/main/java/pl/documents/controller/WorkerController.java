@@ -39,12 +39,21 @@ public class WorkerController
         WorkerReadModel workerReadModel;
         try
         {
-            User user = userService.getByToken(token);
-            workerReadModel = new WorkerReadModel(user.getWorker(), user);
+
+            try
+            {
+                User user = userService.getByToken(token);
+                workerReadModel = new WorkerReadModel(user.getWorker(), user);
+            }
+            catch (AccessException | IllegalArgumentException e)
+            {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("No access!");
+            }
+
         }
-        catch (AccessException | IllegalArgumentException e)
+        catch (NullPointerException e)
         {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("No access!");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Bad request!");
         }
         return ResponseEntity.ok(workerReadModel);
     }
@@ -111,61 +120,6 @@ public class WorkerController
         catch (NullPointerException e)
         {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Incorrect data!");
-        }
-    }
-
-
-    /*
-    @GetMapping(value = "/workers")
-    ResponseEntity<List<WorkerReadModel>> readAllWorkers(Pageable page)
-    {
-        logger.info("Read all workers pageable.");
-        return ResponseEntity.ok(repository.findAll(page).getContent().
-                stream().map(WorkerReadModel::new).collect(Collectors.toList()));
-    }
-     */
-
-    /**
-     * Zmiana hasła lub adresu e-mail użytkownika
-     * @return informacja o zmianie danych
-     */
-    @PutMapping("/change/{id}")
-    ResponseEntity<?> changeImportantData(@PathVariable UUID id, @RequestBody ChangePasswordWriteModel workerWriteModel)
-    {
-        logger.info("Try to change important data!");
-        try
-        {
-            workerService.changeImportantData(id,workerWriteModel);
-        }
-        catch (BadIdException | BadWorkerException e)
-        {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
-        }
-        logger.info("Change success!");
-
-        return ResponseEntity.noContent().build();
-    }
-
-
-
-
-    /**
-     * Usunięcie pracownika o zadanym id
-     * @param id id usuwanego pracownika
-     * @return informacja o pomyślnym bądź nieudanym usunięciu
-     */
-    @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteCandidate(@PathVariable UUID id)
-    {
-        if(workerService.deleteById(id))
-        {
-            logger.info("Delete worker with id " + id+ ".Delete successful!");
-            return ResponseEntity.ok().build();
-        }
-        else
-        {
-            logger.info("Delete worker with id " + id+ ".Worker not found!");
-            return ResponseEntity.notFound().build();
         }
     }
 }

@@ -21,7 +21,10 @@ public class Template
     @Lob
     private byte[] data;
     private boolean obligatory;
+    public Template()
+    {
 
+    }
     public Template(String documentName, String documentType, byte[] data, boolean obligatory)
     {
         this.documentName = documentName;
@@ -33,11 +36,6 @@ public class Template
     public UUID getId()
     {
         return id;
-    }
-
-    public void setId(UUID id)
-    {
-        this.id = id;
     }
 
     public String getDocumentName()

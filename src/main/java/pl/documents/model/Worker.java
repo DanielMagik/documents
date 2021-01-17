@@ -281,17 +281,6 @@ public class Worker
      */
     private String annualEarningsZUS = null;
     /**
-     * Data i czas utworzenia encji
-     */
-    /**
-     * Przebieg dotychczasowego zatrudnienia
-     */
-    private LocalDateTime createDate = null;
-    /**
-     * Data i czas ostatniej aktualizacji encji
-     */
-    private LocalDateTime updateDate = null;
-    /**
      * Nazwy szkół i lata ich ukończenia
      */
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "worker")
@@ -746,8 +735,6 @@ public class Worker
         this.willIncreasedCosts = source.willIncreasedCosts;
         this.willZUS = source.willZUS;
         this.annualEarningsZUS = source.annualEarningsZUS;
-        this.createDate = source.createDate;
-        this.updateDate = source.updateDate;
     }
     public void updateCandidate(CandidateWriteModel candidate)
     {
@@ -768,17 +755,7 @@ public class Worker
         //this.password=source.getPassword();
     }
 
-    @PrePersist
-    void prePersist()
-    {
-        this.createDate = LocalDateTime.now();
-    }
 
-    @PreUpdate
-    void preUpdate()
-    {
-        this.updateDate=LocalDateTime.now();
-    }
 
 
 
