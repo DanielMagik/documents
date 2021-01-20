@@ -1,4 +1,3 @@
-
 spring:
   h2.console:
     enabled: true
@@ -7,6 +6,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+local.url: 'http://localhost:8080'
 
 
 

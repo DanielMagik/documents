@@ -4,43 +4,40 @@ import io.lsn.spring.pesel.validator.domain.PeselValidator;
 import nl.garvelink.iban.Modulo97;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.documents.config.Encryption;
-import pl.documents.config.TokenInstance;
 import pl.documents.exception.*;
 import pl.documents.logic.DataChecker;
-import pl.documents.model.*;
+import pl.documents.model.Address;
+import pl.documents.model.Education;
+import pl.documents.model.FamilyMember;
+import pl.documents.model.Worker;
 import pl.documents.model.projection.*;
-import pl.documents.repository.*;
+import pl.documents.repository.AddressRepository;
+import pl.documents.repository.EducationRepository;
+import pl.documents.repository.FamilyMemberRepository;
+import pl.documents.repository.WorkerRepository;
 
-import java.rmi.AccessException;
 import java.time.Year;
-import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 //TODO ZASTANOWIĆ SIĘ NAD @Scope
 @Service
 public class WorkerService
 {
-    private final UserRepository userRepository;
     private final WorkerRepository workerRepository;
     private final EducationRepository educationRepository;
     private final AddressRepository addressRepository;
     private final FamilyMemberRepository familyMemberRepository;
-    private final Encryption encryption;
 
-    public WorkerService(final UserRepository userRepository, final WorkerRepository workerRepository, final EducationRepository educationRepository,
+    public WorkerService(final WorkerRepository workerRepository, final EducationRepository educationRepository,
                          final AddressRepository addressRepository,
-                         final FamilyMemberRepository familyMemberRepository, Encryption encryption)
+                         final FamilyMemberRepository familyMemberRepository)
     {
-        this.userRepository = userRepository;
         this.workerRepository = workerRepository;
         this.educationRepository = educationRepository;
         this.addressRepository = addressRepository;
         this.familyMemberRepository = familyMemberRepository;
-        this.encryption = encryption;
     }
 
 
@@ -60,106 +57,6 @@ public class WorkerService
         return true;
     }
 
-    /**
-     * Tworzenie nowego pracownika z pustymi polami i dodanie go do bazy danych
-     * @param source pracownik do zapisu w bazie
-     * @return zapisany pracownik
-     */
-    public WorkerReadModel createWorker(Worker source) throws RegisterException
-    {
-
-        Pattern email = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)");
-       // Matcher matcher = email.matcher(source.getEmail());
-       // if(!matcher.matches())
-        //{
-       //     throw new RegisterException("Bad e-mail!");
-       // }
-        
-        //if(workerRepository.existsByEmail(source.getEmail()))
-        //    throw new RegisterException("In database already exists worker with e-mail: " + source.getEmail()+ " !");
-
-        //might throw RegisterException
-       // checkPassword(source.getPassword());
-
-        workerRepository.save(source);
-       // Worker result = workerRepository.findByEmailAndPassword(source.getEmail(),source.getPassword())
-       // .orElseThrow(()->new RegisterException("Register fail!"));
-        //return new WorkerReadModel(result);
-        return null;
-    }
-
-
-    public void changeImportantData(UUID id, ChangePasswordWriteModel changePasswordWriteModel) throws  BadIdException, BadWorkerException
-    {
-        /*
-        boolean willChangeEmail = workerWriteModelChangePassword.isWillChangeEmail();
-        boolean willChangePassword = workerWriteModelChangePassword.isWillChangePassword();
-        Worker source = workerWriteModelChangePassword.toWorker();
-
-        Worker worker = workerRepository.findById(id).
-                orElseThrow(() -> new BadIdException("Bad id!"));
-        if(!willChangeEmail && !willChangePassword)
-        {
-            throw new BadWorkerException("Nothing to change!");
-        }
-        if(willChangeEmail)
-        {
-            if(worker.getEmail().equals(source.getEmail()))
-            {
-                throw new BadWorkerException("The new email is the same as the old one!");
-            }
-            Pattern email = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)");
-            Matcher matcher = email.matcher(source.getEmail());
-            if (!matcher.matches())
-            {
-                throw new BadWorkerException("Bad e-mail!");
-            }
-
-            if (workerRepository.existsByEmail(source.getEmail()))
-                throw new BadWorkerException("In database already exists worker with e-mail: " + source.getEmail() + " !");
-        }
-
-
-        if(!worker.getPassword().equals(source.getPassword()))
-        {
-            throw new BadWorkerException("Bad old password!");
-        }
-
-        //might throw RegisterException
-        if(willChangePassword)
-        {
-            try
-            {
-                checkPassword(workerWriteModelChangePassword.getNewPassword());
-            }
-            catch (RegisterException e)
-            {
-                BadWorkerException exception = new BadWorkerException(e.getErrorMessage());
-                throw exception;
-            }
-        }
-        //reset ewentualnego maila
-        if(!willChangeEmail)
-        {
-            source.setEmail(worker.getEmail());
-        }
-
-        if(willChangePassword)
-        {
-            if(worker.getPassword().equals(workerWriteModelChangePassword.getNewPassword()))
-            {
-                throw new BadWorkerException("The new password is the same as the old one!");
-            }
-            source.setPassword(workerWriteModelChangePassword.getNewPassword());
-        }
-        workerRepository.findById(id).
-                ifPresent(w ->{
-                    w.updateImportantData(source);
-                    workerRepository.save(w);
-                });
-
-         */
-    }
 
     /**
      * Zmiana danych pracownika o zadanym id
@@ -245,54 +142,6 @@ public class WorkerService
 
         }
     }
-
-    /**
-     * Odczyt całej edukacji pracownika o zadanym id
-     * @param id id pracownika
-     * @return lista edukacji
-     */
-    public List<EducationReadModel> readWorkerEducation(UUID id) throws BadIdException
-    {
-            Worker result = workerRepository.findById(id).orElseThrow(
-                    () -> new BadIdException("Worker with id "+id+" doesn't exists!")
-            );
-            return educationRepository.findAllByWorker(result).stream()
-                    .map(EducationReadModel::new).collect(Collectors.toList());
-    }
-
-
-    /**
-     * Odczyt wszystkich adresów pracownika o zadanym id
-     * @param id id pracownika
-     * @return lista adresów
-     */
-    public List<Address> readWorkerAddresses(UUID id) throws BadIdException
-    {
-        Worker result = workerRepository.findById(id).orElseThrow(
-                () -> new BadIdException("Worker with id "+id+" doesn't exists!")
-        );
-        return addressRepository.findAllByWorker(result);
-
-    }
-    /**
-     * Odczyt wszystkich członków rodziny pracownika o zadanym id
-     * @param id id pracownika
-     * @return lista członków rodziny
-     */
-    public List<FamilyMemberReadModel> readWorkerFamily(UUID id) throws BadIdException
-    {
-        Worker result = workerRepository.findById(id).orElseThrow(
-                () -> new BadIdException("Worker with id "+id+" doesn't exists!")
-        );
-        return familyMemberRepository.findAllByWorker(result).stream()
-                .map(FamilyMemberReadModel::new).collect(Collectors.toList());
-    }
-
-    /**
-     * Sprawdzenie, czy przekazane słowo zawiera znaki inne niż białe
-     * @param data przekazane słowo
-     * @return informacja, czy data jest słowem
-     */
 
 
     /**

@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import pl.documents.exception.RegisterException;
 import pl.documents.model.User;
-import pl.documents.model.enums.UserType;
 import pl.documents.model.projection.EmailAndPasswordWriteModel;
 import pl.documents.service.EmployeeAndAdminService;
 import pl.documents.service.UserService;

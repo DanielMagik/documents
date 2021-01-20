@@ -1,12 +1,9 @@
 package pl.documents.model.projection;
 
 import pl.documents.model.User;
-import pl.documents.model.Worker;
-import pl.documents.model.enums.*;
+import pl.documents.model.enums.UserType;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class WorkerReadModelForEmployee
 {

@@ -5,14 +5,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.documents.exception.BadIdException;
 import pl.documents.exception.TemplateException;
-import pl.documents.exception.TemplateExistsException;
 import pl.documents.model.Template;
 import pl.documents.repository.TemplateRepository;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-
-import java.io.IOException;
 import java.util.UUID;
 
 @Service

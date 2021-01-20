@@ -27,11 +27,11 @@ public class TokenService
 
             Token token = new Token(userType, TokenType.CREATE_ACCOUNT);
             if(token.getUserType().equals(UserType.ADMIN))
-                throw new TokenException("Cannot create token!");
+                throw new TokenException("Bad request!");
             tokenRepository.save(token);
 
             Token result = tokenRepository.findById(token.getId()).orElseThrow(
-                    ()-> new TokenException("Cannot create token!")
+                    ()-> new TokenException("Bad request!")
             );
             String link = "http://localhost:8080/register/" + result.getId();
             return link;
@@ -47,7 +47,7 @@ public class TokenService
         tokenRepository.save(token);
 
         Token result = tokenRepository.findById(token.getId()).orElseThrow(
-                ()-> new TokenException("Cannot create token!")
+                ()-> new TokenException("Bad request!")
         );
         String link = "http://localhost:8080/register/" + result.getId();
         return link;
@@ -58,7 +58,7 @@ public class TokenService
         Token token = new Token(user.getUserType(), TokenType.CONFIRM_EMAIL, user.getEmail());
         tokenRepository.save(token);
         Token result = tokenRepository.findById(token.getId()).orElseThrow(
-                ()-> new TokenException("Cannot create account!")
+                ()-> new TokenException("Bad request!")
         );
         String link = "http://localhost:8080/confirm/" + result.getId();
         return link;
@@ -67,9 +67,9 @@ public class TokenService
     public Token findTokenActiveById(UUID id) throws TokenException
     {
         if(!tokenRepository.existsByIdAndTokenTypeIs(id,TokenType.CONFIRM_EMAIL))
-            throw new TokenException("Page not found!");
+            throw new TokenException("Bad request!");
         Token token = tokenRepository.findById(id).orElseThrow(
-                ()->new TokenException("Page not found!")
+                ()->new TokenException("Bad request!")
         );
         tokenRepository.deleteById(id);
         return token;

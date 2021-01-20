@@ -7,7 +7,6 @@ import pl.documents.model.projection.WorkerWriteModelRest;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Set;
 import java.util.UUID;
@@ -618,7 +617,15 @@ public class Worker
         this.familyMembers = familyMembers;
     }
 
+    public String getPersonToNotify()
+    {
+        return personToNotify;
+    }
 
+    public LocalDate getPensionFrom()
+    {
+        return pensionFrom;
+    }
 
 
     public Worker(String email, String phoneNumber, String fillLocation, Sex sex, String firstName, String secondName, String surname, LocalDate dateOfBirth, String profession, String specialty, String title, String qualifications, String additionalPersonalData, boolean polishCitizen, String citizenship, String documentNumber, String documentType, String taxOffice, String authorizedName, String authorizedSurname, String authorizedContact, boolean willSpecialPowersForFamily, String NIP, boolean willPIT2, String position, String department, Pension pension, LocalDate employmentDate, String bank, String accountNumber, SecurityClearance securityClearance, String NFZ, String pensionZUSNumber, boolean isDisabled, String disabledZUSNumber, LocalDate disabledFrom, LocalDate disabledTo, Medicover medicover, ContractType contractType, IncomePerPerson incomePerPerson, boolean zfss1, boolean zfss2, boolean zfss3, boolean zfss4, boolean zfss5, boolean zfss6, boolean zfss7, boolean hasChildren, boolean willParent, ChildUnderFourPermissions childUnderFourPermissions, ChildUnderFourteenPermissions childUnderFourteenPermissions, boolean willReducedTask, boolean methodOfTaxation, String annualEarningsFamily, boolean willTaxReducingAmount, boolean willHigherTask, Month higherTaskMonth, boolean willIncreasedCosts, boolean willZUS, String annualEarningsZUS)

@@ -5,20 +5,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.documents.exception.*;
+import pl.documents.exception.BadAddressException;
+import pl.documents.exception.BadEducationException;
+import pl.documents.exception.BadFamilyMemberException;
+import pl.documents.exception.BadWorkerException;
 import pl.documents.model.User;
-import pl.documents.model.projection.*;
+import pl.documents.model.projection.CandidateWriteModel;
+import pl.documents.model.projection.WorkerReadModel;
+import pl.documents.model.projection.WorkerWriteModelRest;
 import pl.documents.service.UserService;
 import pl.documents.service.WorkerService;
 
 import java.rmi.AccessException;
-import java.util.UUID;
 
 @RestController
 public class WorkerController
 {
 
-    private static final Logger logger = LoggerFactory.getLogger(WorkerController.class);
     private final WorkerService workerService;
     private final UserService userService;
 
@@ -47,13 +50,13 @@ public class WorkerController
             }
             catch (AccessException | IllegalArgumentException e)
             {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("No access!");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bad request!");
             }
 
         }
         catch (NullPointerException e)
         {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Bad request!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bad request!");
         }
         return ResponseEntity.ok(workerReadModel);
     }
@@ -74,7 +77,7 @@ public class WorkerController
             }
             catch (AccessException | IllegalArgumentException e)
             {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("No access!");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bad request!");
             }
             try
             {
@@ -88,9 +91,9 @@ public class WorkerController
         }
         catch (NullPointerException e)
         {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Incorrect data!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bad request!");
         }
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
     @PutMapping("/updateworker")
     ResponseEntity<?> updateWorkerRest(@RequestHeader("Authorization") String token, @RequestBody WorkerWriteModelRest workerWriteModelRest)
@@ -104,7 +107,7 @@ public class WorkerController
             }
             catch (AccessException | IllegalArgumentException e)
             {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("No access!");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bad request!");
             }
             try
             {
@@ -115,11 +118,11 @@ public class WorkerController
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
             }
             workerService.updateWorkerRest(user.getWorker().getId(), workerWriteModelRest);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().build();
         }
         catch (NullPointerException e)
         {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Incorrect data!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bad request!");
         }
     }
 }

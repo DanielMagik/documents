@@ -3,8 +3,6 @@ package pl.documents.model.projection;
 import pl.documents.model.Address;
 import pl.documents.model.enums.AddressType;
 
-import java.util.UUID;
-
 public class AddressReadModel
 {
     private AddressType addressType;

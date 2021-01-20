@@ -1,19 +1,9 @@
 package pl.documents.model;
 
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.security.crypto.encrypt.Encryptors;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import pl.documents.model.enums.UserType;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.SecretKeySpec;
 import javax.persistence.*;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 

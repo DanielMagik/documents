@@ -1,7 +1,6 @@
 package pl.documents.repository;
 
 import pl.documents.model.User;
-import pl.documents.model.Worker;
 
 import java.time.LocalDateTime;
 import java.util.List;

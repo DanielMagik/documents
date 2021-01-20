@@ -75,7 +75,7 @@ public class UserService
                 ()->new LoginException("Bad email or password!")
         );
         if(!user.isActive())
-            throw new LoginException("Account is not active. Please, confirm the mail.");
+            throw new LoginException("Account is not active. Please, confirm the e-mail.");
         return user;
     }
     public boolean existsByEmail(String email)
@@ -155,50 +155,13 @@ public class UserService
                 });
     }
 
-    /*
-    public boolean checkAccessToWorker(UUID id, String token)
-    {
-        User user;
-        try
-        {
-            user = userRepository.findById(id)
-                    .orElseThrow(
-                            ()->new AccessException("No access!")
-                    );
-        }
-        catch (AccessException e)
-        {
-            return false;
-        }
-        Jws<Claims> claimsJws;
-        try
-        {
-            claimsJws = Jwts.parser().setSigningKey(encryption.getSequence().getBytes())
-                    .parseClaimsJws(token.replace("Bearer ", ""));
-        }
-        catch (Exception e)
-        {
-            return false;
-        }
-
-        String username = claimsJws.getBody().get("name").toString();
-        String role = claimsJws.getBody().get("role").toString();
-        String tokenId = claimsJws.getBody().get("id").toString();
-        String i ="111";
-
-        return true;
-
-    }
-
-     */
-
     public String generateToken(User user)
     {
         LocalDateTime currentTime = LocalDateTime.now();
         String sequence = encryption.getSequence();
         String encodedString = Base64.getEncoder().encodeToString(sequence.getBytes());
         String resultToken= Jwts.builder()
-                .claim("name", user.getEmail())
+                //.claim("name", user.getEmail())
                 .claim("role","ROLE_"+user.getUserType().toString())
                 .claim("id",user.getId().toString())
                 .setIssuedAt(Date.from(currentTime.atZone(ZoneId.systemDefault()).toInstant()))

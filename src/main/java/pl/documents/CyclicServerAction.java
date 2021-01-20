@@ -1,12 +1,9 @@
 package pl.documents;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import pl.documents.controller.WorkerController;
 import pl.documents.model.Token;
 import pl.documents.model.User;
 import pl.documents.model.enums.TokenType;

@@ -2,8 +2,6 @@ package pl.documents.model.projection;
 
 import pl.documents.model.Education;
 
-import java.util.UUID;
-
 public class EducationReadModel
 {
     private String schoolName;

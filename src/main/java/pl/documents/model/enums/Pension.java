@@ -17,4 +17,5 @@ public enum  Pension
      * Rencista
      */
     DISABILITY,
+
 }

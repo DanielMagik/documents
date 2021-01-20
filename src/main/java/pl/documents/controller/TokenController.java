@@ -31,7 +31,7 @@ public class TokenController
         }
         catch (TokenException e)
         {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getErrorMessage());
         }
     }
     @PostMapping("/generatelinkadmin")
@@ -44,7 +44,7 @@ public class TokenController
         }
         catch (TokenException e)
         {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getErrorMessage());
         }
     }
 

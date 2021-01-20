@@ -1,12 +1,10 @@
 package pl.documents.model.projection;
 
-import pl.documents.model.Address;
 import pl.documents.model.FamilyMember;
 import pl.documents.model.enums.DisabilityLevel;
 import pl.documents.model.enums.Relationship;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 public class FamilyMemberReadModel
 {

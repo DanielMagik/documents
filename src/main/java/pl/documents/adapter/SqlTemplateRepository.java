@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 import pl.documents.model.Template;
 import pl.documents.repository.TemplateRepository;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository

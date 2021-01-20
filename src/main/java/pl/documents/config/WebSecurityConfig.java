@@ -32,7 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/deletehr").hasRole("ADMIN")
                 .antMatchers("/generatelink").hasAnyRole("ADMIN","HR_EMPLOYEE")
                 .antMatchers("/generatelinkadmin").hasRole("ADMIN")
-                .antMatchers("/alltokens").hasAnyRole("ADMIN","HR_EMPLOYEE")
+                .antMatchers("/alltokens").hasRole("ADMIN")
                 .antMatchers("/uploadfiles/*").hasRole("ADMIN")
                 .antMatchers("/deletefile/*").hasRole("ADMIN")
                 .antMatchers("/downloadfilenames").hasAnyRole("WORKER","ADMIN","HR_EMPLOYEE")

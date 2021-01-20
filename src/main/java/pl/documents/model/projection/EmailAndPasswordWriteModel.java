@@ -1,8 +1,6 @@
 package pl.documents.model.projection;
 
 import pl.documents.model.User;
-import pl.documents.model.Worker;
-import pl.documents.model.enums.UserType;
 
 public class EmailAndPasswordWriteModel
 {

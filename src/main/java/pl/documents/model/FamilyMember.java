@@ -44,7 +44,7 @@ public class FamilyMember
      * Czy pracownik jest opiekunem prawnym/rodzicem dziecka
      * TRUE-TAK, FALSE-NIE
      */
-    private boolean legalGuardian;//ToDo czy to na pewno jest potrzebne?
+    private boolean legalGuardian;
     /**
      * Czy członek rodziny jest niepełnosprwny?
      */

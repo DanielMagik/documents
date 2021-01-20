@@ -1,32 +1,21 @@
 package pl.documents.controller;
 
-import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import pl.documents.exception.BadIdException;
 import pl.documents.exception.TemplateException;
-import pl.documents.exception.TemplateExistsException;
 import pl.documents.model.Template;
 import pl.documents.service.TemplateService;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 public class TemplateController
 {
-    public class ObligatoryReadModel
-    {
-        boolean obligatory;
-
-    }
     private final TemplateService service;
 
     public TemplateController(final TemplateService service)

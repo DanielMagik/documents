@@ -48,7 +48,7 @@ public class UserController
             }
             catch (LoginException e)
             {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getErrorMessage());
             }
 
             String href = "http://localhost:8080/";
@@ -69,7 +69,7 @@ public class UserController
         }
         catch (NullPointerException e)
         {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Incorrect data!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bad request!");
         }
 
         return ResponseEntity.ok(loginResponse);
@@ -82,14 +82,16 @@ public class UserController
         UserType userType = null;
         try
         {
+
             try
             {
                 userType = userService.findTypeById(id);
             }
             catch (RegisterException e)
             {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getErrorMessage());
             }
+
 
 
             User user = emailAndPasswordWriteModel.toUser();
@@ -130,12 +132,12 @@ public class UserController
             }
             catch (TokenException e)
             {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getErrorMessage());
             }
         }
         catch (NullPointerException e)
         {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Incorrect data!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bad request!");
         }
 
         return ResponseEntity.ok(userType.toString()+" account was created! Active it by confirming the email!");
@@ -173,7 +175,7 @@ public class UserController
         }
         catch (AccessException | IllegalArgumentException e)
         {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("No access!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bad request!");
         }
         try
         {
@@ -217,7 +219,7 @@ public class UserController
         }
         catch (AccessException | IllegalArgumentException e)
         {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("No access!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bad request!");
         }
 
         try
@@ -226,7 +228,7 @@ public class UserController
         }
         catch (RegisterException e)
         {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getErrorMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getErrorMessage());
         }
         return ResponseEntity.ok("Your account has been deleted!");
     }
