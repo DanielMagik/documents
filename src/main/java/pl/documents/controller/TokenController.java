@@ -25,7 +25,6 @@ public class TokenController
     {
         try
         {
-
             String link = tokenService.generateToken(tokenWriteModel.getUserType());
             return ResponseEntity.ok(link);
         }
@@ -34,7 +33,8 @@ public class TokenController
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getErrorMessage());
         }
     }
-    @PostMapping("/generatelinkadmin")
+
+    @GetMapping("/generatelinkadmin")
     ResponseEntity<?> generateLinkToRegisterAdmin(@RequestHeader("Authorization") String token)
     {
         try

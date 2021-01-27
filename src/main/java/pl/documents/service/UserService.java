@@ -225,6 +225,7 @@ public class UserService
         return user;
     }
 
+
     @Transactional
     public void deleteAccount(User user, String password) throws RegisterException
     {

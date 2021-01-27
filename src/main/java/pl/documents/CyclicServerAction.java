@@ -1,6 +1,7 @@
 package pl.documents;
 
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,16 +19,21 @@ public class CyclicServerAction
 {
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
-    private int userDays = 7;
-    private int linkHours=48;
-    private int noActiveUserHours=24;
-    private final int repeatSeconds = 900000;
+    @Value("${local.user-days}")
+    private int userDays;
+    @Value("${local.link-hours}")
+    private int linkHours;
+    @Value("${local.no-active-user-hours}")
+    private int noActiveUserHours;
+    private final int repeatSeconds = 90;
 
     public CyclicServerAction(final TokenRepository tokenRepository, final UserRepository userRepository)
     {
         this.tokenRepository = tokenRepository;
         this.userRepository = userRepository;
     }
+
+
     @Scheduled(fixedRate = repeatSeconds)//co 15 minut
     @Transactional
     void deleteAllWorkersOlderThan()
@@ -52,6 +58,8 @@ public class CyclicServerAction
             }
         }
     }
+
+
     @Scheduled(fixedRate = repeatSeconds)//co 15 minut
     @Transactional
     void deleteAllTokensOlderThan()

@@ -8,7 +8,7 @@ import pl.documents.repository.UserRepository;
 import java.util.UUID;
 
 @Repository
-public interface SqlUserRepository extends UserRepository, JpaRepository<User, UUID>
+interface SqlUserRepository extends UserRepository, JpaRepository<User, UUID>
 {
 
 }

@@ -1,5 +1,6 @@
 package pl.documents.controller;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,9 @@ public class UserController
     private final MailService mailService;
     private final TokenService tokenService;
 
+    @Value("${local.url}")
+    private String linkBeginning;
+
     public UserController(final UserService userService, final MailService mailService, final TokenService tokenService)
     {
         this.userService = userService;
@@ -39,8 +43,7 @@ public class UserController
         User user;
         User result = null;
         LoginResponse loginResponse;
-        try
-        {
+
             user = emailAndPasswordWriteModel.toUser();
             try
             {
@@ -51,27 +54,21 @@ public class UserController
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getErrorMessage());
             }
 
-            String href = "http://localhost:8080/";
+            String href = linkBeginning;
             switch (result.getUserType())
             {
                 case WORKER:
-                    href = href + "worker";
+                    href = href + "/worker";
                     break;
                 case HR_EMPLOYEE:
-                    href = href + "hr_employee";
+                    href = href + "/hr_employee";
                     break;
                 case ADMIN:
-                    href = href + "admin";
+                    href = href + "/admin";
                     break;
             }
             String token = userService.generateToken(result);
             loginResponse = new LoginResponse(href, token);
-        }
-        catch (NullPointerException e)
-        {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bad request!");
-        }
-
         return ResponseEntity.ok(loginResponse);
 
     }
@@ -80,19 +77,14 @@ public class UserController
     ResponseEntity<?> registerWorker(@RequestBody EmailAndPasswordWriteModel emailAndPasswordWriteModel, @PathVariable UUID id)
     {
         UserType userType = null;
-        try
-        {
-
             try
             {
                 userType = userService.findTypeById(id);
             }
             catch (RegisterException e)
             {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getErrorMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
             }
-
-
 
             User user = emailAndPasswordWriteModel.toUser();
             if (userService.existsByEmail(user.getEmail()))
@@ -132,14 +124,8 @@ public class UserController
             }
             catch (TokenException e)
             {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getErrorMessage());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("");
             }
-        }
-        catch (NullPointerException e)
-        {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bad request!");
-        }
-
         return ResponseEntity.ok(userType.toString()+" account was created! Active it by confirming the email!");
     }
 

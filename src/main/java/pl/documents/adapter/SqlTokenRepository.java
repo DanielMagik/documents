@@ -8,7 +8,7 @@ import pl.documents.repository.TokenRepository;
 import java.util.UUID;
 
 @Repository
-public interface SqlTokenRepository extends TokenRepository, JpaRepository<Token, UUID>
+interface SqlTokenRepository extends TokenRepository, JpaRepository<Token, UUID>
 {
 
 }

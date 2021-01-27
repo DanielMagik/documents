@@ -1,5 +1,6 @@
 package pl.documents.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.documents.exception.TokenException;
@@ -16,6 +17,8 @@ import java.util.UUID;
 public class TokenService
 {
     private final TokenRepository tokenRepository;
+    @Value("${local.url}")
+    private String linkBeginning;
 
     public TokenService(final TokenRepository tokenRepository)
     {
@@ -33,7 +36,7 @@ public class TokenService
             Token result = tokenRepository.findById(token.getId()).orElseThrow(
                     ()-> new TokenException("Bad request!")
             );
-            String link = "http://localhost:8080/register/" + result.getId();
+            String link = linkBeginning + "/register/" + result.getId();
             return link;
     }
     public List<Token> readAll()
@@ -49,7 +52,7 @@ public class TokenService
         Token result = tokenRepository.findById(token.getId()).orElseThrow(
                 ()-> new TokenException("Bad request!")
         );
-        String link = "http://localhost:8080/register/" + result.getId();
+        String link = linkBeginning +  "/register/" + result.getId();
         return link;
     }
 
@@ -60,7 +63,7 @@ public class TokenService
         Token result = tokenRepository.findById(token.getId()).orElseThrow(
                 ()-> new TokenException("Bad request!")
         );
-        String link = "http://localhost:8080/confirm/" + result.getId();
+        String link = linkBeginning+ "/confirm/" + result.getId();
         return link;
     }
     @Transactional

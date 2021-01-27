@@ -40,24 +40,6 @@ public class WorkerService
         this.familyMemberRepository = familyMemberRepository;
     }
 
-
-    /**
-     * Usunięcie pracownika o zadanym id
-     * @param id id pracownika
-     * @return informacja, czy udało się usunąć pracownika
-     */
-    @Transactional
-    public boolean deleteById(UUID id)
-    {
-        if(!workerRepository.existsById(id))
-        {
-            return false;
-        }
-        workerRepository.deleteById(id);
-        return true;
-    }
-
-
     /**
      * Zmiana danych pracownika o zadanym id
      * @param id id zmienianego pracownika
@@ -87,10 +69,6 @@ public class WorkerService
         Worker oldData = workerRepository.findById(id).orElseThrow(
                 ()-> new BadIdException("Worker with id "+id+" doesn't exists")
         );
-        Pattern pattern;
-        Matcher matcher;
-        //numer PESEL/dokumentu
-
         //numer dokumentu będzie zmieniany
         //różne numery dokumentów lub typy dokumentów
         if(!DataChecker.compareStrings(oldData.getDocumentNumber(),worker.getDocumentNumber()) || !DataChecker.compareStrings(oldData.getDocumentType(),worker.getDocumentType()))
@@ -216,8 +194,6 @@ public class WorkerService
                 }
         );
     }
-
-
 
 
 

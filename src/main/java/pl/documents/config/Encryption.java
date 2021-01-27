@@ -1,5 +1,6 @@
 package pl.documents.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -11,10 +12,11 @@ import java.util.Random;
 @Scope("singleton")
 public class Encryption
 {
+    private int keyLength = 20;
     private String sequence;
     public Encryption()
     {
-        byte[] array = new byte[30];
+        byte[] array = new byte[keyLength];
         new Random().nextBytes(array);
         this.sequence = new String(array, StandardCharsets.UTF_8);
     }

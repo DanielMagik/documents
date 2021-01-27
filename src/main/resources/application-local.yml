@@ -6,7 +6,13 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-local.url: 'http://localhost:8080'
+local:
+  url: 'http://localhost:8080'
+  user-days: 7
+  link-hours: 48
+  no-active-user-hours: 24
+  repeat-seconds: 900000;
+
 
 
 
